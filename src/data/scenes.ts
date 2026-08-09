@@ -1,7 +1,6 @@
 export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village'
 export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village'
 export type Hotspot = { x: number; y: number; label: string; align?: 'left' | 'right'; action?: 'spotify' }
-export type RainRipple = { x: number; y: number; width: number; delay?: number }
 
 export type Scene = {
   id: SceneId
@@ -21,7 +20,6 @@ export type Scene = {
   accentColor: string
   hotspots: Hotspot[]
   animation: { dust: boolean; dustCount: number }
-  weather?: { type: 'rain'; intensity: 'light' | 'medium' | 'heavy'; opacity: number; angle: number; speed: number; ripples: RainRipple[] }
   availability: 'active' | 'planned'
   primaryNav: boolean
   mobilePosition: string
@@ -84,7 +82,7 @@ export const scenes: Scene[] = [
   },
   {
     id: 'rain', slug: '/rain', navLabel: 'Rain', title: 'Monsoon Memories', hindiTitle: 'बारिश के दिन', year: '1996',
-    description: 'Wet uniforms, paper boats, and one more cup of chai under the awning.', shortLine: 'बारिश रुकने का इंतज़ार किसे था?', desktopBackground: '/scenes/rain/rain.webp', mobileBackground: '/scenes/rain/rain-mobile.webp', backgroundVideo: '/scenes/rain-loop.mp4', fallbackImage: '/scenes/rain/rain.webp', ambientAudio: 'rain', accentColor: '#6f96a5', animation: { dust: false, dustCount: 0 }, weather: { type: 'rain', intensity: 'medium', opacity: .32, angle: -7, speed: 1, ripples: [{ x: 23, y: 89, width: 58 }, { x: 46, y: 83, width: 42, delay: .8 }, { x: 63, y: 91, width: 35, delay: 1.6 }] }, availability: 'active', primaryNav: false, mobilePosition: '72% center',
+    description: 'Wet uniforms, paper boats, and one more cup of chai under the awning.', shortLine: 'बारिश रुकने का इंतज़ार किसे था?', desktopBackground: '/scenes/rain/rain.webp', mobileBackground: '/scenes/rain/rain-mobile.webp', backgroundVideo: '/scenes/rain-loop.mp4', fallbackImage: '/scenes/rain/rain.webp', ambientAudio: 'rain', accentColor: '#6f96a5', animation: { dust: false, dustCount: 0 }, availability: 'active', primaryNav: false, mobilePosition: '72% center',
     hotspots: [
       { x: 22, y: 87, label: 'Notebook ka आखिरी page शायद इसी काम आता था.' },
       { x: 92, y: 57, label: 'Books बचानी थीं. खुद भीग सकते थे.', align: 'right' },

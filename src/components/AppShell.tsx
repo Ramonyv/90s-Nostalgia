@@ -4,11 +4,13 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { Maximize2, Menu, Minimize2, Volume2, VolumeX } from 'lucide-react'
 import { getScene, scenes } from '../data/scenes'
 import { useAmbientAudio } from '../hooks/useAmbientAudio'
+import { useAudioPlayer } from '../hooks/useAudioPlayer'
 import { MemoryScene } from '../scenes/MemoryScene'
 import { SceneNavigation } from './SceneNavigation'
 import { MoreMemories } from './MoreMemories'
 import { IntroLoader } from './IntroLoader'
 import { SpotifyRadio } from './SpotifyRadio'
+import { MusicPlayer } from './MusicPlayer'
 
 export function AppShell() {
   const location = useLocation(), scene = getScene(location.pathname)
@@ -16,6 +18,7 @@ export function AppShell() {
   const [moreOpen, setMoreOpen] = useState(false)
   const [fullscreen, setFullscreen] = useState(Boolean(document.fullscreenElement))
   const ambient = useAmbientAudio(scene, entered)
+  const music = useAudioPlayer()
   useEffect(() => {
     const syncFullscreen = () => setFullscreen(Boolean(document.fullscreenElement))
     document.addEventListener('fullscreenchange', syncFullscreen)
@@ -30,7 +33,8 @@ export function AppShell() {
   const enter = async () => {
     sessionStorage.setItem('yaadein-entered', 'yes')
     setEntered(true)
-    await ambient.startAmbient()
+    const sceneIndex = scenes.findIndex(item => item.id === scene.id)
+    await Promise.all([ambient.startAmbient(), music.playTrack(sceneIndex)])
   }
   const toggleFullscreen = async () => {
     if (document.fullscreenElement) await document.exitFullscreen()
@@ -44,14 +48,15 @@ export function AppShell() {
         <Route path="*" element={<Navigate to="/salon" replace />} />
       </Routes>
     </AnimatePresence>
-    <header className="topbar"><a className="brand" href="/salon"><strong><span>90s</span> यादें</strong><small>Relive it. Feel it. Live it.</small></a><SceneNavigation current={scene.id} onMore={() => setMoreOpen(true)} /><button className="mobile-menu" onClick={() => setMoreOpen(true)} aria-label="Open memory menu"><Menu /></button></header>
+    <header className="topbar"><a className="brand" href="/salon"><strong><span>90s</span> यादें</strong><small>Relive it. Feel it. Live it.</small></a><SceneNavigation current={scene.id} onMore={() => setMoreOpen(true)} onSceneSelect={index => void music.playTrack(index)} /><button className="mobile-menu" onClick={() => setMoreOpen(true)} aria-label="Open memory menu"><Menu /></button></header>
     <div className="scene-controls">
       <button className="scene-control ambient-toggle" onClick={() => ambient.setAmbienceEnabled(!ambient.ambienceEnabled)} aria-label={ambient.ambienceEnabled ? 'Mute ambience' : 'Play ambience'}>{ambient.ambienceEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}<span>Ambience {ambient.ambienceEnabled ? 'on' : 'off'}</span></button>
       {document.fullscreenEnabled && <button className="scene-control fullscreen-toggle" onClick={() => void toggleFullscreen()} aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} aria-pressed={fullscreen}>{fullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}<span>{fullscreen ? 'Exit fullscreen' : 'Fullscreen'}</span></button>}
     </div>
+    <MusicPlayer audio={music} />
     <SpotifyRadio />
     <div className="scene-count"><span>0{scenes.findIndex(s => s.id === scene.id) + 1}</span><i /><span>0{scenes.length}</span></div>
-    <MoreMemories open={moreOpen} onClose={() => setMoreOpen(false)} />
+    <MoreMemories open={moreOpen} onClose={() => setMoreOpen(false)} onSceneSelect={index => void music.playTrack(index)} />
     <IntroLoader visible={!entered} onEnter={enter} />
   </div>
 }

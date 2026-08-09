@@ -36,7 +36,7 @@ export function useAudioPlayer() {
     const audio = new Audio(urls[0]); audio.loop = true; audio.preload = 'metadata'; audio.volume = volume; audioRef.current = audio
     const time = () => setCurrentTime(audio.currentTime), meta = () => setDuration(audio.duration || 24)
     audio.addEventListener('timeupdate', time); audio.addEventListener('loadedmetadata', meta)
-    return () => { audio.pause() }
+    return () => { audio.pause(); urls.forEach(URL.revokeObjectURL) }
   }, []) // one persistent audio instance
 
   useEffect(() => { if (audioRef.current) audioRef.current.volume = volume; sessionStorage.setItem('yaadein-volume', String(volume)) }, [volume])
@@ -44,6 +44,17 @@ export function useAudioPlayer() {
     const audio = audioRef.current; if (!audio) return
     if (audio.paused) { await audio.play(); setPlaying(true) } else { audio.pause(); setPlaying(false) }
   }, [])
+  const playTrack = useCallback(async (next: number) => {
+    const audio = audioRef.current; if (!audio) return
+    if (next !== trackIndex) {
+      audio.src = urls[next]
+      audio.loop = true
+      setTrackIndex(next)
+      setCurrentTime(0)
+    }
+    await audio.play()
+    setPlaying(true)
+  }, [trackIndex, urls])
   const select = useCallback(async (next: number) => {
     const audio = audioRef.current; if (!audio) return
     const wasPlaying = !audio.paused; audio.src = urls[next]; audio.loop = true; setTrackIndex(next); setCurrentTime(0)
@@ -52,5 +63,5 @@ export function useAudioPlayer() {
   const previous = () => select((trackIndex - 1 + tracks.length) % tracks.length)
   const next = () => select((trackIndex + 1) % tracks.length)
   const seek = (value: number) => { if (audioRef.current) { audioRef.current.currentTime = value; setCurrentTime(value) } }
-  return { track: tracks[trackIndex], playing, currentTime, duration, volume, setVolume, toggle, previous, next, seek }
+  return { track: tracks[trackIndex], playing, currentTime, duration, volume, setVolume, toggle, playTrack, previous, next, seek }
 }

@@ -140,10 +140,10 @@ export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
   }, [])
 
   useEffect(() => {
-    if (!controller.current || currentUri.current === playlist.uri) return
+    if (!controller.current || playlist.preservePlayback || currentUri.current === playlist.uri) return
     controller.current.loadEntity(playlist.uri)
     currentUri.current = playlist.uri
-  }, [playlist.uri])
+  }, [playlist.preservePlayback, playlist.uri])
 
   const clamp = (next: Position) => {
     const width = panel.current?.offsetWidth ?? Math.min(370, window.innerWidth - 28)

@@ -6,6 +6,9 @@ export type SpotifyPlaylist = {
   sourceUrl: string
   uri: string
   stationLabel: string
+  cover?: string
+  hindiName?: string
+  preservePlayback?: boolean
 }
 
 const salonPlaylist: SpotifyPlaylist = {
@@ -31,6 +34,15 @@ export const spotifyPlaylists: Record<SceneId, SpotifyPlaylist> = {
   school: memoryPlaylist('School radio'),
   cricket: memoryPlaylist('Gully radio'),
   tv: memoryPlaylist('TV room radio'),
+  rain: {
+    playlistId: '1eydFGwTFhx46dvqo2fnbO',
+    title: 'Rainy 90s · Monsoon Mixtape',
+    sourceUrl: 'https://open.spotify.com/playlist/1eydFGwTFhx46dvqo2fnbO?si=Ko4RGTwtTgSpiENxFFORpQ',
+    uri: 'spotify:playlist:1eydFGwTFhx46dvqo2fnbO',
+    stationLabel: 'Monsoon mixtape',
+    cover: '/covers/rainy-90s.webp',
+    hindiName: 'बारिश वाली धुनें',
+  },
   gaming: memoryPlaylist('Game parlour radio'),
   'cassette-shop': memoryPlaylist('Cassette shop radio'),
   'bus-stand': memoryPlaylist('Bus stand radio'),

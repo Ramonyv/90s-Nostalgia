@@ -41,3 +41,11 @@ A small-town Indian bus stand in 1996 with an old red-and-cream unbranded public
 ## Village Summer
 
 An ancestral village courtyard in 1995 beneath a large mango or neem tree. Include a faded plaster home, charpai, hand pump, steel bucket, earthen matka, bicycle, mangoes, distant fields and family resting in deep shade. Contrast the hot bright background with the slow cool afternoon under the tree.
+
+## Monsoon Memories
+
+A modest Indian neighbourhood during steady monsoon rain in 1996, viewed at street level. A wet narrow road and puddles lead to a tiny chai stall beneath a corrugated awning, with warm tungsten light, kettle steam and cutting chai. Include schoolchildren sharing a period umbrella, a protected school bag, a paper boat, an old bicycle, scooter, distant hatchback, plaster homes, wires and leafy trees. Balance cool slate-blue rain with mustard and amber warmth; keep the left side calm and dark enough for scene typography.
+
+## Rainy 90s playlist cover
+
+Square editorial album art showing a used compact cassette, cutting chai and a folded old umbrella on a rain-speckled window ledge. Beyond the glass is a softly blurred Indian street with warm shop lights. Use deep monsoon blue, faded teal, mustard and amber with subtle film grain and tactile print texture; leave upper-left breathing room for optional typography and include no logos, readable text or modern objects.

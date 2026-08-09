@@ -8,6 +8,7 @@ const ambiencePresets: Record<AmbientKind, { filter: number; noise: number; gain
   classroom: { filter: 260, noise: .12, gain: .1 },
   lane: { filter: 430, noise: .16, gain: .11 },
   television: { filter: 700, noise: .1, gain: .1 },
+  rain: { filter: 1450, noise: .28, gain: .17 },
   arcade: { filter: 980, noise: .1, gain: .1 },
   cassette: { filter: 620, noise: .09, gain: .1 },
   'bus-stand': { filter: 380, noise: .18, gain: .13 },

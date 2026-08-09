@@ -1,3 +1,5 @@
+import type { SceneId } from './scenes'
+
 export type SpotifyPlaylist = {
   playlistId: string
   title: string
@@ -14,7 +16,9 @@ const salonPlaylist: SpotifyPlaylist = {
   stationLabel: 'Salon radio',
 }
 
-export const spotifyPlaylists: Record<'salon' | 'truck' | 'railway', SpotifyPlaylist> = {
+const memoryPlaylist = (stationLabel: string): SpotifyPlaylist => ({ ...salonPlaylist, stationLabel })
+
+export const spotifyPlaylists: Record<SceneId, SpotifyPlaylist> = {
   salon: salonPlaylist,
   truck: {
     playlistId: '0iT5gTODhpUFGSwqGZUpdG',
@@ -23,7 +27,14 @@ export const spotifyPlaylists: Record<'salon' | 'truck' | 'railway', SpotifyPlay
     uri: 'spotify:playlist:0iT5gTODhpUFGSwqGZUpdG',
     stationLabel: 'Highway radio',
   },
-  railway: { ...salonPlaylist, stationLabel: 'Railway radio' },
+  railway: memoryPlaylist('Railway radio'),
+  school: memoryPlaylist('School radio'),
+  cricket: memoryPlaylist('Gully radio'),
+  tv: memoryPlaylist('TV room radio'),
+  gaming: memoryPlaylist('Game parlour radio'),
+  'cassette-shop': memoryPlaylist('Cassette shop radio'),
+  'bus-stand': memoryPlaylist('Bus stand radio'),
+  village: memoryPlaylist('Village radio'),
 }
 
 export const getSpotifyEmbedUrl = (playlist: SpotifyPlaylist) => `https://open.spotify.com/embed/playlist/${playlist.playlistId}?utm_source=generator&theme=0`

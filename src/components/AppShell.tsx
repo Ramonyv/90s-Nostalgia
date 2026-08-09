@@ -26,7 +26,7 @@ export function AppShell() {
   useEffect(() => {
     const current = scenes.findIndex(item => item.id === scene.id)
     const neighbours = [scenes[(current + 1) % scenes.length], scenes[(current - 1 + scenes.length) % scenes.length]]
-    const timer = window.setTimeout(() => neighbours.forEach(item => { const image = new Image(); image.src = item.background }), 1200)
+    const timer = window.setTimeout(() => neighbours.forEach(item => { const image = new Image(); image.src = item.desktopBackground }), 1200)
     return () => window.clearTimeout(timer)
   }, [scene.id])
   const enter = async () => {

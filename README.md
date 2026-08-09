@@ -9,8 +9,10 @@ npm install
 npm run dev
 ```
 
-The optimized scene illustrations live in `public/scenes`, with separate mobile crops. Music and ambience are royalty-free procedural audio generated in the browser, so no copyrighted recordings ship with the project. New scenes can be added through `src/data/scenes.ts`.
+The ten optimized scene illustrations live in `public/scenes`, with separate mobile crops. Scene ambience is generated in the browser, while music is provided by the persistent Spotify embed. New scenes can be added through the data-driven registry in `src/data/scenes.ts`.
+
+Active routes: `/salon`, `/truck`, `/railway`, `/school`, `/cricket`, `/tv`, `/gaming`, `/cassette-shop`, `/bus-stand`, and `/village`.
 
 ## Spotify radio
 
-The Salon radio opens an official Spotify playlist embed. Change `playlistId`, `title`, and `sourceUrl` in `src/data/spotify.ts` to swap the collection. The Spotify player stays mounted in `AppShell`, so it survives scene navigation while open. Playback availability depends on Spotify, the listener's region, and account state.
+The global radio uses official Spotify playlist embeds. Playlist-to-scene mappings live in `src/data/spotify.ts`; Highway has its own collection and the remaining scenes use the shared memory playlist. The player stays mounted in `AppShell`, so it survives scene navigation. Playback availability depends on Spotify, the listener's region, and account state.

@@ -1,26 +1,34 @@
+export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village'
+export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'arcade' | 'cassette' | 'bus-stand' | 'village'
 export type Hotspot = { x: number; y: number; label: string; align?: 'left' | 'right'; action?: 'spotify' }
 
 export type Scene = {
-  id: 'salon' | 'truck' | 'railway'
+  id: SceneId
   slug: string
   navLabel: string
   title: string
-  englishTitle: string
-  description: string
-  background: string
-  mobileBackground: string
-  video?: string
-  mobilePosition: string
-  accent: string
+  hindiTitle: string
   year: string
-  ambience: 'room' | 'road' | 'station'
+  description: string
+  shortLine: string
+  desktopBackground: string
+  mobileBackground: string
+  backgroundVideo?: string
+  mobileVideo?: string
+  fallbackImage: string
+  ambientAudio: AmbientKind
+  accentColor: string
   hotspots: Hotspot[]
+  animation: { dust: boolean; dustCount: number }
+  availability: 'active' | 'planned'
+  primaryNav: boolean
+  mobilePosition: string
 }
 
 export const scenes: Scene[] = [
   {
-    id: 'salon', slug: '/salon', navLabel: 'Salon', title: 'दिलवाय सैलून', englishTitle: 'Mohalle ka salon',
-    description: 'कुछ यादें कभी पुरानी नहीं होती…', background: '/scenes/salon.webp', mobileBackground: '/scenes/salon-mobile.webp', video: '/scenes/salon-loop.mp4', mobilePosition: '68% center', accent: '#c95a36', year: '1996', ambience: 'room',
+    id: 'salon', slug: '/salon', navLabel: 'Salon', title: 'Mohalle ka salon', hindiTitle: 'दिलवाय सैलून', year: '1996',
+    description: 'The neighbourhood chair where every story got a trim.', shortLine: 'कुछ यादें कभी पुरानी नहीं होती…', desktopBackground: '/scenes/salon.webp', mobileBackground: '/scenes/salon-mobile.webp', backgroundVideo: '/scenes/salon-loop.mp4', fallbackImage: '/scenes/salon.webp', ambientAudio: 'room', accentColor: '#c95a36', animation: { dust: true, dustCount: 8 }, availability: 'active', primaryNav: true, mobilePosition: '68% center',
     hotspots: [
       { x: 78, y: 37, label: 'Raju Mistri, always on the radio.', align: 'right' },
       { x: 22, y: 82, label: 'Papa ki cycle.' },
@@ -28,8 +36,8 @@ export const scenes: Scene[] = [
     ],
   },
   {
-    id: 'truck', slug: '/truck', navLabel: 'Highway', title: 'सफ़र लंबा था,', englishTitle: 'Highway days',
-    description: 'पर जल्दी किसी को नहीं थी।', background: '/scenes/truck.webp', mobileBackground: '/scenes/truck-mobile.webp', video: '/scenes/truck-loop.mp4', mobilePosition: '64% center', accent: '#dda12e', year: '1997', ambience: 'road',
+    id: 'truck', slug: '/truck', navLabel: 'Highway', title: 'Highway days', hindiTitle: 'सफ़र लंबा था,', year: '1997',
+    description: 'Dusty roads, one cassette, and chai worth stopping for.', shortLine: 'पर जल्दी किसी को नहीं थी।', desktopBackground: '/scenes/truck.webp', mobileBackground: '/scenes/truck-mobile.webp', backgroundVideo: '/scenes/truck-loop.mp4', fallbackImage: '/scenes/truck.webp', ambientAudio: 'road', accentColor: '#dda12e', animation: { dust: true, dustCount: 8 }, availability: 'active', primaryNav: true, mobilePosition: '64% center',
     hotspots: [
       { x: 73, y: 61, label: 'Chai tasted better by the highway.', align: 'right' },
       { x: 58, y: 67, label: 'Long road. One cassette.' },
@@ -37,16 +45,78 @@ export const scenes: Scene[] = [
     ],
   },
   {
-    id: 'railway', slug: '/railway', navLabel: 'Railway', title: 'ट्रेन थोड़ी देर से आती थी,', englishTitle: 'Platform no. 2',
-    description: 'पर इंतज़ार अच्छा लगता था।', background: '/scenes/railway.webp', mobileBackground: '/scenes/railway-mobile.webp', video: '/scenes/railway-loop.mp4', mobilePosition: '62% center', accent: '#62839a', year: '1995', ambience: 'station',
+    id: 'railway', slug: '/railway', navLabel: 'Railway', title: 'Platform no. 2', hindiTitle: 'ट्रेन थोड़ी देर से आती थी,', year: '1995',
+    description: 'A platform full of chai, newspapers, and patient journeys.', shortLine: 'पर इंतज़ार अच्छा लगता था।', desktopBackground: '/scenes/railway.webp', mobileBackground: '/scenes/railway-mobile.webp', backgroundVideo: '/scenes/railway-loop.mp4', fallbackImage: '/scenes/railway.webp', ambientAudio: 'station', accentColor: '#62839a', animation: { dust: true, dustCount: 8 }, availability: 'active', primaryNav: true, mobilePosition: '62% center',
     hotspots: [
       { x: 61, y: 78, label: 'One suitcase. Entire family trip.' },
       { x: 34, y: 53, label: 'Chai garam, chai…' },
       { x: 17, y: 66, label: 'The newspaper was part of the journey.' },
     ],
   },
+  {
+    id: 'school', slug: '/school', navLabel: 'School', title: 'School Days', hindiTitle: 'स्कूल के दिन', year: '1996',
+    description: 'Wooden desks, chalk dust, and a clock that moved too slowly.', shortLine: 'Bell bajte hi duniya badal jaati thi.', desktopBackground: '/scenes/school.webp', mobileBackground: '/scenes/school-mobile.webp', fallbackImage: '/scenes/school.webp', ambientAudio: 'classroom', accentColor: '#c66b42', animation: { dust: true, dustCount: 7 }, availability: 'active', primaryNav: false, mobilePosition: '58% center',
+    hotspots: [
+      { x: 52, y: 66, label: 'Steel bottle ka paani hamesha thanda lagta tha.' },
+      { x: 76, y: 81, label: 'New session ka best part — books cover karna.', align: 'right' },
+      { x: 92, y: 75, label: 'Bag humse zyada heavy hota tha.', align: 'right' },
+    ],
+  },
+  {
+    id: 'cricket', slug: '/cricket', navLabel: 'Cricket', title: 'Street Cricket', hindiTitle: 'गली क्रिकेट', year: '1997',
+    description: 'Every lane had a pitch, an umpire, and its own rules.', shortLine: 'Boundary wahi thi jahan aunty ka ghar shuru hota tha.', desktopBackground: '/scenes/cricket.webp', mobileBackground: '/scenes/cricket-mobile.webp', fallbackImage: '/scenes/cricket.webp', ambientAudio: 'lane', accentColor: '#d58a36', animation: { dust: true, dustCount: 8 }, availability: 'active', primaryNav: false, mobilePosition: '67% center',
+    hotspots: [
+      { x: 72, y: 77, label: 'Stumps? Do ईंटें काफी थीं.', align: 'right' },
+      { x: 68, y: 62, label: 'Ball neighbour ke ghar gayi toh game over.' },
+      { x: 80, y: 14, label: 'Har match ka ek permanent audience hota tha.', align: 'right' },
+    ],
+  },
+  {
+    id: 'tv', slug: '/tv', navLabel: 'TV', title: 'TV Evening', hindiTitle: 'टीवी वाली शाम', year: '1995',
+    description: 'The whole room gathered around one flickering screen.', shortLine: 'Ek TV. Puri family.', desktopBackground: '/scenes/tv.webp', mobileBackground: '/scenes/tv-mobile.webp', fallbackImage: '/scenes/tv.webp', ambientAudio: 'television', accentColor: '#5d7891', animation: { dust: true, dustCount: 5 }, availability: 'active', primaryNav: false, mobilePosition: '65% center',
+    hotspots: [
+      { x: 64, y: 39, label: 'Picture साफ करने के लिए antenna घुमाओ.' },
+      { x: 61, y: 82, label: 'Best seat हमेशा TV के सबसे पास.' },
+      { x: 70, y: 59, label: 'Channel बदलने के लिए उठना पड़ता था.', align: 'right' },
+    ],
+  },
+  {
+    id: 'gaming', slug: '/gaming', navLabel: 'Gaming', title: 'Video Game Parlour', hindiTitle: 'वीडियो गेम पार्लर', year: '1998',
+    description: 'A dark little room where thirty minutes disappeared.', shortLine: '10 रुपये में आधा घंटा.', desktopBackground: '/scenes/gaming.webp', mobileBackground: '/scenes/gaming-mobile.webp', fallbackImage: '/scenes/gaming.webp', ambientAudio: 'arcade', accentColor: '#648d7d', animation: { dust: false, dustCount: 0 }, availability: 'active', primaryNav: false, mobilePosition: '62% center',
+    hotspots: [
+      { x: 37, y: 31, label: 'Blow करके फिर लगाओ. अब चलेगा.' },
+      { x: 66, y: 71, label: 'Player 2 बनने के लिए भी इंतज़ार.' },
+      { x: 80, y: 16, label: 'Half hour खत्म सबसे जल्दी यहीं होता था.', align: 'right' },
+    ],
+  },
+  {
+    id: 'cassette-shop', slug: '/cassette-shop', navLabel: 'Cassettes', title: 'Cassette Shop', hindiTitle: 'कैसेट की दुकान', year: '1996',
+    description: 'Songs were chosen slowly, recorded carefully, and rewound often.', shortLine: 'Playlist नहीं थी. Mixtape बनती थी.', desktopBackground: '/scenes/cassette-shop.webp', mobileBackground: '/scenes/cassette-shop-mobile.webp', fallbackImage: '/scenes/cassette-shop.webp', ambientAudio: 'cassette', accentColor: '#b85b3f', animation: { dust: true, dustCount: 5 }, availability: 'active', primaryNav: false, mobilePosition: '69% center',
+    hotspots: [
+      { x: 72, y: 68, label: 'Side A / Side B — दोनों की planning होती थी.', align: 'right' },
+      { x: 61, y: 53, label: 'Cassette rewind emergency tool.' },
+      { x: 86, y: 25, label: 'Songs download नहीं होते थे. Record होते थे.', align: 'right' },
+    ],
+  },
+  {
+    id: 'bus-stand', slug: '/bus-stand', navLabel: 'Bus Stand', title: 'Bus Stand', hindiTitle: 'बस अड्डा', year: '1996',
+    description: 'No timetable felt certain, but everyone eventually got home.', shortLine: 'Bus कब आएगी? किसी को ठीक से नहीं पता था.', desktopBackground: '/scenes/bus-stand.webp', mobileBackground: '/scenes/bus-stand-mobile.webp', fallbackImage: '/scenes/bus-stand.webp', ambientAudio: 'bus-stand', accentColor: '#b8583c', animation: { dust: true, dustCount: 9 }, availability: 'active', primaryNav: false, mobilePosition: '66% center',
+    hotspots: [
+      { x: 68, y: 57, label: 'Ticket संभाल के रखना.' },
+      { x: 76, y: 82, label: 'पूरा सफर एक trunk में.', align: 'right' },
+      { x: 76, y: 42, label: 'Window seat मिल जाए तो journey successful.', align: 'right' },
+    ],
+  },
+  {
+    id: 'village', slug: '/village', navLabel: 'Village', title: 'Village Summer', hindiTitle: 'गाँव की गर्मियाँ', year: '1995',
+    description: 'Hot afternoons, cool shade, and nowhere else to be.', shortLine: 'छुट्टियाँ लंबी थीं. दिन उससे भी लंबे.', desktopBackground: '/scenes/village.webp', mobileBackground: '/scenes/village-mobile.webp', fallbackImage: '/scenes/village.webp', ambientAudio: 'village', accentColor: '#71804b', animation: { dust: true, dustCount: 7 }, availability: 'active', primaryNav: false, mobilePosition: '70% center',
+    hotspots: [
+      { x: 65, y: 61, label: 'Afternoon plans: कुछ नहीं.' },
+      { x: 38, y: 81, label: 'Fridge से बेहतर पानी.' },
+      { x: 83, y: 79, label: 'Summer का असली subscription.', align: 'right' },
+    ],
+  },
 ]
 
-export const futureMemories = ['School Days', 'Street Cricket', 'TV Evening', 'Video Game Parlour', 'Cassette Shop', 'Bus Stand', 'Village Summer']
-
-export const getScene = (pathname: string) => scenes.find((scene) => scene.slug === pathname) ?? scenes[0]
+export const plannedSceneIdeas = ['STD / PCO Booth', 'Photo Studio', 'Sunday Market', 'Mela', 'Monsoon School Day', 'Terrace Night', 'Audio / Video Rental Shop'] as const
+export const getScene = (pathname: string) => scenes.find(scene => scene.slug === pathname && scene.availability === 'active') ?? scenes[0]

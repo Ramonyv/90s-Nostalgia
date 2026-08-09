@@ -70,6 +70,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 .scene-count i { width:1px; height:44px; background:rgba(255,255,255,.48); }
 .spotify-radio { position:fixed; z-index:30; width:min(370px,calc(100vw - 28px)); padding:10px; border:1px solid rgba(244,234,215,.24); border-radius:16px; color:var(--cream); background:rgba(36,23,15,.93); box-shadow:0 20px 55px rgba(18,10,5,.36); backdrop-filter:blur(18px); }
 .spotify-embed { height:152px; border-radius:10px; background:#181818; overflow:hidden; }
+.spotify-embed.is-loading::after { content:"Loading playlist…"; height:100%; display:grid; place-items:center; color:rgba(244,234,215,.5); font-size:9px; letter-spacing:.08em; }
+.spotify-embed.is-loading:has(iframe)::after { display:none; }
 .spotify-embed iframe { display:block; border:0; border-radius:10px; }
 .radio-topline { height:30px; display:flex; align-items:flex-start; justify-content:space-between; }
 .radio-topline>div { display:flex; align-items:center; gap:7px; font-size:9px; letter-spacing:.08em; text-transform:uppercase; opacity:.78; }

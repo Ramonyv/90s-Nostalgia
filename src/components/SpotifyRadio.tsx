@@ -4,8 +4,61 @@ import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } fr
 import { spotifyConfig, spotifyEmbedUrl } from '../data/spotify'
 
 type Position = { x: number; y: number }
+type SpotifyController = {
+  addListener: (event: string, listener: () => void) => void
+  destroy: () => void
+  play: () => void
+}
+type SpotifyIframeApi = {
+  createController: (
+    element: HTMLElement,
+    options: { uri: string; width: string; height: number },
+    callback: (controller: SpotifyController) => void,
+  ) => void
+}
+
+declare global {
+  interface Window {
+    onSpotifyIframeApiReady?: (api: SpotifyIframeApi) => void
+    __yaadeinSpotifyApi?: SpotifyIframeApi
+  }
+}
 
 const STORAGE_KEY = 'yaadein-spotify-position'
+export const SPOTIFY_PLAY_EVENT = 'yaadein:play-spotify'
+let spotifyApiPromise: Promise<SpotifyIframeApi> | undefined
+
+function loadSpotifyApi() {
+  if (window.__yaadeinSpotifyApi) return Promise.resolve(window.__yaadeinSpotifyApi)
+  if (spotifyApiPromise) return spotifyApiPromise
+
+  spotifyApiPromise = new Promise((resolve, reject) => {
+    const timeout = window.setTimeout(() => {
+      spotifyApiPromise = undefined
+      reject(new Error('Spotify iframe API timed out'))
+    }, 8000)
+    window.onSpotifyIframeApiReady = api => {
+      window.clearTimeout(timeout)
+      window.__yaadeinSpotifyApi = api
+      resolve(api)
+    }
+
+    if (!document.querySelector('script[data-yaadein-spotify-api]')) {
+      const script = document.createElement('script')
+      script.src = 'https://open.spotify.com/embed/iframe-api/v1'
+      script.async = true
+      script.dataset.yaadeinSpotifyApi = 'true'
+      script.onerror = () => {
+        window.clearTimeout(timeout)
+        spotifyApiPromise = undefined
+        reject(new Error('Spotify iframe API failed to load'))
+      }
+      document.body.appendChild(script)
+    }
+  })
+
+  return spotifyApiPromise
+}
 
 function defaultPosition(): Position {
   const panelWidth = Math.min(370, window.innerWidth - 28)
@@ -21,9 +74,48 @@ function defaultPosition(): Position {
 
 export function SpotifyRadio() {
   const panel = useRef<HTMLElement>(null)
+  const embedHost = useRef<HTMLDivElement>(null)
+  const controller = useRef<SpotifyController | null>(null)
+  const pendingPlay = useRef(false)
   const dragOffset = useRef<Position | null>(null)
   const [position, setPosition] = useState<Position>(defaultPosition)
   const [dragging, setDragging] = useState(false)
+  const [embedReady, setEmbedReady] = useState(false)
+  const [embedFailed, setEmbedFailed] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    let spotifyController: SpotifyController | null = null
+    const requestPlayback = () => {
+      pendingPlay.current = true
+      controller.current?.play()
+    }
+    window.addEventListener(SPOTIFY_PLAY_EVENT, requestPlayback)
+
+    void loadSpotifyApi().then(api => {
+      if (cancelled || !embedHost.current) return
+      api.createController(embedHost.current, { uri: spotifyConfig.uri, width: '100%', height: 152 }, createdController => {
+        if (cancelled) {
+          createdController.destroy()
+          return
+        }
+        spotifyController = createdController
+        controller.current = createdController
+        createdController.addListener('ready', () => {
+          setEmbedReady(true)
+          if (pendingPlay.current) createdController.play()
+        })
+        createdController.addListener('playback_started', () => { pendingPlay.current = false })
+      })
+    }).catch(() => { if (!cancelled) setEmbedFailed(true) })
+
+    return () => {
+      cancelled = true
+      window.removeEventListener(SPOTIFY_PLAY_EVENT, requestPlayback)
+      spotifyController?.destroy()
+      controller.current = null
+    }
+  }, [])
 
   const clamp = (next: Position) => {
     const width = panel.current?.offsetWidth ?? Math.min(370, window.innerWidth - 28)
@@ -74,15 +166,8 @@ export function SpotifyRadio() {
       <div><Radio size={14} /><span>Salon radio · real 80s &amp; 90s</span></div>
       <GripHorizontal size={18} aria-hidden="true" />
     </div>
-    <div className="spotify-embed">
-      <iframe
-        src={spotifyEmbedUrl}
-        title={`${spotifyConfig.title} on Spotify`}
-        width="100%"
-        height="152"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="eager"
-      />
+    <div ref={embedHost} className={`spotify-embed ${embedReady ? 'is-ready' : 'is-loading'}`} aria-label={`${spotifyConfig.title} on Spotify`}>
+      {embedFailed && <iframe src={spotifyEmbedUrl} title={`${spotifyConfig.title} on Spotify`} width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="eager" />}
     </div>
     <a href={spotifyConfig.sourceUrl} target="_blank" rel="noreferrer">Open playlist on Spotify <ExternalLink size={10} /></a>
   </motion.aside>

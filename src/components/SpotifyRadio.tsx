@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion'
 import { ExternalLink, GripHorizontal, Radio } from 'lucide-react'
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
-import { spotifyConfig, spotifyEmbedUrl } from '../data/spotify'
+import { getSpotifyEmbedUrl, type SpotifyPlaylist } from '../data/spotify'
 
 type Position = { x: number; y: number }
 type SpotifyController = {
   addListener: (event: string, listener: () => void) => void
   destroy: () => void
+  loadEntity: (uri: string) => void
   play: () => void
 }
 type SpotifyIframeApi = {
@@ -26,6 +27,7 @@ declare global {
 
 const STORAGE_KEY = 'yaadein-spotify-position'
 export const SPOTIFY_PLAY_EVENT = 'yaadein:play-spotify'
+export const requestSpotifyPlayback = (playlist: SpotifyPlaylist) => window.dispatchEvent(new CustomEvent(SPOTIFY_PLAY_EVENT, { detail: { uri: playlist.uri } }))
 let spotifyApiPromise: Promise<SpotifyIframeApi> | undefined
 
 function loadSpotifyApi() {
@@ -72,11 +74,14 @@ function defaultPosition(): Position {
   return { x: Math.max(14, Math.round(window.innerWidth * .043)), y: Math.max(14, window.innerHeight - 224) }
 }
 
-export function SpotifyRadio() {
+export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
   const panel = useRef<HTMLElement>(null)
   const embedHost = useRef<HTMLDivElement>(null)
   const controller = useRef<SpotifyController | null>(null)
-  const pendingPlay = useRef(false)
+  const currentUri = useRef(playlist.uri)
+  const pendingUri = useRef<string | null>(null)
+  const activePlaylist = useRef(playlist)
+  activePlaylist.current = playlist
   const dragOffset = useRef<Position | null>(null)
   const [position, setPosition] = useState<Position>(defaultPosition)
   const [dragging, setDragging] = useState(false)
@@ -86,15 +91,25 @@ export function SpotifyRadio() {
   useEffect(() => {
     let cancelled = false
     let spotifyController: SpotifyController | null = null
-    const requestPlayback = () => {
-      pendingPlay.current = true
-      controller.current?.play()
+    const requestPlayback = (event: Event) => {
+      const requestedUri = (event as CustomEvent<{ uri?: string }>).detail?.uri ?? activePlaylist.current.uri
+      if (!controller.current) {
+        pendingUri.current = requestedUri
+        return
+      }
+      if (currentUri.current !== requestedUri) {
+        controller.current.loadEntity(requestedUri)
+        currentUri.current = requestedUri
+      }
+      controller.current.play()
     }
     window.addEventListener(SPOTIFY_PLAY_EVENT, requestPlayback)
 
     void loadSpotifyApi().then(api => {
       if (cancelled || !embedHost.current) return
-      api.createController(embedHost.current, { uri: spotifyConfig.uri, width: '100%', height: 152 }, createdController => {
+      const initialPlaylist = activePlaylist.current
+      currentUri.current = initialPlaylist.uri
+      api.createController(embedHost.current, { uri: initialPlaylist.uri, width: '100%', height: 152 }, createdController => {
         if (cancelled) {
           createdController.destroy()
           return
@@ -103,9 +118,15 @@ export function SpotifyRadio() {
         controller.current = createdController
         createdController.addListener('ready', () => {
           setEmbedReady(true)
-          if (pendingPlay.current) createdController.play()
+          if (pendingUri.current) {
+            if (currentUri.current !== pendingUri.current) {
+              createdController.loadEntity(pendingUri.current)
+              currentUri.current = pendingUri.current
+            }
+            createdController.play()
+          }
         })
-        createdController.addListener('playback_started', () => { pendingPlay.current = false })
+        createdController.addListener('playback_started', () => { pendingUri.current = null })
       })
     }).catch(() => { if (!cancelled) setEmbedFailed(true) })
 
@@ -116,6 +137,12 @@ export function SpotifyRadio() {
       controller.current = null
     }
   }, [])
+
+  useEffect(() => {
+    if (!controller.current || currentUri.current === playlist.uri) return
+    controller.current.loadEntity(playlist.uri)
+    currentUri.current = playlist.uri
+  }, [playlist.uri])
 
   const clamp = (next: Position) => {
     const width = panel.current?.offsetWidth ?? Math.min(370, window.innerWidth - 28)
@@ -163,12 +190,12 @@ export function SpotifyRadio() {
 
   return <motion.aside ref={panel} className={`spotify-radio spotify-radio--persistent ${dragging ? 'is-dragging' : ''}`} style={{ left: position.x, top: position.y }} initial={{ opacity: 0, y: 12, scale: .98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: .45 }} aria-label="Persistent Spotify radio">
     <div className="radio-topline radio-drag-handle" role="button" tabIndex={0} aria-label="Drag Spotify player. Use arrow keys to reposition." onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onKeyDown={moveWithKeyboard}>
-      <div><Radio size={14} /><span>Salon radio · real 80s &amp; 90s</span></div>
+      <div><Radio size={14} /><span>{playlist.stationLabel} · real 80s &amp; 90s</span></div>
       <GripHorizontal size={18} aria-hidden="true" />
     </div>
-    <div ref={embedHost} className={`spotify-embed ${embedReady ? 'is-ready' : 'is-loading'}`} aria-label={`${spotifyConfig.title} on Spotify`}>
-      {embedFailed && <iframe src={spotifyEmbedUrl} title={`${spotifyConfig.title} on Spotify`} width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="eager" />}
+    <div ref={embedHost} className={`spotify-embed ${embedReady ? 'is-ready' : 'is-loading'}`} aria-label={`${playlist.title} on Spotify`}>
+      {embedFailed && <iframe src={getSpotifyEmbedUrl(playlist)} title={`${playlist.title} on Spotify`} width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="eager" />}
     </div>
-    <a href={spotifyConfig.sourceUrl} target="_blank" rel="noreferrer">Open playlist on Spotify <ExternalLink size={10} /></a>
+    <a href={playlist.sourceUrl} target="_blank" rel="noreferrer">Open playlist on Spotify <ExternalLink size={10} /></a>
   </motion.aside>
 }

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="shade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#160d08" stop-opacity="0.84"/>
+      <stop offset="0.44" stop-color="#160d08" stop-opacity="0.34"/>
+      <stop offset="0.72" stop-color="#160d08" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#shade)"/>
+  <rect x="72" y="132" width="58" height="4" rx="2" fill="#d5683e"/>
+  <text x="72" y="204" fill="#d9cbbb" font-family="DM Sans, Helvetica, sans-serif" font-size="34" font-weight="600" letter-spacing="7">90s</text>
+  <text x="68" y="310" fill="#f4ead7" font-family="Kohinoor Devanagari, Devanagari Sangam MN, sans-serif" font-size="108" font-weight="600">यादें</text>
+  <text x="72" y="382" fill="#eee0cb" font-family="Kohinoor Devanagari, Devanagari Sangam MN, sans-serif" font-size="28" font-weight="500">कुछ यादें कभी पुरानी नहीं होतीं…</text>
+  <text x="74" y="502" fill="#d9cbbb" opacity="0.78" font-family="DM Sans, Helvetica, sans-serif" font-size="15" font-weight="600" letter-spacing="3">RELIVE IT · FEEL IT · LIVE IT</text>
+</svg>

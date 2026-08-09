@@ -26,6 +26,7 @@ declare global {
 }
 
 const STORAGE_KEY = 'yaadein-spotify-position'
+const NAV_CLEARANCE = 82
 export const SPOTIFY_PLAY_EVENT = 'yaadein:play-spotify'
 export const requestSpotifyPlayback = (playlist: SpotifyPlaylist) => window.dispatchEvent(new CustomEvent(SPOTIFY_PLAY_EVENT, { detail: { uri: playlist.uri } }))
 let spotifyApiPromise: Promise<SpotifyIframeApi> | undefined
@@ -68,10 +69,10 @@ function defaultPosition(): Position {
   if (saved) {
     try {
       const value = JSON.parse(saved) as Position
-      return { x: Math.min(Math.max(14, value.x), window.innerWidth - panelWidth - 14), y: Math.min(Math.max(14, value.y), window.innerHeight - 218) }
+      return { x: Math.min(Math.max(14, value.x), window.innerWidth - panelWidth - 14), y: Math.min(Math.max(14, value.y), Math.max(14, window.innerHeight - 218 - NAV_CLEARANCE)) }
     } catch { /* use the default position */ }
   }
-  return { x: Math.max(14, Math.round(window.innerWidth * .043)), y: Math.max(14, window.innerHeight - 224) }
+  return { x: Math.max(14, Math.round(window.innerWidth * .043)), y: window.innerWidth <= 760 ? 144 : Math.max(14, window.innerHeight - 224 - NAV_CLEARANCE) }
 }
 
 export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
@@ -149,7 +150,7 @@ export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
     const height = panel.current?.offsetHeight ?? 210
     return {
       x: Math.min(Math.max(8, next.x), Math.max(8, window.innerWidth - width - 8)),
-      y: Math.min(Math.max(8, next.y), Math.max(8, window.innerHeight - height - 8)),
+      y: Math.min(Math.max(8, next.y), Math.max(8, window.innerHeight - height - NAV_CLEARANCE)),
     }
   }
 

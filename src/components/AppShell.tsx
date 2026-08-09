@@ -9,6 +9,7 @@ import { MemoryScene } from '../scenes/MemoryScene'
 import { SceneNavigation } from './SceneNavigation'
 import { MoreMemories } from './MoreMemories'
 import { IntroLoader } from './IntroLoader'
+import { MemoryNavigator } from './MemoryNavigator'
 import { requestSpotifyPlayback, SpotifyRadio } from './SpotifyRadio'
 
 export function AppShell() {
@@ -52,6 +53,7 @@ export function AppShell() {
       <button className="scene-control ambient-toggle" onClick={() => ambient.setAmbienceEnabled(!ambient.ambienceEnabled)} aria-label={ambient.ambienceEnabled ? 'Mute ambience' : 'Play ambience'}>{ambient.ambienceEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}<span>Ambience {ambient.ambienceEnabled ? 'on' : 'off'}</span></button>
       {document.fullscreenEnabled && <button className="scene-control fullscreen-toggle" onClick={() => void toggleFullscreen()} aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} aria-pressed={fullscreen}>{fullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}<span>{fullscreen ? 'Exit fullscreen' : 'Fullscreen'}</span></button>}
     </div>
+    <MemoryNavigator current={scene.id} onMore={() => setMoreOpen(true)} onSceneSelect={sceneId => requestSpotifyPlayback(spotifyPlaylists[sceneId])} />
     <SpotifyRadio playlist={playlist} />
     <div className="scene-count"><span>0{scenes.findIndex(s => s.id === scene.id) + 1}</span><i /><span>0{scenes.length}</span></div>
     <MoreMemories open={moreOpen} onClose={() => setMoreOpen(false)} onSceneSelect={sceneId => requestSpotifyPlayback(spotifyPlaylists[sceneId])} />

@@ -1,56 +1,11 @@
 import { motion } from 'framer-motion'
-import { ExternalLink, GripHorizontal, Play, Radio } from 'lucide-react'
+import { ExternalLink, GripHorizontal, Radio } from 'lucide-react'
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
-import { spotifyConfig } from '../data/spotify'
+import { spotifyConfig, spotifyEmbedUrl } from '../data/spotify'
 
 type Position = { x: number; y: number }
-type SpotifyController = {
-  addListener: (event: string, listener: (event?: { data?: { isPaused?: boolean } }) => void) => void
-  destroy: () => void
-  play: () => void
-}
-type SpotifyIframeApi = {
-  createController: (
-    element: HTMLElement,
-    options: { uri: string; width: string; height: number },
-    callback: (controller: SpotifyController) => void,
-  ) => void
-}
-
-declare global {
-  interface Window {
-    onSpotifyIframeApiReady?: (api: SpotifyIframeApi) => void
-    __yaadeinSpotifyApi?: SpotifyIframeApi
-  }
-}
 
 const STORAGE_KEY = 'yaadein-spotify-position'
-export const SPOTIFY_PLAY_EVENT = 'yaadein:play-spotify'
-let spotifyApiPromise: Promise<SpotifyIframeApi> | undefined
-
-function loadSpotifyApi() {
-  if (window.__yaadeinSpotifyApi) return Promise.resolve(window.__yaadeinSpotifyApi)
-  if (spotifyApiPromise) return spotifyApiPromise
-
-  spotifyApiPromise = new Promise(resolve => {
-    const previousCallback = window.onSpotifyIframeApiReady
-    window.onSpotifyIframeApiReady = api => {
-      window.__yaadeinSpotifyApi = api
-      previousCallback?.(api)
-      resolve(api)
-    }
-
-    if (!document.querySelector('script[data-yaadein-spotify-api]')) {
-      const script = document.createElement('script')
-      script.src = 'https://open.spotify.com/embed/iframe-api/v1'
-      script.async = true
-      script.dataset.yaadeinSpotifyApi = 'true'
-      document.body.appendChild(script)
-    }
-  })
-
-  return spotifyApiPromise
-}
 
 function defaultPosition(): Position {
   const panelWidth = Math.min(370, window.innerWidth - 28)
@@ -66,51 +21,9 @@ function defaultPosition(): Position {
 
 export function SpotifyRadio() {
   const panel = useRef<HTMLElement>(null)
-  const embedHost = useRef<HTMLDivElement>(null)
-  const controller = useRef<SpotifyController | null>(null)
-  const pendingPlay = useRef(false)
   const dragOffset = useRef<Position | null>(null)
   const [position, setPosition] = useState<Position>(defaultPosition)
   const [dragging, setDragging] = useState(false)
-  const [needsTap, setNeedsTap] = useState(true)
-
-  const requestPlayback = () => {
-    pendingPlay.current = true
-    controller.current?.play()
-  }
-
-  useEffect(() => {
-    let cancelled = false
-    let spotifyController: SpotifyController | null = null
-    const onPlayRequest = () => requestPlayback()
-    window.addEventListener(SPOTIFY_PLAY_EVENT, onPlayRequest)
-
-    void loadSpotifyApi().then(api => {
-      if (cancelled || !embedHost.current) return
-      api.createController(embedHost.current, { uri: spotifyConfig.sourceUrl, width: '100%', height: 152 }, createdController => {
-        if (cancelled) {
-          createdController.destroy()
-          return
-        }
-        spotifyController = createdController
-        controller.current = createdController
-        createdController.addListener('ready', () => {
-          if (pendingPlay.current || sessionStorage.getItem('yaadein-entered') === 'yes') requestPlayback()
-        })
-        createdController.addListener('playback_started', () => {
-          pendingPlay.current = false
-          setNeedsTap(false)
-        })
-      })
-    })
-
-    return () => {
-      cancelled = true
-      window.removeEventListener(SPOTIFY_PLAY_EVENT, onPlayRequest)
-      spotifyController?.destroy()
-      controller.current = null
-    }
-  }, [])
 
   const clamp = (next: Position) => {
     const width = panel.current?.offsetWidth ?? Math.min(370, window.innerWidth - 28)
@@ -159,11 +72,18 @@ export function SpotifyRadio() {
   return <motion.aside ref={panel} className={`spotify-radio spotify-radio--persistent ${dragging ? 'is-dragging' : ''}`} style={{ left: position.x, top: position.y }} initial={{ opacity: 0, y: 12, scale: .98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: .45 }} aria-label="Persistent Spotify radio">
     <div className="radio-topline radio-drag-handle" role="button" tabIndex={0} aria-label="Drag Spotify player. Use arrow keys to reposition." onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onKeyDown={moveWithKeyboard}>
       <div><Radio size={14} /><span>Salon radio · real 80s &amp; 90s</span></div>
-      {needsTap
-        ? <button className="spotify-play-nudge" type="button" onPointerDown={event => event.stopPropagation()} onClick={requestPlayback}><Play size={10} fill="currentColor" /> Play music</button>
-        : <GripHorizontal size={18} aria-hidden="true" />}
+      <GripHorizontal size={18} aria-hidden="true" />
     </div>
-    <div ref={embedHost} className="spotify-embed" aria-label={`${spotifyConfig.title} on Spotify`} />
+    <div className="spotify-embed">
+      <iframe
+        src={spotifyEmbedUrl}
+        title={`${spotifyConfig.title} on Spotify`}
+        width="100%"
+        height="152"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="eager"
+      />
+    </div>
     <a href={spotifyConfig.sourceUrl} target="_blank" rel="noreferrer">Open playlist on Spotify <ExternalLink size={10} /></a>
   </motion.aside>
 }

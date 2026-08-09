@@ -8,7 +8,7 @@ import { MemoryScene } from '../scenes/MemoryScene'
 import { SceneNavigation } from './SceneNavigation'
 import { MoreMemories } from './MoreMemories'
 import { IntroLoader } from './IntroLoader'
-import { SpotifyRadio, SPOTIFY_PLAY_EVENT } from './SpotifyRadio'
+import { SpotifyRadio } from './SpotifyRadio'
 
 export function AppShell() {
   const location = useLocation(), scene = getScene(location.pathname)
@@ -23,7 +23,6 @@ export function AppShell() {
   }, [scene.id])
   const enter = async () => {
     sessionStorage.setItem('yaadein-entered', 'yes')
-    window.dispatchEvent(new Event(SPOTIFY_PLAY_EVENT))
     setEntered(true)
     await ambient.startAmbient()
   }

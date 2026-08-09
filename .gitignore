@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.DS_Store
+public/.DS_Store
+public/audio/.DS_Store
+public/scenes/.DS_Store
+.env
+.env.*
+!.env.example

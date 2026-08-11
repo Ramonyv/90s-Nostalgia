@@ -1,5 +1,5 @@
-export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village'
-export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village'
+export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw'
+export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village' | 'auto-rickshaw'
 export type Hotspot = { x: number; y: number; label: string; align?: 'left' | 'right'; action?: 'spotify' }
 
 export type Scene = {
@@ -15,6 +15,7 @@ export type Scene = {
   mobileBackground: string
   backgroundVideo?: string
   mobileVideo?: string
+  videoMuted?: boolean
   fallbackImage: string
   ambientAudio: AmbientKind
   accentColor: string
@@ -124,6 +125,16 @@ export const scenes: Scene[] = [
       { x: 65, y: 61, label: 'Afternoon plans: कुछ नहीं.' },
       { x: 38, y: 81, label: 'Fridge से बेहतर पानी.' },
       { x: 83, y: 79, label: 'Summer का असली subscription.', align: 'right' },
+    ],
+  },
+  {
+    id: 'auto-rickshaw', slug: '/auto-rickshaw', navLabel: 'Auto Ride', title: 'Auto Ride', hindiTitle: 'ऑटो की सवारी', year: '1997',
+    description: 'Warm wind, familiar roads, and an old song somewhere in the traffic.', shortLine: 'हवा चेहरे पर थी, गाने दिल में।', desktopBackground: '/scenes/auto-rickshaw/auto.webp', mobileBackground: '/scenes/auto-rickshaw/auto-mobile.webp', backgroundVideo: '/scenes/auto-rickshaw/Auto%20Rickshaw%20Loop.mp4', videoMuted: true, fallbackImage: '/scenes/auto-rickshaw/auto.webp', ambientAudio: 'auto-rickshaw', accentColor: '#d89b3d', animation: { dust: false, dustCount: 0 }, availability: 'active', primaryNav: false, mobilePosition: '58% center',
+    hotspots: [
+      { x: 41, y: 61, label: 'मीटर चलता था. अंदाज़ा फिर भी अलग होता था.' },
+      { x: 25, y: 49, label: 'AC नहीं था. हवा free थी.' },
+      { x: 54, y: 29, label: 'Driver bhaiya को पूरा शहर पता था.' },
+      { x: 76, y: 82, label: 'तीन की जगह चार भी बैठ जाते थे.', align: 'right' },
     ],
   },
 ]

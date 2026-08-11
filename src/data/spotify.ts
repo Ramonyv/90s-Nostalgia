@@ -47,6 +47,14 @@ export const spotifyPlaylists: Record<SceneId, SpotifyPlaylist> = {
   'cassette-shop': memoryPlaylist('Cassette shop radio'),
   'bus-stand': memoryPlaylist('Bus stand radio'),
   village: memoryPlaylist('Village radio'),
+  'auto-rickshaw': {
+    ...memoryPlaylist('City Ride Mix'),
+    playlistId: '0YFA8rR63BkCFr3H1g3LGh',
+    title: 'City Ride Mix',
+    sourceUrl: 'https://open.spotify.com/playlist/0YFA8rR63BkCFr3H1g3LGh?si=s-PnLaC_QvunyUfgREklnQ',
+    uri: 'spotify:playlist:0YFA8rR63BkCFr3H1g3LGh',
+    hindiName: 'सवारी वाली धुनें',
+  },
 }
 
 export const getSpotifyEmbedUrl = (playlist: SpotifyPlaylist) => `https://open.spotify.com/embed/playlist/${playlist.playlistId}?utm_source=generator&theme=0`

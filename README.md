@@ -20,3 +20,4 @@ The global radio uses official Spotify playlist embeds. Playlist-to-scene mappin
 Background videos retain their original sound at a 20% ambient mix after the visitor enters the experience. The Ambience control mutes both the generated ambience and video sound; reduced-motion mode uses the static scene artwork instead.
 
 <!-- Trigger Cloudflare deployment -->
+<!-- Trigger Cloudflare build -->

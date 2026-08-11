@@ -18,3 +18,5 @@ Active routes: `/salon`, `/truck`, `/railway`, `/school`, `/cricket`, `/tv`, `/r
 The global radio uses official Spotify playlist embeds. Playlist-to-scene mappings live in `src/data/spotify.ts`; Highway and Monsoon Memories have their own collections and the remaining scenes use the shared memory playlist. The player stays mounted in `AppShell`, so it survives scene navigation. Playback availability depends on Spotify, the listener's region, and account state.
 
 Background videos retain their original sound at a 20% ambient mix after the visitor enters the experience. The Ambience control mutes both the generated ambience and video sound; reduced-motion mode uses the static scene artwork instead.
+
+<!-- Trigger Cloudflare deployment -->

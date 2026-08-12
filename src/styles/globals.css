@@ -88,6 +88,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 .creator-radio__speaker::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,210,138,.07),transparent); }
 .creator-radio__support { position:relative; isolation:isolate; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; margin:0 0 9px; padding:7px 8px 6px; border:1px solid rgba(225,181,111,.3); border-radius:5px; color:#f3d8ae; background:rgba(214,154,50,.06); font-size:7px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; transition:color .25s,border-color .25s,background .25s,transform .25s; animation:support-button-breathe 2.8s ease-in-out infinite; }
 .creator-radio__support::before { content:""; position:absolute; z-index:-1; inset:-2px; padding:2px; border-radius:7px; background:conic-gradient(from 0deg,transparent 0 42%,rgba(255,216,153,.12) 47%,#ffd486 52%,rgba(255,216,153,.16) 58%,transparent 63% 100%); pointer-events:none; -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; animation:support-stroke-shine 3.4s linear infinite; }
+.creator-radio__support::after { content:""; position:absolute; inset:0; border-radius:inherit; background:linear-gradient(110deg,transparent 32%,rgba(255,240,205,.08) 43%,rgba(255,222,162,.38) 50%,rgba(255,240,205,.08) 57%,transparent 68%); background-size:260% 100%; background-position:150% 0; pointer-events:none; animation:support-button-shimmer 3.4s ease-in-out infinite; }
 .creator-radio__support:hover { color:#fff0d5; border-color:rgba(226,169,84,.62); background:rgba(214,154,50,.14); transform:translateY(-1px); }
 .creator-radio__support svg { color:var(--rust); }
 .creator-radio__footer { position:relative; display:flex; align-items:center; justify-content:space-between; }
@@ -209,6 +210,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 @keyframes on-air { 50% { opacity:.42; box-shadow:0 0 3px #ff7b4c } }
 @keyframes support-stroke-shine { to { transform:rotate(360deg) } }
 @keyframes support-button-breathe { 50% { box-shadow:0 0 12px rgba(224,173,98,.24),inset 0 0 8px rgba(214,154,50,.07) } }
+@keyframes support-button-shimmer { 0%,18% { background-position:150% 0 } 58%,100% { background-position:-150% 0 } }
 @keyframes support-heart { 50% { transform:scale(1.13) } }
 @keyframes auto-ride-arrive { to { opacity:1 } }
 @keyframes auto-ride-vibration { 0%,100% { transform:scale(1.009) translate(0,0) } 50% { transform:scale(1.009) translate(1px,-1px) } }

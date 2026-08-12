@@ -12,6 +12,7 @@ import { IntroLoader } from './IntroLoader'
 import { MemoryNavigator } from './MemoryNavigator'
 import { requestSpotifyPlayback, SpotifyRadio } from './SpotifyRadio'
 import { CreatorRadio } from './CreatorRadio'
+import { NetlifyCredit } from './NetlifyCredit'
 
 export function AppShell() {
   const location = useLocation(), scene = getScene(location.pathname)
@@ -71,6 +72,7 @@ export function AppShell() {
       {document.fullscreenEnabled && <button className="scene-control fullscreen-toggle" onClick={() => void toggleFullscreen()} aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} aria-pressed={fullscreen}>{fullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}<span>{fullscreen ? 'Exit fullscreen' : 'Fullscreen'}</span></button>}
     </div>
     <CreatorRadio />
+    <NetlifyCredit />
     <MemoryNavigator current={scene.id} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} />
     <SpotifyRadio playlist={playlist} />
     <div className="scene-count"><span>0{scenes.findIndex(s => s.id === scene.id) + 1}</span><i /><span>0{scenes.length}</span></div>

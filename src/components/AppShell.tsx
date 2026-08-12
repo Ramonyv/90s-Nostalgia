@@ -13,6 +13,7 @@ import { MemoryNavigator } from './MemoryNavigator'
 import { requestSpotifyPlayback, SpotifyRadio } from './SpotifyRadio'
 import { CreatorRadio } from './CreatorRadio'
 import { NetlifyCredit } from './NetlifyCredit'
+import { Gear6Promo } from './Gear6Promo'
 
 export function AppShell() {
   const location = useLocation(), scene = getScene(location.pathname)
@@ -71,6 +72,7 @@ export function AppShell() {
       <button className="scene-control ambient-toggle" onClick={() => { if (!ambient.ambienceEnabled) setMediaAudioUnlocked(true); ambient.setAmbienceEnabled(!ambient.ambienceEnabled) }} aria-label={ambient.ambienceEnabled ? 'Mute ambience' : 'Play ambience'}>{ambient.ambienceEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}<span>Ambience {ambient.ambienceEnabled ? 'on' : 'off'}</span></button>
       {document.fullscreenEnabled && <button className="scene-control fullscreen-toggle" onClick={() => void toggleFullscreen()} aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} aria-pressed={fullscreen}>{fullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}<span>{fullscreen ? 'Exit fullscreen' : 'Fullscreen'}</span></button>}
     </div>
+    <Gear6Promo />
     <CreatorRadio />
     <NetlifyCredit />
     <MemoryNavigator current={scene.id} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} />

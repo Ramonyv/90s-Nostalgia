@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Scene } from '../data/scenes'
 import { SceneHotspot } from '../components/SceneHotspot'
 
-export function MemoryScene({ scene, videoSoundEnabled }: { scene: Scene; videoSoundEnabled: boolean }) {
+export function MemoryScene({ scene, animated, videoSoundEnabled }: { scene: Scene; animated: boolean; videoSoundEnabled: boolean }) {
   const [videoFailed, setVideoFailed] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
@@ -13,7 +13,7 @@ export function MemoryScene({ scene, videoSoundEnabled }: { scene: Scene; videoS
     query.addEventListener('change', sync)
     return () => query.removeEventListener('change', sync)
   }, [])
-  const showVideo = Boolean(scene.backgroundVideo && !videoFailed && !reducedMotion)
+  const showVideo = Boolean(animated && scene.backgroundVideo && !videoFailed && !reducedMotion)
   useEffect(() => {
     const video = videoRef.current
     if (!video) return

@@ -55,6 +55,14 @@ export const spotifyPlaylists: Record<SceneId, SpotifyPlaylist> = {
     uri: 'spotify:playlist:0YFA8rR63BkCFr3H1g3LGh',
     hindiName: 'सवारी वाली धुनें',
   },
+  'adhoori-shaam': {
+    ...memoryPlaylist('Dard Bhari Raat · Side A · 1997'),
+    playlistId: '57NwRU3l6nTtuLk4b8l1qk',
+    title: 'Dard Bhari Raat',
+    sourceUrl: 'https://open.spotify.com/playlist/57NwRU3l6nTtuLk4b8l1qk?si=bYGr6mOMTZue0RvnDsR0uQ',
+    uri: 'spotify:playlist:57NwRU3l6nTtuLk4b8l1qk',
+    hindiName: 'अधूरी धुनें',
+  },
 }
 
 export const getSpotifyEmbedUrl = (playlist: SpotifyPlaylist) => `https://open.spotify.com/embed/playlist/${playlist.playlistId}?utm_source=generator&theme=0`

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ExternalLink, GripHorizontal, Radio } from 'lucide-react'
+import { ExternalLink, GripHorizontal, Maximize2, Minimize2, Radio } from 'lucide-react'
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
 import { getSpotifyEmbedUrl, type SpotifyPlaylist } from '../data/spotify'
 
@@ -26,6 +26,7 @@ declare global {
 }
 
 const STORAGE_KEY = 'yaadein-spotify-position'
+const COLLAPSED_KEY = 'yaadein-spotify-collapsed'
 const NAV_CLEARANCE = 82
 export const SPOTIFY_PLAY_EVENT = 'yaadein:play-spotify'
 export const requestSpotifyPlayback = (playlist: SpotifyPlaylist) => window.dispatchEvent(new CustomEvent(SPOTIFY_PLAY_EVENT, { detail: { uri: playlist.uri } }))
@@ -81,10 +82,12 @@ export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
   const controller = useRef<SpotifyController | null>(null)
   const currentUri = useRef(playlist.uri)
   const pendingUri = useRef<string | null>(null)
+  const playbackStarted = useRef(false)
   const activePlaylist = useRef(playlist)
   activePlaylist.current = playlist
   const dragOffset = useRef<Position | null>(null)
   const [position, setPosition] = useState<Position>(defaultPosition)
+  const [collapsed, setCollapsed] = useState(() => localStorage.getItem(COLLAPSED_KEY) === 'yes')
   const [dragging, setDragging] = useState(false)
   const [embedReady, setEmbedReady] = useState(false)
   const [embedFailed, setEmbedFailed] = useState(false)
@@ -124,10 +127,13 @@ export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
               createdController.loadEntity(pendingUri.current)
               currentUri.current = pendingUri.current
             }
-            createdController.play()
           }
+          createdController.play()
         })
-        createdController.addListener('playback_started', () => { pendingUri.current = null })
+        createdController.addListener('playback_started', () => {
+          pendingUri.current = null
+          playbackStarted.current = true
+        })
       })
     }).catch(() => { if (!cancelled) setEmbedFailed(true) })
 
@@ -140,10 +146,29 @@ export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
   }, [])
 
   useEffect(() => {
-    if (!controller.current || playlist.preservePlayback || currentUri.current === playlist.uri) return
-    controller.current.loadEntity(playlist.uri)
-    currentUri.current = playlist.uri
-  }, [playlist.preservePlayback, playlist.uri])
+    const retryPlayback = () => {
+      if (!playbackStarted.current) controller.current?.play()
+    }
+    window.addEventListener('pointerdown', retryPlayback)
+    window.addEventListener('keydown', retryPlayback)
+    return () => {
+      window.removeEventListener('pointerdown', retryPlayback)
+      window.removeEventListener('keydown', retryPlayback)
+    }
+  }, [])
+
+  useEffect(() => {
+    playbackStarted.current = false
+    if (!controller.current) {
+      pendingUri.current = playlist.uri
+      return
+    }
+    if (currentUri.current !== playlist.uri) {
+      controller.current.loadEntity(playlist.uri)
+      currentUri.current = playlist.uri
+    }
+    controller.current.play()
+  }, [playlist.uri])
 
   const clamp = (next: Position) => {
     const width = panel.current?.offsetWidth ?? Math.min(370, window.innerWidth - 28)
@@ -189,14 +214,22 @@ export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
     save({ x: position.x + movement[event.key].x, y: position.y + movement[event.key].y })
   }
 
-  return <motion.aside ref={panel} className={`spotify-radio spotify-radio--persistent ${dragging ? 'is-dragging' : ''}`} style={{ left: position.x, top: position.y }} initial={{ opacity: 0, y: 12, scale: .98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: .45 }} aria-label="Persistent Spotify radio">
-    <div className="radio-topline radio-drag-handle" role="button" tabIndex={0} aria-label="Drag Spotify player. Use arrow keys to reposition." onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onKeyDown={moveWithKeyboard}>
-      <div><Radio size={14} /><span>{playlist.stationLabel} · real 80s &amp; 90s</span></div>
-      <GripHorizontal size={18} aria-hidden="true" />
+  const toggleCollapsed = () => {
+    const next = !collapsed
+    setCollapsed(next)
+    localStorage.setItem(COLLAPSED_KEY, next ? 'yes' : 'no')
+  }
+
+  return <motion.aside layout ref={panel} className={`spotify-radio spotify-radio--persistent${collapsed ? ' is-collapsed' : ''}${dragging ? ' is-dragging' : ''}`} style={{ left: position.x, top: position.y, transformOrigin: 'top left' }} initial={{ opacity: 0, y: 12, scale: .94 }} animate={{ opacity: 1, y: 0, scale: collapsed ? .9 : 1 }} transition={{ duration: .38, ease: [0.22, 1, 0.36, 1] }} aria-label="Persistent Spotify radio">
+    <div className="radio-topline">
+      <div className="radio-drag-handle" role="button" tabIndex={0} aria-label="Drag Spotify player. Use arrow keys to reposition." onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onKeyDown={moveWithKeyboard}><Radio size={14} /><span>{playlist.stationLabel} · real 80s &amp; 90s</span><GripHorizontal size={18} aria-hidden="true" /></div>
+      <button className="spotify-scale-toggle" type="button" onClick={toggleCollapsed} aria-label={collapsed ? 'Expand Spotify player' : 'Minimize Spotify player'} aria-expanded={!collapsed}>{collapsed ? <Maximize2 size={14} /> : <Minimize2 size={14} />}</button>
     </div>
-    <div ref={embedHost} className={`spotify-embed ${embedReady ? 'is-ready' : 'is-loading'}`} aria-label={`${playlist.title} on Spotify`}>
-      {embedFailed && <iframe src={getSpotifyEmbedUrl(playlist)} title={`${playlist.title} on Spotify`} width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="eager" />}
+    <div className="spotify-radio__body" aria-hidden={collapsed}>
+      <div ref={embedHost} className={`spotify-embed ${embedReady ? 'is-ready' : 'is-loading'}`} aria-label={`${playlist.title} on Spotify`}>
+        {embedFailed && <iframe src={getSpotifyEmbedUrl(playlist)} title={`${playlist.title} on Spotify`} width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="eager" />}
+      </div>
+      <a href={playlist.sourceUrl} target="_blank" rel="noreferrer" tabIndex={collapsed ? -1 : undefined}>Open playlist on Spotify <ExternalLink size={10} /></a>
     </div>
-    <a href={playlist.sourceUrl} target="_blank" rel="noreferrer">Open playlist on Spotify <ExternalLink size={10} /></a>
   </motion.aside>
 }

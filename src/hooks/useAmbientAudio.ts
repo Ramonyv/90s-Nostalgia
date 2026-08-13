@@ -14,6 +14,7 @@ const ambiencePresets: Record<AmbientKind, { filter: number; noise: number; gain
   'bus-stand': { filter: 380, noise: .18, gain: .13 },
   village: { filter: 540, noise: .11, gain: .1 },
   'auto-rickshaw': { filter: 360, noise: .2, gain: .16, rhythm: 8 },
+  'permit-room': { filter: 1180, noise: .2, gain: .14, rhythm: .72 },
 }
 
 export function useAmbientAudio(scene: Scene, entered: boolean) {

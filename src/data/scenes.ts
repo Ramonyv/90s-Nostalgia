@@ -1,5 +1,5 @@
-export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw'
-export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village' | 'auto-rickshaw'
+export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'adhoori-shaam'
+export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'permit-room'
 export type Hotspot = { x: number; y: number; label: string; align?: 'left' | 'right'; action?: 'spotify' }
 
 export type Scene = {
@@ -135,6 +135,17 @@ export const scenes: Scene[] = [
       { x: 25, y: 49, label: 'AC नहीं था. हवा free थी.' },
       { x: 54, y: 29, label: 'Driver bhaiya को पूरा शहर पता था.' },
       { x: 76, y: 82, label: 'तीन की जगह चार भी बैठ जाते थे.', align: 'right' },
+    ],
+  },
+  {
+    id: 'adhoori-shaam', slug: '/adhoori-shaam', navLabel: 'Evening', title: 'An Unfinished Evening', hindiTitle: 'एक अधूरी शाम', year: '1997',
+    description: 'A rainy permit-room, an old photograph, and a memory that never quite left.', shortLine: 'कुछ लोग चले जाते हैं, कुछ शामों में रह जाते हैं।', desktopBackground: '/scenes/adhoori-shaam/adhoori-shaam.webp', mobileBackground: '/scenes/adhoori-shaam/adhoori-shaam-mobile.webp', fallbackImage: '/scenes/adhoori-shaam/adhoori-shaam.webp', ambientAudio: 'permit-room', accentColor: '#b57a38', animation: { dust: false, dustCount: 0 }, availability: 'active', primaryNav: false, mobilePosition: 'center',
+    hotspots: [
+      { x: 49, y: 54, label: 'कुछ तस्वीरें album में नहीं… wallet में रहती थीं।' },
+      { x: 51, y: 72, label: 'कुछ शामें धीरे-धीरे खत्म होती थीं।' },
+      { x: 79, y: 30, label: 'कुछ लोग चले जाते हैं, कुछ शामों में रह जाते हैं।', align: 'right' },
+      { x: 43, y: 42, label: 'कुछ गाने वक्त नहीं बताते… बस याद दिलाते हैं।' },
+      { x: 17, y: 45, label: 'बारिश बाहर थी. यादें अंदर।' },
     ],
   },
 ]

@@ -26,7 +26,7 @@ export function AppShell() {
   const playlist = spotifyPlaylists[scene.id]
   const selectScene = (sceneId: typeof scene.id) => {
     const nextPlaylist = spotifyPlaylists[sceneId]
-    if (!nextPlaylist.preservePlayback) requestSpotifyPlayback(nextPlaylist)
+    requestSpotifyPlayback(nextPlaylist)
   }
   useEffect(() => {
     const syncFullscreen = () => setFullscreen(Boolean(document.fullscreenElement))
@@ -51,7 +51,7 @@ export function AppShell() {
   }, [scene.id])
   const enter = async () => {
     sessionStorage.setItem('yaadein-entered', 'yes')
-    if (!playlist.preservePlayback) requestSpotifyPlayback(playlist)
+    requestSpotifyPlayback(playlist)
     setMediaAudioUnlocked(true)
     setEntered(true)
     await ambient.startAmbient()

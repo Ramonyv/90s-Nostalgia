@@ -18,6 +18,16 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 .auto-ride-motion i { position:absolute; width:9vw; height:150%; top:-25%; background:linear-gradient(90deg,transparent,rgba(255,190,100,.08),transparent); filter:blur(9px); transform:rotate(10deg); animation:auto-light-pass 7.5s linear infinite; }
 .auto-ride-motion i:nth-child(2) { animation-delay:-2.8s; opacity:.65; }
 .auto-ride-motion i:nth-child(3) { animation-delay:-5.4s; opacity:.4; }
+.memory-scene--adhoori-shaam .scene-shade { background:linear-gradient(90deg,rgba(18,13,9,.7) 0%,rgba(24,16,10,.28) 29%,transparent 56%),linear-gradient(0deg,rgba(14,10,7,.46),transparent 34%,rgba(12,8,5,.12)); }
+.adhoori-shayari { position:absolute; z-index:4; left:73%; top:26%; margin:0; transform:rotate(-1.2deg); color:rgba(91,56,30,.67); font-family:'Noto Sans Devanagari',sans-serif; font-size:clamp(12px,1.05vw,17px); line-height:1.75; font-weight:600; letter-spacing:-.02em; text-shadow:0 1px rgba(233,188,112,.13); pointer-events:none; }
+.adhoori-ambience { position:absolute; z-index:3; inset:0; overflow:hidden; pointer-events:none; }
+.adhoori-fan { position:absolute; left:30.4%; top:5.6%; width:91px; height:91px; opacity:.14; animation:adhoori-fan 8s linear infinite; }
+.adhoori-fan i { position:absolute; left:44px; top:5px; width:4px; height:81px; border-radius:90% 12% 90% 12%; background:rgba(20,13,8,.72); transform-origin:center; }
+.adhoori-fan i:nth-child(2) { transform:rotate(120deg); }
+.adhoori-fan i:nth-child(3) { transform:rotate(240deg); }
+.adhoori-rain { position:absolute; left:0; top:20%; width:27%; height:52%; opacity:.13; background:repeating-linear-gradient(105deg,transparent 0 9px,rgba(215,226,219,.65) 10px 11px,transparent 12px 19px); background-size:100% 38px; animation:adhoori-rain .85s linear infinite; mask-image:linear-gradient(90deg,#000 15%,#000 78%,transparent); }
+.adhoori-light { position:absolute; left:48.2%; top:11.7%; width:7vw; height:7vw; border-radius:50%; background:rgba(255,185,92,.13); filter:blur(20px); animation:adhoori-light 6s ease-in-out infinite; }
+.adhoori-photo { position:absolute; left:47.3%; top:51.8%; width:2.5%; height:6%; background:linear-gradient(125deg,transparent 48%,rgba(255,229,183,.13),transparent 58%); animation:adhoori-photo 7s ease-in-out infinite; }
 .topbar { position:fixed; z-index:20; inset:0 0 auto; height:108px; display:flex; align-items:center; justify-content:space-between; padding:0 4.3vw; }
 .brand { color:var(--cream); text-decoration:none; display:flex; align-items:flex-start; gap:14px; text-shadow:0 2px 18px rgba(0,0,0,.35); }
 .brand strong { font-family:'Noto Sans Devanagari',sans-serif; font-size:21px; line-height:1; font-weight:600; }
@@ -174,13 +184,20 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 .memory-navigator__reel i.is-current { width:16px; background:var(--mustard); box-shadow:0 0 8px rgba(214,154,50,.48); }
 .scene-count { position:fixed; z-index:20; right:4.3vw; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; font-size:8px; letter-spacing:.1em; }
 .scene-count i { width:1px; height:44px; background:rgba(255,255,255,.48); }
-.spotify-radio { position:fixed; z-index:30; width:min(370px,calc(100vw - 28px)); padding:10px; border:1px solid rgba(244,234,215,.24); border-radius:16px; color:var(--cream); background:rgba(36,23,15,.93); box-shadow:0 20px 55px rgba(18,10,5,.36); backdrop-filter:blur(18px); }
+.spotify-radio { position:fixed; z-index:30; width:min(370px,calc(100vw - 28px)); padding:10px; border:1px solid rgba(244,234,215,.24); border-radius:16px; color:var(--cream); background:rgba(36,23,15,.93); box-shadow:0 20px 55px rgba(18,10,5,.36); backdrop-filter:blur(18px); transition:width .38s cubic-bezier(.22,1,.36,1),padding .38s cubic-bezier(.22,1,.36,1),border-radius .38s; }
+.spotify-radio.is-collapsed { width:min(270px,calc(100vw - 28px)); padding:8px 9px; border-radius:14px; }
 .spotify-embed { height:152px; border-radius:10px; background:#181818; overflow:hidden; }
 .spotify-embed.is-loading::after { content:"Loading playlist…"; height:100%; display:grid; place-items:center; color:rgba(244,234,215,.5); font-size:9px; letter-spacing:.08em; }
 .spotify-embed.is-loading:has(iframe)::after { display:none; }
 .spotify-embed iframe { display:block; border:0; border-radius:10px; }
-.radio-topline { height:30px; display:flex; align-items:flex-start; justify-content:space-between; }
-.radio-topline>div { display:flex; align-items:center; gap:7px; font-size:9px; letter-spacing:.08em; text-transform:uppercase; opacity:.78; }
+.radio-topline { height:30px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.radio-topline>div { min-width:0; display:flex; align-items:center; gap:7px; font-size:9px; letter-spacing:.08em; text-transform:uppercase; opacity:.78; }
+.radio-topline>div span { overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.radio-topline>div svg:last-child { flex:0 0 auto; }
+.spotify-scale-toggle { width:25px; height:25px; flex:0 0 auto; display:grid; place-items:center; padding:0; border:1px solid rgba(244,234,215,.18); border-radius:50%; color:var(--cream); background:rgba(244,234,215,.06); cursor:pointer; transition:background .25s,border-color .25s,transform .25s; }
+.spotify-scale-toggle:hover { background:rgba(244,234,215,.14); border-color:rgba(244,234,215,.36); transform:scale(1.06); }
+.spotify-radio__body { max-height:185px; overflow:hidden; opacity:1; transform:scale(1); transform-origin:top left; transition:max-height .38s cubic-bezier(.22,1,.36,1),opacity .2s ease,transform .38s cubic-bezier(.22,1,.36,1); }
+.spotify-radio.is-collapsed .spotify-radio__body { max-height:0; opacity:0; transform:scale(.92); pointer-events:none; }
 .spotify-play-nudge { display:flex; align-items:center; gap:4px; margin-top:-3px; padding:5px 7px; border:1px solid rgba(244,234,215,.25); border-radius:12px; color:var(--cream); background:rgba(244,234,215,.08); font:inherit; font-size:7px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; }
 .spotify-play-nudge:hover { background:rgba(244,234,215,.16); }
 .spotify-play-nudge:focus-visible { outline:1px solid var(--cream); outline-offset:2px; }
@@ -188,7 +205,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 .radio-drag-handle:focus-visible { outline:1px solid var(--cream); outline-offset:3px; border-radius:4px; }
 .spotify-radio.is-dragging { cursor:grabbing; box-shadow:0 25px 65px rgba(18,10,5,.48); }
 .spotify-radio.is-dragging .radio-drag-handle { cursor:grabbing; }
-.spotify-radio>a { display:flex; align-items:center; justify-content:flex-end; gap:4px; margin:8px 3px 0; color:var(--cream); text-decoration:none; font-size:7px; letter-spacing:.06em; opacity:.52; }
+.spotify-radio__body>a { display:flex; align-items:center; justify-content:flex-end; gap:4px; margin:8px 3px 0; color:var(--cream); text-decoration:none; font-size:7px; letter-spacing:.06em; opacity:.52; }
 .memories-overlay { position:fixed; inset:0; z-index:40; color:var(--cream); background:rgba(31,20,14,.96); backdrop-filter:blur(12px); overflow:auto; }
 .close-overlay { position:fixed; right:4.3vw; top:40px; color:var(--cream); background:none; border:0; cursor:pointer; z-index:2; }
 .memories-inner { width:min(1080px,84vw); margin:0 auto; padding:13vh 0 9vh; }
@@ -239,12 +256,25 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 @keyframes auto-ride-arrive { to { opacity:1 } }
 @keyframes auto-ride-vibration { 0%,100% { transform:scale(1.009) translate(0,0) } 50% { transform:scale(1.009) translate(1px,-1px) } }
 @keyframes auto-light-pass { from { left:-18vw } to { left:112vw } }
+@keyframes adhoori-fan { to { transform:rotate(360deg) } }
+@keyframes adhoori-rain { to { background-position:0 38px } }
+@keyframes adhoori-light { 0%,100% { opacity:.72 } 48% { opacity:.82 } 52% { opacity:.68 } 56% { opacity:.8 } }
+@keyframes adhoori-photo { 0%,88%,100% { transform:translate(0,0) } 92% { transform:translate(1px,-1px) } }
 @media (max-width: 760px) {
   .scene-image { object-position:var(--scene-position); }
   .scene-video { object-position:var(--scene-position); }
   .scene-shade { background:linear-gradient(0deg,rgba(25,15,9,.75) 0%,rgba(28,17,10,.16) 55%,rgba(19,12,8,.35) 100%); }
   .memory-scene--auto-rickshaw .scene-shade { background:linear-gradient(0deg,rgba(17,10,6,.83) 0%,rgba(25,15,9,.25) 48%,rgba(15,9,5,.2) 100%); }
   .memory-scene--auto-rickshaw .scene-copy { bottom:142px; }
+  .memory-scene--adhoori-shaam .scene-shade { background:linear-gradient(0deg,rgba(18,12,8,.88) 0%,rgba(25,16,10,.18) 55%,rgba(13,9,6,.24) 100%); }
+  .memory-scene--adhoori-shaam .scene-copy { bottom:142px; }
+  .memory-scene--adhoori-shaam .scene-copy h1 { max-width:100%; }
+  .adhoori-shayari { left:auto; right:5%; top:24%; max-width:45%; font-size:10px; line-height:1.7; }
+  .adhoori-fan { left:31%; top:5%; width:68px; height:68px; }
+  .adhoori-fan i { left:33px; height:63px; }
+  .adhoori-rain { top:18%; width:28%; height:41%; }
+  .adhoori-light { left:57%; top:15%; width:18vw; height:18vw; }
+  .adhoori-photo { left:40%; top:44%; width:7%; height:5%; }
   .topbar { height:80px; padding:0 22px; }
   .brand { gap:8px; }
   .brand strong { font-size:18px; }

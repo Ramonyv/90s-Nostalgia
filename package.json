@@ -8,6 +8,7 @@
     "build": "tsc -b && tsc -p tsconfig.server.json && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "images:optimize": "node scripts/optimize-static-images.mjs",
     "cms:secrets": "node scripts/setup-blog-secrets.mjs"
   },
   "dependencies": {

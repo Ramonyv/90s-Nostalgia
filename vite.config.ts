@@ -50,7 +50,7 @@ function getFeedPosts(): FeedPost[] {
     if (!match) return []
     const data = (parseYaml(match[1]) || {}) as Record<string, unknown>
     if (data.draft === true || typeof data.date !== 'string' || data.date > new Date().toISOString().slice(0, 10)) return []
-    return [{ title: String(data.title || ''), slug: String(data.slug || ''), description: String(data.description || ''), date: data.date, seoTitle: String(data.seoTitle || data.title || ''), seoDescription: String(data.seoDescription || data.description || ''), cover: String(data.cover || '/social-preview.png') }]
+    return [{ title: String(data.title || ''), slug: String(data.slug || ''), description: String(data.description || ''), date: data.date, seoTitle: String(data.seoTitle || data.title || ''), seoDescription: String(data.seoDescription || data.description || ''), cover: String(data.cover || '/social-preview.jpg') }]
   }).sort((a, b) => b.date.localeCompare(a.date))
 }
 
@@ -81,7 +81,7 @@ function staticDiscoveryPlugin(siteUrl: string, publisherId: string) {
       writeFileSync(resolve(output, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /api/\n\nSitemap: ${origin}/sitemap.xml\n`)
       writeFileSync(resolve(output, 'ads.txt'), publisherId ? `google.com, ${publisherId}, DIRECT, f08c47fec0942fa0\n` : '')
       const baseHtml = readFileSync(resolve(output, 'index.html'), 'utf8')
-      const renderHtml = (path: string, title: string, description: string, image = '/social-preview.png', type = 'website', noindex = false) => {
+      const renderHtml = (path: string, title: string, description: string, image = '/social-preview.jpg', type = 'website', noindex = false) => {
         const canonical = `${origin}${path}`
         const socialImage = image.startsWith('http') ? image : `${origin}${image}`
         return baseHtml
@@ -105,7 +105,7 @@ function staticDiscoveryPlugin(siteUrl: string, publisherId: string) {
         const path = `/journal/${post.slug}`; const html = renderHtml(path, `${post.seoTitle} — 90s Yaadein`, post.seoDescription, post.cover, 'article')
         const directory = resolve(output, 'journal', post.slug); mkdirSync(directory, { recursive: true }); writeFileSync(resolve(directory, 'index.html'), html); writeFileSync(resolve(output, `journal/${post.slug}.html`), html)
       }
-      const adminHtml = renderHtml('/admin/blog', 'Blog Studio — 90s Yaadein', 'Internal Markdown importer.', '/social-preview.png', 'website', true)
+      const adminHtml = renderHtml('/admin/blog', 'Blog Studio — 90s Yaadein', 'Internal Markdown importer.', '/social-preview.jpg', 'website', true)
       const adminDirectory = resolve(output, 'admin/blog'); mkdirSync(adminDirectory, { recursive: true }); writeFileSync(resolve(adminDirectory, 'index.html'), adminHtml); mkdirSync(resolve(output, 'admin'), { recursive: true }); writeFileSync(resolve(output, 'admin/blog.html'), adminHtml)
     },
   }

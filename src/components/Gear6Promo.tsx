@@ -28,7 +28,7 @@ export function Gear6Promo() {
         <span className="gear6-promo__cta">Start a live ride <ArrowUpRight size={12} /></span>
         <span className="gear6-promo__visual">
           <span className="gear6-promo__live"><i /> Live</span>
-          <img src="/Live Ride (Tracking).png" alt="Gear6 live group ride tracking screen" />
+          <img src="/live-ride-tracking.webp" alt="Gear6 live group ride tracking screen" width="240" height="475" loading="lazy" />
         </span>
         <i className="gear6-promo__timer" aria-hidden="true" />
       </motion.span> : <motion.span className="gear6-promo__panel" key="qr" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: .4 }}>

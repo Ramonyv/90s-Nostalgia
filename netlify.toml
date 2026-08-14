@@ -5,6 +5,52 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# Vite fingerprints production JS/CSS, so browsers can safely retain these files.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Scene filenames are stable rather than fingerprinted. Cache for a month, then
+# revalidate so artwork and opt-in animation updates can still propagate safely.
+[[headers]]
+  for = "/scenes/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, stale-while-revalidate=604800"
+
+# CMS covers can be replaced at the same URL, so use a shorter browser lifetime.
+[[headers]]
+  for = "/blog/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
+[[headers]]
+  for = "/covers/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=2592000"
+
+[[headers]]
+  for = "/live-ride-tracking.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, stale-while-revalidate=604800"
+
+[[headers]]
+  for = "/social-preview.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, stale-while-revalidate=604800"
+
+[[headers]]
+  for = "/creator-raman.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, stale-while-revalidate=604800"
+
+# HTML and any unmatched files revalidate, so a new atomic deploy is visible
+# immediately while the asset rules above retain expensive static downloads.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
 [[redirects]]
   from = "/api/blog-auth"
   to = "/.netlify/functions/blog-auth"

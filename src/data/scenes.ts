@@ -151,4 +151,5 @@ export const scenes: Scene[] = [
 ]
 
 export const plannedSceneIdeas = ['STD / PCO Booth', 'Photo Studio', 'Sunday Market', 'Mela', 'Monsoon School Day', 'Terrace Night', 'Audio / Video Rental Shop'] as const
+export const sceneAvif = (source: string) => source.replace(/\.webp$/i, '.avif')
 export const getScene = (pathname: string) => scenes.find(scene => scene.slug === pathname && scene.availability === 'active') ?? scenes[0]

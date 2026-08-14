@@ -21,7 +21,7 @@ function upsertMeta(selector: string, attributes: Record<string, string>) {
   Object.entries(attributes).forEach(([key, value]) => element!.setAttribute(key, value))
 }
 
-export function SEO({ title, description = SITE_DESCRIPTION, canonicalPath = '/', image = '/social-preview.png', type = 'website', noindex = false, jsonLd }: SEOProps) {
+export function SEO({ title, description = SITE_DESCRIPTION, canonicalPath = '/', image = '/social-preview.jpg', type = 'website', noindex = false, jsonLd }: SEOProps) {
   useEffect(() => {
     const fullTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — ${SITE_DESCRIPTION}`
     const canonical = absoluteUrl(canonicalPath)

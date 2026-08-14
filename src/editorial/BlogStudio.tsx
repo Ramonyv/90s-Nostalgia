@@ -34,13 +34,13 @@ async function blobToBase64(blob: Blob) {
 async function convertImageToWebP(file: File) {
   if (!file.type.startsWith('image/')) throw new Error('Choose a valid image file.')
   const bitmap = await createImageBitmap(file)
-  const scale = Math.min(1, 2400 / bitmap.width)
+  const scale = Math.min(1, 2000 / bitmap.width)
   const width = Math.max(1, Math.round(bitmap.width * scale)), height = Math.max(1, Math.round(bitmap.height * scale))
   const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height
   const context = canvas.getContext('2d')
   if (!context) { bitmap.close(); throw new Error('This browser could not prepare the image canvas.') }
   context.drawImage(bitmap, 0, 0, width, height); bitmap.close()
-  const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(result => result ? resolve(result) : reject(new Error('WebP conversion failed in this browser.')), 'image/webp', .86))
+  const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(result => result ? resolve(result) : reject(new Error('WebP conversion failed in this browser.')), 'image/webp', .82))
   return { blob, width, height }
 }
 

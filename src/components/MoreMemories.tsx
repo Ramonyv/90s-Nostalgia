@@ -10,6 +10,7 @@ export function MoreMemories({ open, onClose, onSceneSelect }: { open: boolean; 
       <div className="memory-list">
         {scenes.filter(scene => scene.availability === 'active').map((scene, i) => <motion.div key={scene.id} style={{ '--memory-accent': scene.accentColor } as React.CSSProperties} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .08 + i * .035 }}><Link to={scene.slug} onClick={() => { onSceneSelect(scene.id); onClose() }}><span>{String(i + 1).padStart(2, '0')}</span><strong>{scene.title}<small>{scene.shortLine}</small></strong><em>{scene.year}</em><ArrowUpRight size={14} /></Link></motion.div>)}
       </div>
+      <nav className="memories-overlay__archive" aria-label="Archive pages"><Link to="/memories" onClick={onClose}>Memories index</Link><Link to="/journal" onClick={onClose}>Journal</Link><Link to="/about" onClick={onClose}>About</Link></nav>
     </div>
   </motion.div>}</AnimatePresence>
 }

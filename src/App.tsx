@@ -1,2 +1,26 @@
-import { AppShell } from './components/AppShell'
-export default function App() { return <AppShell /> }
+import { lazy, Suspense, useEffect } from 'react'
+import { Navigate, useLocation } from 'react-router-dom'
+import { scenes } from './data/scenes'
+import { AdSenseLoader } from './editorial/ads'
+import { ConsentManager } from './editorial/ConsentManager'
+import { RouteAnalytics } from './editorial/SEO'
+
+const ImmersiveApp = lazy(() => import('./components/AppShell').then(module => ({ default: module.AppShell })))
+const EditorialApp = lazy(() => import('./editorial/EditorialApp').then(module => ({ default: module.EditorialApp })))
+
+export default function App() {
+  const location = useLocation()
+  const isImmersive = scenes.some(scene => scene.slug === location.pathname)
+  useEffect(() => {
+    document.documentElement.classList.toggle('editorial-mode', !isImmersive)
+    document.body.classList.toggle('editorial-mode', !isImmersive)
+    return () => {
+      document.documentElement.classList.remove('editorial-mode')
+      document.body.classList.remove('editorial-mode')
+    }
+  }, [isImmersive])
+  return <>
+    <RouteAnalytics /><ConsentManager /><AdSenseLoader />
+    {location.pathname === '/' ? <Navigate to="/salon" replace /> : isImmersive ? <Suspense fallback={<div className="route-loader">Loading memory…</div>}><ImmersiveApp /></Suspense> : <Suspense fallback={<div className="route-loader route-loader--paper">Loading archive…</div>}><EditorialApp /></Suspense>}
+  </>
+}

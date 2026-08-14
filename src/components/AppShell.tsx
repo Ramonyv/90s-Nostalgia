@@ -14,6 +14,8 @@ import { requestSpotifyPlayback, SpotifyRadio } from './SpotifyRadio'
 import { CreatorRadio } from './CreatorRadio'
 import { NetlifyCredit } from './NetlifyCredit'
 import { Gear6Promo } from './Gear6Promo'
+import { SEO } from '../editorial/SEO'
+import { absoluteUrl } from '../config/site'
 
 export function AppShell() {
   const location = useLocation(), scene = getScene(location.pathname)
@@ -61,6 +63,7 @@ export function AppShell() {
     else await document.documentElement.requestFullscreen()
   }
   return <div className="app-shell">
+    <SEO title={`${scene.title} (${scene.year})`} description={`${scene.description} Explore an illustrated memory from everyday India in the 1990s.`} canonicalPath={scene.slug} image={scene.desktopBackground} jsonLd={scene.id === 'salon' ? { '@context': 'https://schema.org', '@type': 'WebSite', name: '90s Yaadein', description: 'An interactive archive of everyday memories from 1990s India.', url: absoluteUrl('/') } : undefined} />
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Navigate to="/salon" replace />} />
@@ -68,7 +71,7 @@ export function AppShell() {
         <Route path="*" element={<Navigate to="/salon" replace />} />
       </Routes>
     </AnimatePresence>
-    <header className="topbar"><a className="brand" href="/salon"><strong><span>90s</span> यादें</strong><small>Relive it. Feel it. Live it.</small></a><SceneNavigation current={scene.id} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} /><button className="mobile-menu" onClick={() => setMoreOpen(true)} aria-label="Open memory menu"><Menu /></button></header>
+    <header className="topbar"><a className="brand" href="/salon"><strong><span>90s</span> यादें</strong><small>Relive it. Feel it. Live it.</small></a><div className="immersive-nav-cluster"><SceneNavigation current={scene.id} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} /><nav className="archive-nav" aria-label="Archive"><a href="/memories">Memories</a><a href="/journal">Journal</a><a href="/about">About</a></nav></div><button className="mobile-menu" onClick={() => setMoreOpen(true)} aria-label="Open memory menu"><Menu /></button></header>
     <div className="scene-controls">
       <button className={`scene-control animation-toggle${animatedScenes ? ' is-active' : ''}`} onClick={() => setAnimatedScenes(value => !value)} aria-label={animatedScenes ? 'Use static scene backgrounds' : 'Animate scene backgrounds'} aria-pressed={animatedScenes}>{animatedScenes ? <Film size={15} /> : <ImageIcon size={15} />}<span>{animatedScenes ? 'Animated' : 'Static'}</span></button>
       <button className="scene-control ambient-toggle" onClick={() => { if (!ambient.ambienceEnabled) setMediaAudioUnlocked(true); ambient.setAmbienceEnabled(!ambient.ambienceEnabled) }} aria-label={ambient.ambienceEnabled ? 'Mute ambience' : 'Play ambience'}>{ambient.ambienceEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}<span>Ambience {ambient.ambienceEnabled ? 'on' : 'off'}</span></button>

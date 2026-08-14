@@ -11,7 +11,15 @@ npm run dev
 
 The eleven optimized scene illustrations live in `public/scenes`, with separate mobile crops. Scene ambience is generated in the browser, while music is provided by the persistent Spotify embed. New scenes can be added through the data-driven registry in `src/data/scenes.ts`.
 
-Active routes: `/salon`, `/truck`, `/railway`, `/school`, `/cricket`, `/tv`, `/rain`, `/gaming`, `/cassette-shop`, `/bus-stand`, and `/village`.
+Active immersive routes: `/salon`, `/truck`, `/railway`, `/school`, `/cricket`, `/tv`, `/rain`, `/gaming`, `/cassette-shop`, `/bus-stand`, `/village`, `/auto-rickshaw`, and `/adhoori-shaam`.
+
+## Editorial archive
+
+The journal and trust layer is code-split from the immersive application. Public routes include `/memories`, `/journal`, `/about`, `/contact`, `/privacy`, `/terms`, `/editorial-policy`, `/accessibility`, and `/cookies`. Blog Studio is available only by direct URL at `/admin/blog`; it validates and exports local files because the current deployment has no authenticated publishing function.
+
+Add journal articles to `content/blog` using the schema in `docs/BLOG_PUBLISHING.md`. Drafts and future-dated posts are excluded from public bundles, routes, feeds, search, and sitemaps. The build generates route-specific HTML metadata plus `/sitemap.xml`, `/rss.xml`, `/robots.txt`, and `/ads.txt` from the `SITE_URL` deployment variable.
+
+AdSense remains disabled unless all required variables, slots, and advertising consent are present. See `docs/ADSENSE_SETUP.md`.
 
 ## Spotify radio
 

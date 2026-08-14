@@ -2,7 +2,7 @@
 
 Store one standalone `.md` or `.markdown` file per article in `content/blog`. Drafts must set `draft: true`; they are excluded from public routes, search, related content, RSS, and the sitemap.
 
-Use `/admin/blog` to import, validate, preview, and export a prepared Markdown file. The current deployment has no authenticated server function, so Blog Studio deliberately does not accept credentials or publish to GitHub directly.
+Use `/admin/blog` to import, validate, preview, export, or securely publish a prepared Markdown file. When the server environment is configured, Blog Studio uses an HttpOnly authenticated session and commits through the GitHub API. If it is not configured, the local export fallback remains available. See [Secure Blog Studio setup](BLOG_CMS_SETUP.md).
 
 Cover uploads are converted locally to WebP at 86% quality and constrained to a maximum width of 2400px without upscaling. Blog Studio updates the cover path to `/blog/{slug}/cover.webp` and exports the converted asset as `cover.webp`; the original upload never leaves the browser.
 

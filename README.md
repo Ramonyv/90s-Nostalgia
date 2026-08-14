@@ -15,11 +15,13 @@ Active immersive routes: `/salon`, `/truck`, `/railway`, `/school`, `/cricket`, 
 
 ## Editorial archive
 
-The journal and trust layer is code-split from the immersive application. Public routes include `/memories`, `/journal`, `/about`, `/contact`, `/privacy`, `/terms`, `/editorial-policy`, `/accessibility`, and `/cookies`. Blog Studio is available only by direct URL at `/admin/blog`; it validates and exports local files because the current deployment has no authenticated publishing function.
+The journal and trust layer is code-split from the immersive application. Public routes include `/memories`, `/journal`, `/about`, `/contact`, `/privacy`, `/terms`, `/editorial-policy`, `/accessibility`, and `/cookies`. Blog Studio is available only by direct URL at `/admin/blog`; it supports secure server-side GitHub publishing when configured and retains a local export fallback.
 
 Add journal articles to `content/blog` using the schema in `docs/BLOG_PUBLISHING.md`. Drafts and future-dated posts are excluded from public bundles, routes, feeds, search, and sitemaps. The build generates route-specific HTML metadata plus `/sitemap.xml`, `/rss.xml`, `/robots.txt`, and `/ads.txt` from the `SITE_URL` deployment variable.
 
 AdSense remains disabled unless all required variables, slots, and advertising consent are present. See `docs/ADSENSE_SETUP.md`.
+
+Secure Blog Studio deployment is documented in `docs/BLOG_CMS_SETUP.md`.
 
 ## Spotify radio
 

@@ -18,7 +18,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['vite.config.ts'],
+    files: ['vite.config.ts', 'scripts/**/*.mjs', 'server/**/*.ts', 'netlify/functions/**/*.ts'],
     languageOptions: { globals: globals.node },
   },
 )

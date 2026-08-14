@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && tsc -p tsconfig.server.json && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cms:secrets": "node scripts/setup-blog-secrets.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
@@ -24,12 +25,14 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/node": "^26.2.0",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "eslint": "^10.8.1",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.11.0",
     "sharp": "^0.35.3",
-    "typescript-eslint": "^8.67.0"
+    "typescript-eslint": "^8.67.0",
+    "wrangler": "^4.123.0"
   }
 }

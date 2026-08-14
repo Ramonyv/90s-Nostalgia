@@ -8,3 +8,6 @@ public/scenes/.DS_Store
 .env
 .env.*
 !.env.example
+.wrangler/
+.dev.vars
+.netlify/

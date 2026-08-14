@@ -6,6 +6,16 @@
   NODE_VERSION = "22"
 
 [[redirects]]
+  from = "/api/blog-auth"
+  to = "/.netlify/functions/blog-auth"
+  status = 200
+
+[[redirects]]
+  from = "/api/blog-publish"
+  to = "/.netlify/functions/blog-publish"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200

@@ -26,3 +26,7 @@ Recorded before implementation on 2026-08-14.
 ## Regression boundary
 
 No scene route, media path, music/ambient behavior, transition, existing social link, GA measurement ID, deployment file, or immersive CSS selector is renamed or removed.
+
+## Subsequent secure publishing extension
+
+After the export fallback shipped, secure one-click publishing was explicitly authorized. The implementation adds same-origin `/api/blog-auth` and `/api/blog-publish` endpoints for both existing hosts: Netlify rewrites to functions, while Cloudflare runs the API through a Worker before the unchanged static-assets SPA fallback. Server-only PBKDF2 password verification, signed HttpOnly sessions, same-origin checks, login throttling, server-side Markdown validation, and atomic GitHub tree/commit/ref updates are shared between both adapters. Export mode remains available when server secrets are absent.

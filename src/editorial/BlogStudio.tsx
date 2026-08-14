@@ -16,6 +16,21 @@ function download(name: string, content: BlobPart, type: string) {
   const url = URL.createObjectURL(new Blob([content], { type })); const anchor = document.createElement('a'); anchor.href = url; anchor.download = name; anchor.click(); URL.revokeObjectURL(url)
 }
 
+type AuthState = 'checking' | 'authenticated' | 'logged-out' | 'unavailable'
+
+async function apiRequest(path: string, body: Record<string, unknown>) {
+  const response = await fetch(path, { method: 'POST', credentials: 'same-origin', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
+  if (!response.headers.get('content-type')?.includes('application/json')) throw new Error('The secure publishing API is unavailable on this deployment.')
+  const data = await response.json().catch(() => ({ error: 'The publishing API returned an invalid response.' })) as Record<string, unknown>
+  return { response, data }
+}
+
+async function blobToBase64(blob: Blob) {
+  const bytes = new Uint8Array(await blob.arrayBuffer()); let binary = ''
+  for (let offset = 0; offset < bytes.length; offset += 32_768) binary += String.fromCharCode(...bytes.subarray(offset, offset + 32_768))
+  return btoa(binary)
+}
+
 async function convertImageToWebP(file: File) {
   if (!file.type.startsWith('image/')) throw new Error('Choose a valid image file.')
   const bitmap = await createImageBitmap(file)
@@ -37,9 +52,21 @@ export function BlogStudio() {
   const [coverInfo, setCoverInfo] = useState('')
   const [coverError, setCoverError] = useState('')
   const [convertingCover, setConvertingCover] = useState(false)
+  const [authState, setAuthState] = useState<AuthState>('checking')
+  const [password, setPassword] = useState('')
+  const [authError, setAuthError] = useState('')
+  const [publishing, setPublishing] = useState(false)
+  const [publishMessage, setPublishMessage] = useState('')
+  const [publishedCommit, setPublishedCommit] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
   const coverRef = useRef<HTMLInputElement>(null)
   useEffect(() => () => { if (coverPreview.startsWith('blob:')) URL.revokeObjectURL(coverPreview) }, [coverPreview])
+  useEffect(() => {
+    void apiRequest('/api/blog-auth', { action: 'status' }).then(({ response, data }) => {
+      if (response.status === 503 || data.configured === false) setAuthState('unavailable')
+      else setAuthState(response.ok && data.authenticated === true ? 'authenticated' : 'logged-out')
+    }).catch(() => setAuthState('unavailable'))
+  }, [])
   const validation = useMemo(() => post ? validatePost(post) : null, [post])
   const importFile = async (file?: File) => {
     if (!file || !/\.(md|markdown)$/i.test(file.name)) return
@@ -59,10 +86,40 @@ export function BlogStudio() {
     } catch (error) { setCoverFile(null); setCoverInfo(''); setCoverError(error instanceof Error ? error.message : 'Could not convert this image.') }
     finally { setConvertingCover(false); if (coverRef.current) coverRef.current.value = '' }
   }
+  const login = async () => {
+    setAuthError('')
+    try {
+      const { response, data } = await apiRequest('/api/blog-auth', { action: 'login', password })
+      if (!response.ok || data.authenticated !== true) throw new Error(String(data.error || 'Login failed.'))
+      setPassword(''); setAuthState('authenticated')
+    } catch (error) { setAuthError(error instanceof Error ? error.message : 'Login failed.') }
+  }
+  const logout = async () => {
+    await apiRequest('/api/blog-auth', { action: 'logout' }).catch(() => undefined); setAuthState('logged-out'); setPublishedCommit(''); setPublishMessage('')
+  }
+  const publish = async (overwrite = false) => {
+    if (!post || authState !== 'authenticated') return
+    setPublishing(true); setPublishMessage(''); setPublishedCommit('')
+    try {
+      const coverBase64 = coverFile ? await blobToBase64(coverFile) : ''
+      const { response, data } = await apiRequest('/api/blog-publish', { markdown: serializePost(post), coverBase64, overwrite })
+      if (response.status === 401) { setAuthState('logged-out'); throw new Error('Your secure session expired. Sign in again.') }
+      if (response.status === 409 && data.code === 'ARTICLE_EXISTS' && !overwrite) {
+        setPublishing(false)
+        if (window.confirm('An article with this slug already exists. Publish this as an update?')) await publish(true)
+        return
+      }
+      if (!response.ok || data.ok !== true) throw new Error(String(data.error || 'Publishing failed.'))
+      setPublishMessage('Published successfully. The deployment rebuild has been triggered.'); setPublishedCommit(String(data.commitUrl || ''))
+    } catch (error) { setPublishMessage(error instanceof Error ? error.message : 'Publishing failed.') }
+    finally { setPublishing(false) }
+  }
+  const publishDisabledReason = !post ? 'Import or create an article first.' : validation?.errors.length ? 'Resolve required metadata errors first.' : post.draft ? 'Uncheck Draft before publishing.' : !post.cover ? 'Upload a cover before publishing.' : post.cover !== `/blog/${post.slug}/cover.webp` ? `Cover path must be /blog/${post.slug}/cover.webp.` : authState !== 'authenticated' ? 'Sign in to publish.' : ''
   return <div className="studio-page">
     <SEO title="Blog Studio" description="Internal Markdown importer for 90s Yaadein." canonicalPath="/admin/blog" noindex />
-    <header className="studio-header"><div><p><span>90s</span> यादें</p><h1>Blog Studio</h1></div><nav aria-label="Studio sections"><button onClick={() => { setPost(parseBlogMarkdown('---\ntitle: ""\ndescription: ""\ndate: ""\ncategory: ""\ndraft: true\n---\n\n## Start writing\n')); setFileName('new-article.md'); setCoverPreview(''); setCoverFile(null); setCoverInfo(''); setCoverError('') }}>New Article</button><button onClick={() => inputRef.current?.click()}>Import Markdown</button><button disabled>Drafts</button><button disabled>Published</button></nav></header>
-    <div className="studio-notice"><ShieldCheck size={18} /><p><strong>Safe export mode</strong>This production has no authenticated server function. Blog Studio validates and exports files locally; it never receives a GitHub token or stores a password.</p></div>
+    <header className="studio-header"><div><p><span>90s</span> यादें</p><h1>Blog Studio</h1></div><nav aria-label="Studio sections"><button onClick={() => { setPost(parseBlogMarkdown('---\ntitle: ""\ndescription: ""\ndate: ""\ncategory: ""\ndraft: true\n---\n\n## Start writing\n')); setFileName('new-article.md'); setCoverPreview(''); setCoverFile(null); setCoverInfo(''); setCoverError(''); setPublishMessage(''); setPublishedCommit('') }}>New Article</button><button onClick={() => inputRef.current?.click()}>Import Markdown</button><button disabled>Drafts</button><button className="studio-publish-button" disabled={Boolean(publishDisabledReason) || publishing} title={publishDisabledReason} onClick={() => void publish()}>{publishing ? 'Publishing…' : 'Publish'}</button></nav></header>
+    {authState === 'authenticated' ? <div className="studio-notice studio-notice--connected"><ShieldCheck size={18} /><p><strong>Secure publishing connected</strong>GitHub credentials remain on the server. Your signed session is stored in an HttpOnly cookie.</p><button onClick={() => void logout()}>Sign out</button></div> : authState === 'unavailable' ? <div className="studio-notice"><ShieldCheck size={18} /><p><strong>Safe export mode</strong>The secure publishing API is not configured on this deployment. Blog Studio still validates and exports files locally; it never receives a GitHub token.</p></div> : null}
+    {authState === 'checking' ? <section className="studio-login"><p>Checking secure publishing…</p></section> : authState === 'logged-out' ? <section className="studio-login"><ShieldCheck size={27} /><p className="section-kicker">Protected publishing</p><h2>Sign in to Blog Studio</h2><p>The password is verified by the server and is never stored in the browser.</p><form onSubmit={event => { event.preventDefault(); void login() }}><label><span>Admin password</span><input type="password" autoComplete="current-password" value={password} onChange={event => setPassword(event.target.value)} autoFocus /></label>{authError && <p className="is-error" role="alert">{authError}</p>}<button className="button-primary" type="submit" disabled={!password}>Sign in securely</button></form></section> : <>
     {!post ? <section className="drop-zone" onDrop={drop} onDragOver={event => event.preventDefault()}><UploadCloud size={42} /><h2>Drop your blog.md here</h2><p>Markdown stays on this device while you validate and preview it.</p><button className="button-primary" onClick={() => inputRef.current?.click()}>or choose file</button><input ref={inputRef} type="file" accept=".md,.markdown,text/markdown" hidden onChange={event => void importFile(event.target.files?.[0])} /></section> : <div className="studio-workspace">
       <aside className="studio-editor"><div className="studio-file"><FileText size={18} /><span>{fileName}</span><button aria-label="Remove imported article" onClick={() => setPost(null)}><X size={16} /></button></div>
         <section className="validation-panel"><h2>Pre-publish checklist</h2>{validation?.errors.map(message => <p className="is-error" key={message}><X size={14} />{message}</p>)}{validation?.warnings.map(message => <p className="is-warning" key={message}>! {message}</p>)}{validation && validation.errors.length === 0 && <p className="is-valid"><Check size={14} />Required metadata is valid</p>}</section>
@@ -73,6 +130,7 @@ export function BlogStudio() {
         {coverFile && <button className="cover-upload" onClick={() => download('cover.webp', coverFile, 'image/webp')}><Download size={17} /> Export WebP cover</button>}
       </aside>
       <main className="studio-preview"><p className="section-kicker">Full article preview</p><article><header><span>{post.category || 'Category'}</span><h1>{post.title || 'Untitled article'}</h1><p>{post.description || 'Article description'}</p><small>{post.author} · {post.date || 'Publish date'} · {post.readingTime} min read</small></header>{(coverPreview || post.cover) && <img className="preview-cover" src={coverPreview || post.cover} alt={post.coverAlt} />}<MarkdownContent body={post.body} /></article></main>
-    </div>}
+      {publishMessage && <aside className={publishedCommit ? 'studio-result is-success' : 'studio-result is-error'} role="status"><p>{publishMessage}</p>{publishedCommit && <a href={publishedCommit} target="_blank" rel="noopener noreferrer">View GitHub commit</a>}</aside>}
+    </div>}</>}
   </div>
 }

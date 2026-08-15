@@ -137,6 +137,103 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 .gear6-promo__visual--qr img,.gear6-promo:hover .gear6-promo__visual--qr img { width:96px; height:96px; object-fit:contain; transform:none; image-rendering:crisp-edges; }
 .gear6-promo__scan { position:absolute; z-index:2; top:7px; color:#231f1c; font-size:6px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; }
 .gear6-promo__timer { position:absolute; z-index:3; left:0; bottom:0; width:100%; height:2px; background:#ff5a16; transform-origin:left; animation:gear6-countdown 5s linear forwards; }
+.keepsake-dibba { position:fixed; z-index:29; left:calc(50% - 113px); bottom:max(94px,calc(env(safe-area-inset-bottom) + 82px)); width:108px; height:52px; }
+.keepsake-box { position:relative; width:108px; height:52px; display:block; padding:0; border:1px solid rgba(238,196,121,.52); border-radius:5px 5px 9px 9px; color:#f3ddba; background:linear-gradient(165deg,#77572f,#3c2a18 58%,#24180f); box-shadow:inset 0 0 0 2px rgba(26,17,10,.48),inset 0 -9px 18px rgba(13,8,4,.25),0 12px 28px rgba(15,8,3,.28); cursor:pointer; transform-origin:center bottom; }
+.keepsake-box::before,.keepsake-box::after { content:""; position:absolute; top:8px; bottom:7px; width:2px; border:1px solid rgba(220,172,98,.34); border-width:0 1px; }
+.keepsake-box::before { left:8px; }
+.keepsake-box::after { right:8px; }
+.keepsake-box__lid { position:absolute; z-index:2; left:-4px; right:-4px; top:-7px; height:13px; border:1px solid rgba(238,196,121,.58); border-radius:6px 6px 2px 2px; background:linear-gradient(#8b683a,#4e371f); box-shadow:inset 0 1px rgba(255,230,177,.16),0 3px 5px rgba(12,7,3,.3); transform-origin:center bottom; transition:transform .45s cubic-bezier(.22,1,.36,1),filter .3s; }
+.is-open .keepsake-box__lid { transform:perspective(80px) rotateX(-64deg) translateY(-4px); filter:brightness(1.12); }
+.keepsake-box__label { position:absolute; inset:12px 11px 7px; display:flex; align-items:center; justify-content:center; flex-direction:column; border:1px solid rgba(237,198,132,.27); background:rgba(36,23,13,.34); text-shadow:0 1px 5px #201308; }
+.keepsake-box__label strong { font-family:'Noto Sans Devanagari',sans-serif; font-size:10px; line-height:1.1; font-weight:600; }
+.keepsake-box__label small { margin-top:3px; font-size:5px; letter-spacing:.08em; opacity:.58; }
+.keepsake-note { position:fixed; left:50%; bottom:max(158px,calc(env(safe-area-inset-bottom) + 146px)); width:320px; min-height:290px; padding:31px 31px 24px; translate:-50% 0; color:#38281d; background:#d4b77f; box-shadow:0 25px 70px rgba(12,7,3,.46),inset 0 0 50px rgba(84,51,25,.16); clip-path:polygon(1% 1%,98% 0,100% 94%,97% 100%,3% 98%,0 5%); text-align:center; }
+.keepsake-note::before { content:""; position:absolute; inset:0; opacity:.2; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); mix-blend-mode:multiply; pointer-events:none; }
+.keepsake-note::after { content:""; position:absolute; left:50%; top:0; bottom:0; width:1px; background:rgba(77,49,28,.08); box-shadow:1px 0 rgba(255,242,202,.12); pointer-events:none; }
+.keepsake-note>* { position:relative; z-index:1; }
+.keepsake-note__close { position:absolute; z-index:2; right:17px; top:15px; width:28px; height:28px; display:grid; place-items:center; padding:0; border:0; color:#38281d; background:transparent; cursor:pointer; opacity:.6; }
+.keepsake-note__eyebrow { margin:0 0 15px; color:#724228; font-size:7px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+.keepsake-object { width:78px; height:49px; display:grid; place-items:center; margin:0 auto 11px; border:1px solid rgba(74,47,26,.42); border-radius:3px; color:#49311f; background:linear-gradient(145deg,rgba(247,220,166,.24),rgba(102,66,35,.1)); box-shadow:inset 0 0 0 3px rgba(96,61,32,.08); transform:rotate(-2deg); }
+.keepsake-object span { font:700 10px/1 'DM Sans',sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.keepsake-note__object { margin:0; color:#6b4227; font:600 10px/1.3 'Noto Sans Devanagari','DM Sans',sans-serif; }
+.keepsake-note blockquote { max-width:250px; margin:15px auto 20px; font:500 19px/1.55 'Noto Sans Devanagari',Georgia,serif; letter-spacing:-.025em; }
+.keepsake-note__footer { min-height:25px; display:flex; align-items:center; justify-content:space-between; padding-top:13px; border-top:1px solid rgba(74,47,26,.2); }
+.keepsake-note__footer>span { font-size:7px; font-variant-numeric:tabular-nums; letter-spacing:.13em; opacity:.5; }
+.keepsake-note__footer button { display:flex; align-items:center; gap:2px; padding:4px 0; border:0; color:#5f3822; background:none; font:600 8px/1.2 'Noto Sans Devanagari','DM Sans',sans-serif; cursor:pointer; }
+.keepsake-note__footer button:hover svg { transform:translateX(2px); }
+.keepsake-note__footer svg { transition:transform .2s; }
+.scene-ritual { position:fixed; z-index:29; left:calc(50% + 5px); bottom:max(94px,calc(env(safe-area-inset-bottom) + 82px)); width:108px; height:52px; }
+.ritual-tag { position:relative; width:108px; height:52px; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:5px 9px 4px; overflow:hidden; border:1px solid rgba(89,53,29,.46); color:#402b1c; background:#c9aa70; box-shadow:inset 0 0 25px rgba(82,47,22,.15),0 12px 28px rgba(15,8,3,.27); clip-path:polygon(3% 2%,98% 0,100% 90%,96% 100%,1% 96%,0 9%); cursor:pointer; }
+.ritual-tag::before { content:""; position:absolute; inset:0; opacity:.18; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); mix-blend-mode:multiply; pointer-events:none; }
+.ritual-tag span,.ritual-tag strong,.ritual-tag small { position:relative; z-index:1; }
+.ritual-tag span { position:absolute; left:7px; top:6px; color:#8a4729; font-size:4px; font-weight:700; letter-spacing:.08em; transform:rotate(-3deg); }
+.ritual-tag strong { font:600 9px/1.1 'Noto Sans Devanagari','DM Sans',sans-serif; }
+.ritual-tag small { margin-top:4px; font:500 5px/1 'Noto Sans Devanagari','DM Sans',sans-serif; opacity:.58; }
+.scene-ritual.is-complete .ritual-tag::after { content:"✓"; position:absolute; right:7px; top:5px; width:12px; height:12px; display:grid; place-items:center; border:1px solid #704028; border-radius:50%; color:#704028; font-size:7px; transform:rotate(8deg); }
+.ritual-sheet { position:fixed; left:50%; bottom:max(158px,calc(env(safe-area-inset-bottom) + 146px)); width:340px; min-height:355px; padding:29px 29px 24px; translate:-50% 0; color:#38281d; background:#d7bd8b; box-shadow:0 26px 74px rgba(12,7,3,.5),inset 0 0 55px rgba(83,50,25,.14); clip-path:polygon(1% 1%,98% 0,100% 94%,97% 100%,2% 98%,0 5%); text-align:center; }
+.ritual-sheet::before { content:""; position:absolute; inset:0; opacity:.18; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); mix-blend-mode:multiply; pointer-events:none; }
+.ritual-sheet>* { position:relative; z-index:1; }
+.ritual-sheet__close { position:absolute; z-index:2; right:15px; top:13px; width:30px; height:30px; display:grid; place-items:center; padding:0; border:0; color:#38281d; background:none; opacity:.6; cursor:pointer; }
+.ritual-sheet__eyebrow { margin:0 0 8px; color:#7c472b; font-size:6px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+.ritual-sheet h2 { margin:0; font:600 24px/1.2 'Noto Sans Devanagari','DM Sans',sans-serif; letter-spacing:-.035em; }
+.ritual-sheet__instruction { max-width:260px; margin:7px auto 17px; font:400 10px/1.5 'Noto Sans Devanagari','DM Sans',sans-serif; opacity:.68; }
+.ritual-object,.ritual-coin,.ritual-handpump,.ritual-route { min-height:112px; width:100%; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px; padding:0; border:0; color:#402b1d; background:none; cursor:pointer; }
+.ritual-object small,.ritual-coin small,.ritual-handpump small,.ritual-route small { font:600 8px/1.2 'Noto Sans Devanagari','DM Sans',sans-serif; }
+.ritual-object__visual { position:relative; width:112px; height:68px; display:grid; place-items:center; border:1px solid rgba(68,43,24,.45); color:#452d1d; background:rgba(242,214,159,.25); box-shadow:inset 0 0 0 3px rgba(81,50,27,.07); transition:transform .5s cubic-bezier(.22,1,.36,1); }
+.ritual-object__visual b { font-size:12px; letter-spacing:.08em; }
+.ritual-object--calendar .ritual-object__visual { width:72px; height:78px; border-top:8px solid #8b4a30; background:#e1c99b; transform-origin:center top; }
+.ritual-object--calendar .ritual-object__visual::before { content:"15"; font:600 29px/1 Georgia,serif; }
+.ritual-object--calendar .ritual-object__visual b { position:absolute; bottom:7px; font-size:7px; }
+.scene-ritual--calendar.is-complete .ritual-object__visual { animation:ritual-calendar-flip .75s cubic-bezier(.22,1,.36,1); }
+.ritual-object--road-cassette .ritual-object__visual,.ritual-object--rewind .ritual-object__visual { width:118px; height:72px; border-radius:5px; background:#6e4933; }
+.ritual-object--road-cassette .ritual-object__visual::before,.ritual-object--rewind .ritual-object__visual::before { content:""; width:58px; height:28px; border:1px solid rgba(246,222,174,.55); background:radial-gradient(circle at 17px center,#2a1c13 0 7px,#d8bf8e 8px 10px,transparent 11px),radial-gradient(circle at 41px center,#2a1c13 0 7px,#d8bf8e 8px 10px,transparent 11px); }
+.ritual-object--road-cassette .ritual-object__visual b,.ritual-object--rewind .ritual-object__visual b { position:absolute; top:8px; color:#efd5a3; font-size:6px; }
+.scene-ritual--road-cassette.is-complete .ritual-object__visual::before,.scene-ritual--rewind.is-complete .ritual-object__visual::before { animation:ritual-reel .55s linear 4; }
+.ritual-object--rail-ticket .ritual-object__visual,.ritual-object--bus-ticket .ritual-object__visual { width:140px; height:62px; border-style:dashed; background:#d6b774; }
+.ritual-object--rail-ticket .ritual-object__visual::after,.ritual-object--bus-ticket .ritual-object__visual::after { content:"VALID"; position:absolute; right:13px; width:37px; height:37px; display:grid; place-items:center; border:2px solid #93452d; border-radius:50%; color:#93452d; font-size:7px; font-weight:700; opacity:0; transform:scale(1.8) rotate(-18deg); }
+.scene-ritual--rail-ticket.is-complete .ritual-object__visual::after,.scene-ritual--bus-ticket.is-complete .ritual-object__visual::after { opacity:.78; transform:scale(1) rotate(-18deg); transition:.35s cubic-bezier(.2,1.5,.4,1); }
+.ritual-object--boat .ritual-object__visual { width:130px; border:0; background:linear-gradient(transparent 65%,rgba(77,111,125,.22)); overflow:hidden; }
+.ritual-object--boat .ritual-object__visual::before { content:""; width:55px; height:38px; background:#e3d1aa; clip-path:polygon(50% 0,52% 52%,100% 55%,76% 100%,24% 100%,0 55%,48% 52%); }
+.scene-ritual--boat.is-complete .ritual-object__visual::before { animation:ritual-boat 1.8s ease-in-out forwards; }
+.ritual-object--game .ritual-object__visual { width:122px; height:65px; border-radius:35px 35px 24px 24px; background:#40342d; color:#e0caa2; }
+.ritual-object--game .ritual-object__visual::before { content:"+       • •"; font-size:20px; letter-spacing:.12em; }
+.scene-ritual--game.is-complete .ritual-object__visual { box-shadow:0 0 22px rgba(101,173,118,.35),inset 0 0 0 3px rgba(136,205,151,.1); }
+.ritual-object--meter .ritual-object__visual { width:116px; height:76px; border:7px solid #3b2a1e; color:#e9b55d; background:#17130f; box-shadow:inset 0 0 13px #000; }
+.ritual-object--meter .ritual-object__visual b { font-family:monospace; font-size:16px; }
+.scene-ritual--meter.is-complete .ritual-object__visual b { font-size:0; }
+.scene-ritual--meter.is-complete .ritual-object__visual b::after { content:"₹ 8.50"; font-size:16px; }
+.ritual-object--photograph .ritual-object__visual { width:92px; height:104px; padding:7px 7px 24px; background:#d8c397; transform:rotate(-3deg); transform-style:preserve-3d; }
+.ritual-object--photograph .ritual-object__visual::before { content:""; position:absolute; inset:7px 7px 24px; background:linear-gradient(145deg,#6a5747,#322820); }
+.scene-ritual--photograph.is-complete .ritual-object__visual { transform:rotateY(180deg) rotate(2deg); }
+.ritual-notebook { min-height:112px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:7px; }
+.ritual-notebook label { font-size:7px; opacity:.58; }
+.ritual-notebook input { width:190px; padding:10px 8px 6px; border:0; border-bottom:1px solid rgba(62,39,22,.42); color:#442d1e; background:repeating-linear-gradient(0deg,transparent 0 20px,rgba(91,102,116,.15) 21px); font:500 20px/1.2 'Noto Sans Devanagari','DM Sans',sans-serif; text-align:center; outline:none; }
+.ritual-notebook button { margin-top:5px; padding:7px 12px; border:1px solid rgba(63,40,24,.38); color:#422b1d; background:rgba(245,221,174,.2); font-size:8px; cursor:pointer; }
+.ritual-notebook button:disabled { opacity:.35; cursor:not-allowed; }
+.ritual-coin { perspective:140px; }
+.ritual-coin span { width:65px; height:65px; display:grid; place-items:center; border:3px double #805c2d; border-radius:50%; color:#654522; background:#bd9653; box-shadow:inset 0 0 0 4px rgba(244,216,154,.2),0 8px 14px rgba(62,35,17,.18); font-size:9px; font-weight:700; }
+.ritual-coin.is-flipping span { animation:ritual-coin .85s cubic-bezier(.2,.7,.3,1); }
+.ritual-antenna { min-height:112px; display:grid; grid-template-columns:110px 1fr; grid-template-rows:1fr 18px; align-items:center; gap:5px 16px; }
+.ritual-tv { position:relative; grid-row:1/-1; width:110px; height:82px; display:block; border:8px solid #553b29; border-radius:8px; background:#75746b; box-shadow:inset 0 0 14px #17120e; }
+.ritual-tv::before,.ritual-tv::after { content:""; position:absolute; top:-34px; width:2px; height:31px; background:#4e3828; transform-origin:bottom; }
+.ritual-tv::before { left:41px; transform:rotate(-32deg); }
+.ritual-tv::after { right:41px; transform:rotate(32deg); }
+.ritual-tv i { position:absolute; inset:0; background:repeating-radial-gradient(circle,#f3ead7 0 1px,#36332e 1px 3px); transition:opacity .15s; }
+.ritual-antenna label { align-self:end; font-size:7px; opacity:.6; }
+.ritual-antenna input { width:130px; accent-color:#75442b; }
+.ritual-handpump span { position:relative; width:62px; height:70px; border:5px solid #5a493c; border-top:0; border-radius:0 0 8px 8px; }
+.ritual-handpump span::before { content:""; position:absolute; left:23px; top:-23px; width:54px; height:7px; border-radius:5px; background:#5a493c; transform:rotate(-8deg); transform-origin:left; }
+.ritual-handpump:active span::before { transform:rotate(10deg); }
+.ritual-handpump span::after { content:""; position:absolute; right:-25px; top:8px; width:24px; height:17px; border:5px solid #5a493c; border-left:0; border-bottom:0; border-radius:0 10px 0 0; }
+.ritual-handpump b { position:absolute; margin-top:19px; font-size:8px; }
+.ritual-route svg { width:220px; height:90px; overflow:visible; }
+.ritual-route path { fill:none; stroke-linecap:round; }
+.ritual-route__road { stroke:rgba(73,50,33,.18); stroke-width:7; }
+.ritual-route__trace { stroke:#a54d2e; stroke-width:3; stroke-dasharray:260; stroke-dashoffset:260; }
+.scene-ritual--route.is-complete .ritual-route__trace { animation:ritual-route 1.8s cubic-bezier(.22,1,.36,1) forwards; }
+.ritual-result { margin-top:14px; padding-top:13px; border-top:1px solid rgba(70,44,25,.2); }
+.ritual-result p { max-width:280px; margin:0 auto; font:500 15px/1.5 'Noto Sans Devanagari','DM Sans',sans-serif; }
+.ritual-result button { display:flex; align-items:center; gap:4px; margin:9px auto 0; padding:4px; border:0; color:#73442b; background:none; font:600 7px/1 'Noto Sans Devanagari','DM Sans',sans-serif; cursor:pointer; }
 .creator-radio { position:fixed; z-index:21; right:4.3vw; bottom:140px; width:214px; padding:11px 12px 12px; color:var(--cream); background:linear-gradient(145deg,rgba(45,30,20,.96),rgba(25,18,13,.97)); border:1px solid rgba(215,160,77,.62); border-radius:17px; box-shadow:inset 0 0 0 2px rgba(95,62,31,.62),inset 0 0 22px rgba(0,0,0,.26),0 15px 40px rgba(18,10,5,.28); backdrop-filter:blur(12px); scale:1.5; transform-origin:right bottom; }
 .creator-radio::before { content:""; position:absolute; inset:5px; border:1px solid rgba(211,151,66,.18); border-radius:12px; pointer-events:none; }
 .creator-radio__topline { position:relative; display:flex; align-items:center; justify-content:space-between; min-height:21px; }
@@ -298,6 +395,11 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 @keyframes adda-radio-tune { 0%,100% { opacity:.45 } 50% { opacity:1 } }
 @keyframes adda-steam { from { transform:translate(0,8px) scaleY(.7); opacity:0 } 45% { opacity:.8 } to { transform:translate(9px,-34px) scaleY(1.15); opacity:0 } }
 @keyframes adda-bike-flicker { 0%,17%,31%,49%,100% { opacity:0 } 8%,25%,40%,58%,92% { opacity:.88 } }
+@keyframes ritual-calendar-flip { 0% { transform:rotateX(0) } 48% { transform:perspective(120px) rotateX(-92deg) } 52% { transform:perspective(120px) rotateX(82deg) } 100% { transform:rotateX(0) } }
+@keyframes ritual-reel { to { transform:rotate(360deg) } }
+@keyframes ritual-boat { 0% { transform:translateX(-45px) rotate(-3deg) } 45% { transform:translateX(4px) rotate(4deg) } 100% { transform:translateX(94px) rotate(-2deg); opacity:.35 } }
+@keyframes ritual-coin { 0% { transform:translateY(0) rotateY(0) } 50% { transform:translateY(-38px) rotateY(900deg) scale(.82) } 100% { transform:translateY(0) rotateY(1440deg) } }
+@keyframes ritual-route { to { stroke-dashoffset:0 } }
 @media (max-width: 760px) {
   .consent-panel { right:12px; bottom:12px; width:calc(100% - 24px); max-height:calc(100svh - 24px); overflow:auto; }
   .scene-image { object-position:var(--scene-position); }
@@ -359,6 +461,23 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
   .gear6-promo__visual--qr { width:55px; padding:14px 4px 3px; }
   .gear6-promo__visual--qr img,.gear6-promo:hover .gear6-promo__visual--qr img { width:47px; height:47px; }
   .gear6-promo__scan { top:4px; font-size:4px; }
+  .keepsake-dibba { left:calc(50% - 98px); bottom:max(82px,calc(env(safe-area-inset-bottom) + 72px)); width:94px; height:45px; }
+  .keepsake-box { width:94px; height:45px; border-radius:4px 4px 8px 8px; }
+  .keepsake-box__lid { top:-6px; height:11px; }
+  .keepsake-box__label { inset:10px 9px 6px; }
+  .keepsake-box__label strong { font-size:9px; }
+  .keepsake-box__label small { font-size:4.5px; }
+  .keepsake-note { bottom:max(139px,calc(env(safe-area-inset-bottom) + 129px)); width:calc(100vw - 28px); min-height:264px; max-height:calc(100svh - 158px); padding:27px 25px 21px; overflow:auto; }
+  .keepsake-note blockquote { max-width:280px; font-size:17px; line-height:1.5; }
+  .keepsake-object { width:70px; height:44px; }
+  .scene-ritual { left:calc(50% + 4px); bottom:max(82px,calc(env(safe-area-inset-bottom) + 72px)); width:94px; height:45px; }
+  .ritual-tag { width:94px; height:45px; }
+  .ritual-tag strong { font-size:8px; }
+  .ritual-tag small { font-size:4.5px; }
+  .ritual-sheet { bottom:max(139px,calc(env(safe-area-inset-bottom) + 129px)); width:calc(100vw - 28px); min-height:330px; max-height:calc(100svh - 158px); padding:27px 22px 21px; overflow:auto; }
+  .ritual-sheet h2 { font-size:22px; }
+  .ritual-sheet__instruction { margin-bottom:13px; }
+  .ritual-result p { font-size:14px; }
   .memory-navigator { width:calc(100vw - 28px); min-width:0; height:58px; bottom:max(12px,env(safe-area-inset-bottom)); grid-template-columns:56px 1fr 56px; border-radius:14px; }
   .memory-navigator__direction { justify-content:center; padding:0; }
   .memory-navigator__direction span { display:none; }

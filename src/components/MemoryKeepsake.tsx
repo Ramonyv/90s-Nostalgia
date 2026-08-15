@@ -5,7 +5,6 @@ import { keepsakes, type Keepsake } from '../data/keepsakes'
 import type { Scene } from '../data/scenes'
 
 const STORAGE_PREFIX = 'yaadein-keepsakes-v1:'
-const MEMORY_SURFACE_EVENT = 'yaadein:memory-surface'
 
 function readSeen(sceneId: Scene['id']) {
   try {
@@ -27,13 +26,6 @@ export function MemoryKeepsake({ scene }: { scene: Scene }) {
     window.addEventListener('keydown', close)
     return () => window.removeEventListener('keydown', close)
   }, [open])
-  useEffect(() => {
-    const closeForOtherSurface = (event: Event) => {
-      if ((event as CustomEvent<string>).detail !== 'keepsake') setOpen(false)
-    }
-    window.addEventListener(MEMORY_SURFACE_EVENT, closeForOtherSurface)
-    return () => window.removeEventListener(MEMORY_SURFACE_EVENT, closeForOtherSurface)
-  }, [])
 
   const reveal = () => {
     const collection = keepsakes[scene.id]
@@ -52,7 +44,6 @@ export function MemoryKeepsake({ scene }: { scene: Scene }) {
   }
 
   const openBox = () => {
-    window.dispatchEvent(new CustomEvent(MEMORY_SURFACE_EVENT, { detail: 'keepsake' }))
     if (!item) reveal()
     setOpen(true)
   }

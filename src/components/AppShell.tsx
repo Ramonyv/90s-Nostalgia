@@ -17,7 +17,6 @@ import { Gear6Promo } from './Gear6Promo'
 import { SEO } from '../editorial/SEO'
 import { absoluteUrl } from '../config/site'
 import { MemoryKeepsake } from './MemoryKeepsake'
-import { SceneRitual } from './SceneRitual'
 
 export function AppShell() {
   const location = useLocation(), scene = getScene(location.pathname)
@@ -82,7 +81,6 @@ export function AppShell() {
     <NetlifyCredit />
     <MemoryNavigator current={scene.id} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} />
     <MemoryKeepsake key={scene.id} scene={scene} />
-    <SceneRitual key={`ritual-${scene.id}`} scene={scene} />
     <SpotifyRadio playlist={playlist} />
     <div className="scene-count"><span>0{scenes.findIndex(s => s.id === scene.id) + 1}</span><i /><span>0{scenes.length}</span></div>
     <MoreMemories open={moreOpen} onClose={() => setMoreOpen(false)} onSceneSelect={selectScene} />

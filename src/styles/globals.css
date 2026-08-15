@@ -30,14 +30,14 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 .memory-scene--highway-adda .scene-description { max-width:330px; font-size:clamp(13px,1vw,16px); opacity:.72; }
 .highway-adda-ambience { position:absolute; z-index:3; inset:0; overflow:hidden; pointer-events:none; }
 .adda-distance-light { position:absolute; left:-5%; top:47%; width:9px; height:3px; border-radius:50%; background:#f9d491; box-shadow:0 0 10px 3px rgba(255,198,107,.55),23px 0 9px 2px rgba(255,213,143,.38); opacity:0; animation:adda-highway-pass 15s 3s ease-in-out infinite; }
-.adda-radio-glow { position:absolute; left:69.4%; top:48.8%; width:5.5%; height:8.5%; border-radius:40%; background:radial-gradient(circle,rgba(239,142,60,.28),transparent 67%); opacity:0; transition:opacity .35s; }
+.adda-radio-glow { position:absolute; left:85.5%; top:8%; width:8%; height:12%; border-radius:40%; background:radial-gradient(circle,rgba(239,142,60,.28),transparent 67%); opacity:0; transition:opacity .35s; }
 .is-radio .adda-radio-glow { opacity:1; animation:adda-radio-tune .18s steps(2,end) 7; }
-.adda-chai-steam { position:absolute; left:51.2%; top:62.5%; width:8%; height:13%; opacity:0; transition:opacity .3s; }
+.adda-chai-steam { position:absolute; left:52%; top:70%; width:8%; height:13%; opacity:0; transition:opacity .3s; }
 .is-chai .adda-chai-steam { opacity:.58; }
 .adda-chai-steam i { position:absolute; bottom:0; width:1px; height:54%; background:linear-gradient(transparent,rgba(244,234,215,.72)); filter:blur(.3px); animation:adda-steam 1.6s ease-in-out infinite; }
 .adda-chai-steam i:nth-child(2) { left:22%; animation-delay:-.55s; }
 .adda-chai-steam i:nth-child(3) { left:44%; animation-delay:-1.05s; }
-.adda-bike-light { position:absolute; left:17%; top:51%; width:4.5%; height:4.5%; border-radius:50%; background:radial-gradient(circle,rgba(255,228,155,.82),rgba(244,169,62,.18) 32%,transparent 72%); filter:blur(1px); opacity:0; }
+.adda-bike-light { position:absolute; left:13.5%; top:61%; width:4.5%; height:4.5%; border-radius:50%; background:radial-gradient(circle,rgba(255,228,155,.82),rgba(244,169,62,.18) 32%,transparent 72%); filter:blur(1px); opacity:0; }
 .is-motorcycle .adda-bike-light { animation:adda-bike-flicker 1.65s steps(1,end); }
 .gear6-memory { position:absolute; z-index:32; inset:0; display:grid; place-items:center; padding:24px; background:rgba(12,9,6,.48); backdrop-filter:blur(3px); }
 .gear6-memory__paper { position:relative; width:min(390px,calc(100vw - 40px)); padding:54px 42px 38px; color:#35271c; background:#c4a06b; border:1px solid rgba(255,229,174,.25); box-shadow:0 28px 80px rgba(0,0,0,.52),inset 0 0 44px rgba(77,45,19,.22); text-align:center; clip-path:polygon(1% 2%,98% 0,100% 92%,95% 100%,3% 97%,0 8%); }
@@ -317,13 +317,13 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
   .memory-scene--highway-adda .hotspot__pulse { inset:15px; }
   .memory-scene--highway-adda .hotspot__label { display:none; }
   .memory-scene--highway-adda .adda-distance-light { display:none; }
-  .memory-scene--highway-adda .hotspot:nth-child(1) { left:91%!important; top:48%!important; }
-  .memory-scene--highway-adda .hotspot:nth-child(2) { left:73%!important; top:71%!important; }
-  .memory-scene--highway-adda .hotspot:nth-child(3) { left:5%!important; top:66%!important; }
+  .memory-scene--highway-adda .hotspot:nth-child(1) { left:93%!important; top:18%!important; }
+  .memory-scene--highway-adda .hotspot:nth-child(2) { left:74%!important; top:79%!important; }
+  .memory-scene--highway-adda .hotspot:nth-child(3) { left:52%!important; top:43%!important; }
   .memory-scene--highway-adda .hotspot:nth-child(4) { left:60%!important; top:37%!important; }
-  .memory-scene--highway-adda .adda-radio-glow { left:87%; top:43%; width:16%; height:12%; }
-  .memory-scene--highway-adda .adda-chai-steam { left:68%; top:63%; width:20%; height:12%; }
-  .memory-scene--highway-adda .adda-bike-light { left:0; top:61%; width:12%; height:6%; }
+  .memory-scene--highway-adda .adda-radio-glow { left:87%; top:10%; width:16%; height:12%; }
+  .memory-scene--highway-adda .adda-chai-steam { left:68%; top:70%; width:20%; height:12%; }
+  .memory-scene--highway-adda .adda-bike-light { left:45%; top:37%; width:14%; height:9%; }
   .gear6-memory__paper { padding:48px 28px 34px; }
   .adhoori-shayari { left:auto; right:5%; top:24%; max-width:45%; font-size:10px; line-height:1.7; }
   .adhoori-fan { left:31%; top:5%; width:68px; height:68px; }

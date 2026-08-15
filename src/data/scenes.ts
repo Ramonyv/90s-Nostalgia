@@ -153,10 +153,10 @@ export const scenes: Scene[] = [
     id: 'highway-adda', slug: '/highway-adda', navLabel: 'Highway Adda', title: 'Highway Adda', hindiTitle: 'कुछ रास्ते मंज़िल से ज़्यादा याद रहते हैं।', year: '1998',
     description: 'A late-night dhaba stop, old motorcycles, and friendship before group chats.', shortLine: 'जब दोस्ती के लिए नेटवर्क नहीं चाहिए था।', desktopBackground: '/scenes/highway-adda/highway-adda.webp', mobileBackground: '/scenes/highway-adda/highway-adda-mobile.webp', fallbackImage: '/scenes/highway-adda/highway-adda.webp', ambientAudio: 'road', accentColor: '#d8943b', animation: { dust: true, dustCount: 6 }, availability: 'active', primaryNav: true, mobilePosition: 'center',
     hotspots: [
-      { x: 70, y: 52, label: 'Radio — tune into the night.', align: 'right', action: 'radio' },
-      { x: 53, y: 69, label: 'Chai. Still warm.', action: 'chai' },
-      { x: 19, y: 56, label: 'One kick. Maybe two.', action: 'motorcycle' },
-      { x: 47, y: 36, label: 'An old club poster.', action: 'gear6' },
+      { x: 89, y: 16, label: 'Radio — tune into the night.', align: 'right', action: 'radio' },
+      { x: 56, y: 79, label: 'Chai. Still warm.', action: 'chai' },
+      { x: 16, y: 66, label: 'One kick. Maybe two.', action: 'motorcycle' },
+      { x: 53, y: 31, label: 'An old club poster.', action: 'gear6' },
     ],
   },
 ]

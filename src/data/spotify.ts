@@ -63,6 +63,13 @@ export const spotifyPlaylists: Record<SceneId, SpotifyPlaylist> = {
     uri: 'spotify:playlist:57NwRU3l6nTtuLk4b8l1qk',
     hindiName: 'अधूरी धुनें',
   },
+  'highway-adda': {
+    ...memoryPlaylist('Highway Adda radio'),
+    playlistId: '0hTAaFIMq8i2FzNVgtJQb6',
+    title: 'Highway Adda Playlist',
+    sourceUrl: 'https://open.spotify.com/playlist/0hTAaFIMq8i2FzNVgtJQb6?si=oevM7zIiRB6O3TY5hQ6mPQ',
+    uri: 'spotify:playlist:0hTAaFIMq8i2FzNVgtJQb6',
+  },
 }
 
 export const getSpotifyEmbedUrl = (playlist: SpotifyPlaylist) => `https://open.spotify.com/embed/playlist/${playlist.playlistId}?utm_source=generator&theme=0`

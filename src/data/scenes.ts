@@ -1,6 +1,7 @@
-export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'adhoori-shaam'
+export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'adhoori-shaam' | 'highway-adda'
 export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'permit-room'
-export type Hotspot = { x: number; y: number; label: string; align?: 'left' | 'right'; action?: 'spotify' }
+export type HotspotAction = 'spotify' | 'radio' | 'chai' | 'motorcycle' | 'gear6'
+export type Hotspot = { x: number; y: number; label: string; align?: 'left' | 'right'; action?: HotspotAction }
 
 export type Scene = {
   id: SceneId
@@ -146,6 +147,16 @@ export const scenes: Scene[] = [
       { x: 79, y: 30, label: 'कुछ लोग चले जाते हैं, कुछ शामों में रह जाते हैं।', align: 'right' },
       { x: 43, y: 42, label: 'कुछ गाने वक्त नहीं बताते… बस याद दिलाते हैं।' },
       { x: 17, y: 45, label: 'बारिश बाहर थी. यादें अंदर।' },
+    ],
+  },
+  {
+    id: 'highway-adda', slug: '/highway-adda', navLabel: 'Highway Adda', title: 'Highway Adda', hindiTitle: 'कुछ रास्ते मंज़िल से ज़्यादा याद रहते हैं।', year: '1998',
+    description: 'A late-night dhaba stop, old motorcycles, and friendship before group chats.', shortLine: 'जब दोस्ती के लिए नेटवर्क नहीं चाहिए था।', desktopBackground: '/scenes/highway-adda/highway-adda.webp', mobileBackground: '/scenes/highway-adda/highway-adda-mobile.webp', fallbackImage: '/scenes/highway-adda/highway-adda.webp', ambientAudio: 'road', accentColor: '#d8943b', animation: { dust: true, dustCount: 6 }, availability: 'active', primaryNav: true, mobilePosition: 'center',
+    hotspots: [
+      { x: 70, y: 52, label: 'Radio — tune into the night.', align: 'right', action: 'radio' },
+      { x: 53, y: 69, label: 'Chai. Still warm.', action: 'chai' },
+      { x: 19, y: 56, label: 'One kick. Maybe two.', action: 'motorcycle' },
+      { x: 47, y: 36, label: 'An old club poster.', action: 'gear6' },
     ],
   },
 ]

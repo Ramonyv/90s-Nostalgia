@@ -18,6 +18,7 @@ import { SEO } from '../editorial/SEO'
 import { absoluteUrl } from '../config/site'
 import { MemoryKeepsake } from './MemoryKeepsake'
 import { trackEvent, trackEventOnce } from '../lib/analytics'
+import { NostalgiaStickers } from './NostalgiaStickers'
 
 export function AppShell() {
   const location = useLocation(), scene = getScene(location.pathname)
@@ -74,6 +75,7 @@ export function AppShell() {
   }
   return <div className="app-shell">
     <SEO title={`${scene.title} (${scene.year})`} description={`${scene.description} Explore an illustrated memory from everyday India in the 1990s.`} canonicalPath={scene.slug} image={scene.desktopBackground} jsonLd={scene.id === 'salon' ? { '@context': 'https://schema.org', '@type': 'WebSite', name: '90s Yaadein', description: 'An interactive archive of everyday memories from 1990s India.', url: absoluteUrl('/') } : undefined} />
+    <NostalgiaStickers sceneId={scene.id} />
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Navigate to="/salon" replace />} />

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { creatorLinks, SITE_DESCRIPTION } from '../config/site'
 import { openCookieSettings } from './ConsentManager'
+import { EditorialStickers } from '../components/NostalgiaStickers'
 
 export function EditorialLayout() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -10,6 +11,7 @@ export function EditorialLayout() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [location.pathname])
   return <div className="editorial-shell">
     <a className="skip-link" href="#main-content">Skip to content</a>
+    <EditorialStickers />
     <header className="editorial-header">
       <Link className="editorial-brand" to="/salon"><strong><span>90s</span> यादें</strong><small>{SITE_DESCRIPTION}</small></Link>
       <button className="editorial-menu-button" type="button" onClick={() => setMenuOpen(value => !value)} aria-expanded={menuOpen} aria-controls="editorial-nav" aria-label="Toggle navigation">{menuOpen ? <X /> : <Menu />}</button>

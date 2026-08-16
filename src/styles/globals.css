@@ -10,6 +10,10 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 .consent-panel .eyebrow { margin:0 0 12px; color:#a9432d; font-size:10px; font-weight:600; letter-spacing:.19em; text-transform:uppercase; }
 .consent-panel h2 { margin:0; font:500 28px Georgia,serif; }.consent-panel>p:not(.eyebrow) { font-size:12px; line-height:1.55; }.consent-panel label { display:flex; justify-content:space-between; align-items:center; gap:20px; padding:11px 0; border-top:1px solid rgba(65,44,29,.13); }.consent-panel label span { display:flex; flex-direction:column; }.consent-panel label small { margin-top:3px; font-size:9px; opacity:.62; }.consent-actions { display:flex; flex-wrap:wrap; gap:7px; margin-top:15px; }.consent-actions button { padding:9px 11px; border:1px solid #2c241e; color:#2c241e; background:none; font-size:10px; cursor:pointer; }.consent-actions .button-primary { color:#fff; background:#2c241e; }
 .app-shell { position:relative; width:100%; height:100vh; min-height:100svh; overflow:hidden; background:#21160f; }
+.nostalgia-stickers { position:fixed; z-index:8; inset:0; overflow:hidden; pointer-events:none; }
+.nostalgia-sticker { position:absolute; display:block; width:clamp(76px,8vw,132px); height:auto; filter:drop-shadow(0 10px 13px rgba(15,8,3,.3)); user-select:none; will-change:transform; }
+.nostalgia-sticker--1 { right:-18px; top:18%; animation:sticker-drift-one 7s ease-in-out infinite alternate; }
+.nostalgia-sticker--2 { left:-16px; bottom:15%; width:clamp(62px,6.4vw,106px); animation:sticker-drift-two 8.5s ease-in-out infinite alternate; }
 .memory-scene { position:absolute; inset:0; min-height:100%; overflow:hidden; background:#2e2118; transform-origin:center; }
 @supports (height:100dvh) { .app-shell { height:100dvh; } }
 .scene-image { position:absolute; width:100%; height:100%; inset:0; object-fit:cover; object-position:center; animation:scene-breathe 16s ease-in-out infinite alternate; }
@@ -293,6 +297,10 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 .memory-list a svg { opacity:0; transform:translate(-5px,5px); transition:opacity .25s,transform .25s; }
 .memory-list a:hover svg { opacity:.8; transform:none; }
 .intro { position:fixed; inset:0; z-index:100; display:grid; place-items:center; background:#24160e; color:var(--cream); }
+.intro-stickers { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+.intro-stickers img { position:absolute; width:clamp(130px,17vw,245px); height:auto; filter:drop-shadow(0 24px 30px rgba(0,0,0,.3)); }
+.intro-stickers img:first-child { left:clamp(-68px,-3vw,-30px); top:15%; }
+.intro-stickers img:last-child { right:clamp(-55px,-2vw,-20px); bottom:8%; width:clamp(120px,15vw,220px); }
 .intro::before { content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 42%,rgba(131,77,41,.18),transparent 34%); }
 .intro__grain { position:absolute; inset:0; opacity:.12; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E"); mix-blend-mode:soft-light; pointer-events:none; }
 .intro__content { position:relative; text-align:center; display:flex; align-items:center; flex-direction:column; }
@@ -315,9 +323,20 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 @keyframes dust { to { transform:translate(18px,-26px); opacity:.05 } }
 @keyframes pulse { from { transform:scale(.5); opacity:.9 } to { transform:scale(2); opacity:0 } }
 @keyframes scene-breathe { to { transform:scale(1.008) } }
+@keyframes sticker-drift-one { to { margin-top:9px; margin-right:4px } }
+@keyframes sticker-drift-two { to { margin-bottom:10px; margin-left:5px } }
 @keyframes on-air { 50% { opacity:.42; box-shadow:0 0 3px #ff7b4c } }
 @keyframes support-stroke-shine { to { transform:rotate(360deg) } }
 @keyframes support-button-breathe { 50% { box-shadow:0 0 12px rgba(224,173,98,.24),inset 0 0 8px rgba(214,154,50,.07) } }
+
+@media (max-width:760px) {
+  .nostalgia-sticker { width:74px; opacity:.94; }
+  .nostalgia-sticker--1 { right:-25px; top:18%; }
+  .nostalgia-sticker--2 { left:-22px; top:35%; bottom:auto; width:62px; }
+  .intro-stickers img { width:112px; opacity:.78; }
+  .intro-stickers img:first-child { left:-48px; top:12%; }
+  .intro-stickers img:last-child { right:-42px; bottom:7%; width:104px; }
+}
 @keyframes support-button-shimmer { 0%,18% { background-position:150% 0 } 58%,100% { background-position:-150% 0 } }
 @keyframes support-heart { 50% { transform:scale(1.13) } }
 @keyframes gear6-shimmer { 0%,28% { background-position:140% 0 } 60%,100% { background-position:-140% 0 } }

@@ -4,6 +4,7 @@ import { creatorLinks } from '../config/site'
 import { sceneAvif, scenes } from '../data/scenes'
 import { openCookieSettings } from './ConsentManager'
 import { SEO } from './SEO'
+import { trackEvent } from '../lib/analytics'
 
 type PageSection = { heading: string; paragraphs: string[] }
 
@@ -12,7 +13,7 @@ function TextPage({ title, eyebrow, intro, sections, updated }: { title: string;
 }
 
 export function MemoriesIndex() {
-  return <><SEO title="Memories" description="Explore illustrated scenes of everyday life in 1990s India." canonicalPath="/memories" /><section className="memories-page"><header><p className="eyebrow">An interactive archive</p><h1>Everyday India,<br />remembered in scenes.</h1><p>Enter neighbourhood salons, railway platforms, monsoon lanes and the ordinary places that stayed with us.</p></header><div className="memories-grid">{scenes.map(scene => <article key={scene.id}><Link to={scene.slug}><picture><source media="(max-width: 760px)" srcSet={sceneAvif(scene.mobileBackground)} type="image/avif" /><source media="(max-width: 760px)" srcSet={scene.mobileBackground} type="image/webp" /><source srcSet={sceneAvif(scene.desktopBackground)} type="image/avif" /><img src={scene.desktopBackground} alt={`${scene.title}, an illustrated Indian memory from ${scene.year}`} width="900" height="600" loading="lazy" /></picture><div><p><span>{scene.year}</span><span>Everyday India</span></p><h2>{scene.title}</h2><p>{scene.description}</p><span className="text-link">Enter memory <ArrowRight size={15} /></span></div></Link></article>)}</div></section></>
+  return <><SEO title="Memories" description="Explore illustrated scenes of everyday life in 1990s India." canonicalPath="/memories" /><section className="memories-page"><header><p className="eyebrow">An interactive archive</p><h1>Everyday India,<br />remembered in scenes.</h1><p>Enter neighbourhood salons, railway platforms, monsoon lanes and the ordinary places that stayed with us.</p></header><div className="memories-grid">{scenes.map(scene => <article key={scene.id}><Link to={scene.slug} onClick={() => trackEvent('memory_explore', { to_scene: scene.id, method: 'memories_index' })}><picture><source media="(max-width: 760px)" srcSet={sceneAvif(scene.mobileBackground)} type="image/avif" /><source media="(max-width: 760px)" srcSet={scene.mobileBackground} type="image/webp" /><source srcSet={sceneAvif(scene.desktopBackground)} type="image/avif" /><img src={scene.desktopBackground} alt={`${scene.title}, an illustrated Indian memory from ${scene.year}`} width="900" height="600" loading="lazy" decoding="async" /></picture><div><p><span>{scene.year}</span><span>Everyday India</span></p><h2>{scene.title}</h2><p>{scene.description}</p><span className="text-link">Enter memory <ArrowRight size={15} /></span></div></Link></article>)}</div></section></>
 }
 
 export function AboutPage() {

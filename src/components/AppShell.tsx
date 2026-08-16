@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { Film, Image as ImageIcon, Maximize2, Menu, Minimize2, Volume2, VolumeX } from 'lucide-react'
 import { getScene, scenes } from '../data/scenes'
@@ -17,6 +17,7 @@ import { Gear6Promo } from './Gear6Promo'
 import { SEO } from '../editorial/SEO'
 import { absoluteUrl } from '../config/site'
 import { MemoryKeepsake } from './MemoryKeepsake'
+import { trackEvent, trackEventOnce } from '../lib/analytics'
 
 export function AppShell() {
   const location = useLocation(), scene = getScene(location.pathname)
@@ -25,12 +26,20 @@ export function AppShell() {
   const [fullscreen, setFullscreen] = useState(Boolean(document.fullscreenElement))
   const [mediaAudioUnlocked, setMediaAudioUnlocked] = useState(false)
   const [animatedScenes, setAnimatedScenes] = useState(false)
+  const previousScene = useRef<typeof scene.id | null>(null)
   const ambient = useAmbientAudio(scene, entered)
   const playlist = spotifyPlaylists[scene.id]
   const selectScene = (sceneId: typeof scene.id) => {
     const nextPlaylist = spotifyPlaylists[sceneId]
     requestSpotifyPlayback(nextPlaylist)
   }
+  useEffect(() => {
+    trackEventOnce(`scene-view:${location.key}:${scene.id}`, 'scene_view', { scene_id: scene.id, scene_name: scene.title })
+    if (previousScene.current && previousScene.current !== scene.id) {
+      trackEvent('scene_change', { from_scene: previousScene.current, to_scene: scene.id })
+    }
+    previousScene.current = scene.id
+  }, [location.key, scene.id, scene.title])
   useEffect(() => {
     const syncFullscreen = () => setFullscreen(Boolean(document.fullscreenElement))
     document.addEventListener('fullscreenchange', syncFullscreen)
@@ -52,6 +61,7 @@ export function AppShell() {
     setMediaAudioUnlocked(true)
     setEntered(true)
     await ambient.startAmbient()
+    trackEvent('audio_play', { audio_type: 'ambience', scene_id: scene.id, source: 'intro_enter' })
   }
   const toggleFullscreen = async () => {
     if (document.fullscreenElement) await document.exitFullscreen()
@@ -59,6 +69,7 @@ export function AppShell() {
   }
   const toggleAmbient = () => {
     if (!ambient.ambienceEnabled) setMediaAudioUnlocked(true)
+    trackEvent(ambient.ambienceEnabled ? 'audio_pause' : 'audio_play', { audio_type: 'ambience', scene_id: scene.id, source: 'scene_control' })
     ambient.setAmbienceEnabled(!ambient.ambienceEnabled)
   }
   return <div className="app-shell">
@@ -70,9 +81,9 @@ export function AppShell() {
         <Route path="*" element={<Navigate to="/salon" replace />} />
       </Routes>
     </AnimatePresence>
-    <header className="topbar"><a className="brand" href="/salon"><strong><span>90s</span> यादें</strong><small>Relive it. Feel it. Live it.</small></a><div className="immersive-nav-cluster"><SceneNavigation current={scene.id} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} /><nav className="archive-nav" aria-label="Archive"><a href="/memories">Memories</a><a href="/journal">Journal</a><a href="/about">About</a></nav></div><button className="mobile-menu" onClick={() => setMoreOpen(true)} aria-label="Open memory menu"><Menu /></button></header>
+    <header className="topbar"><a className="brand" href="/salon"><strong><span>90s</span> यादें</strong><small>Relive it. Feel it. Live it.</small></a><div className="immersive-nav-cluster"><SceneNavigation current={scene.id} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} /><nav className="archive-nav" aria-label="Archive"><a href="/memories">Memories</a><a href="/journal" onClick={() => trackEvent('scene_to_blog_click', { scene_id: scene.id, destination: '/journal' })}>Journal</a><a href="/about">About</a></nav></div><button className="mobile-menu" onClick={() => { trackEvent('memory_explore', { scene_id: scene.id, method: 'mobile_menu' }); setMoreOpen(true) }} aria-label="Open memory menu"><Menu /></button></header>
     <div className="scene-controls">
-      <button className={`scene-control animation-toggle${animatedScenes ? ' is-active' : ''}`} onClick={() => setAnimatedScenes(value => !value)} aria-label={animatedScenes ? 'Use static scene backgrounds' : 'Animate scene backgrounds'} aria-pressed={animatedScenes}>{animatedScenes ? <Film size={15} /> : <ImageIcon size={15} />}<span>{animatedScenes ? 'Animated' : 'Static'}</span></button>
+      <button className={`scene-control animation-toggle${animatedScenes ? ' is-active' : ''}`} onClick={() => { if (!animatedScenes) trackEvent('memory_explore', { scene_id: scene.id, method: 'enable_animation' }); setAnimatedScenes(value => !value) }} aria-label={animatedScenes ? 'Use static scene backgrounds' : 'Animate scene backgrounds'} aria-pressed={animatedScenes}>{animatedScenes ? <Film size={15} /> : <ImageIcon size={15} />}<span>{animatedScenes ? 'Animated' : 'Static'}</span></button>
       <button className="scene-control ambient-toggle" onClick={toggleAmbient} aria-label={ambient.ambienceEnabled ? 'Mute ambience' : 'Play ambience'}>{ambient.ambienceEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}<span>Ambience {ambient.ambienceEnabled ? 'on' : 'off'}</span></button>
       {document.fullscreenEnabled && <button className="scene-control fullscreen-toggle" onClick={() => void toggleFullscreen()} aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} aria-pressed={fullscreen}>{fullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}<span>{fullscreen ? 'Exit fullscreen' : 'Fullscreen'}</span></button>}
     </div>
@@ -81,7 +92,7 @@ export function AppShell() {
     <NetlifyCredit />
     <MemoryNavigator current={scene.id} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} />
     <MemoryKeepsake key={scene.id} scene={scene} />
-    <SpotifyRadio playlist={playlist} />
+    {entered && <SpotifyRadio playlist={playlist} />}
     <div className="scene-count"><span>0{scenes.findIndex(s => s.id === scene.id) + 1}</span><i /><span>0{scenes.length}</span></div>
     <MoreMemories open={moreOpen} onClose={() => setMoreOpen(false)} onSceneSelect={selectScene} />
     <IntroLoader visible={!entered} onEnter={enter} />

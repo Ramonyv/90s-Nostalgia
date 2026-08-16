@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { sceneAvif, type Scene } from '../data/scenes'
 import { SceneHotspot } from '../components/SceneHotspot'
 import { Gear6LogoPlaceholder } from '../components/Gear6LogoPlaceholder'
+import { trackEvent } from '../lib/analytics'
 
 export function MemoryScene({ scene, animated, videoSoundEnabled, onAmbientToggle }: { scene: Scene; animated: boolean; videoSoundEnabled: boolean; onAmbientToggle?: () => void }) {
   const [videoFailed, setVideoFailed] = useState(false)
@@ -41,7 +42,7 @@ export function MemoryScene({ scene, animated, videoSoundEnabled, onAmbientToggl
   }
 
   return <motion.main className={`memory-scene memory-scene--${scene.id}`} style={{ '--accent': scene.accentColor, '--scene-position': scene.mobilePosition } as React.CSSProperties} initial={{ opacity: 0, scale: 1.015 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.01 }} transition={{ duration: .85, ease: [0.22, 1, 0.36, 1] }}>
-    {showVideo ? <video ref={videoRef} className="scene-video" poster={scene.fallbackImage} autoPlay muted={Boolean(scene.videoMuted || !videoSoundEnabled)} loop playsInline preload="metadata" aria-hidden="true" onError={() => setVideoFailed(true)}>{scene.mobileVideo && <source media="(max-width: 760px)" src={scene.mobileVideo} type="video/mp4" />}<source src={scene.backgroundVideo} type="video/mp4" /></video> : <picture><source media="(max-width: 760px)" srcSet={sceneAvif(scene.mobileBackground)} type="image/avif" /><source media="(max-width: 760px)" srcSet={scene.mobileBackground} type="image/webp" /><source srcSet={sceneAvif(scene.desktopBackground)} type="image/avif" /><img className="scene-image" src={scene.desktopBackground} alt={`${scene.title}, an illustrated Indian memory from ${scene.year}`} fetchPriority="high" /></picture>}
+    {showVideo ? <video ref={videoRef} className="scene-video" poster={scene.fallbackImage} autoPlay muted={Boolean(scene.videoMuted || !videoSoundEnabled)} loop playsInline preload="metadata" aria-hidden="true" onPlay={() => trackEvent('video_play', { scene_id: scene.id, video_type: 'scene_background' })} onError={() => setVideoFailed(true)}>{scene.mobileVideo && <source media="(max-width: 760px)" src={scene.mobileVideo} type="video/mp4" />}<source src={scene.backgroundVideo} type="video/mp4" /></video> : <picture><source media="(max-width: 760px)" srcSet={sceneAvif(scene.mobileBackground)} type="image/avif" /><source media="(max-width: 760px)" srcSet={scene.mobileBackground} type="image/webp" /><source srcSet={sceneAvif(scene.desktopBackground)} type="image/avif" /><img className="scene-image" src={scene.desktopBackground} alt={`${scene.title}, an illustrated Indian memory from ${scene.year}`} fetchPriority="high" decoding="async" /></picture>}
     <div className="scene-shade" />
     {scene.id === 'auto-rickshaw' && <div className="auto-ride-motion" aria-hidden="true"><i /><i /><i /></div>}
     {scene.id === 'adhoori-shaam' && animated && !reducedMotion && <div className="adhoori-ambience" aria-hidden="true"><span className="adhoori-fan"><i /><i /><i /></span><span className="adhoori-rain" /><span className="adhoori-light" /><span className="adhoori-photo" /></div>}

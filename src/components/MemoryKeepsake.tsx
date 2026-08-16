@@ -3,6 +3,7 @@ import { ChevronRight, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { keepsakes, type Keepsake } from '../data/keepsakes'
 import type { Scene } from '../data/scenes'
+import { trackEvent } from '../lib/analytics'
 
 const STORAGE_PREFIX = 'yaadein-keepsakes-v1:'
 
@@ -41,6 +42,7 @@ export function MemoryKeepsake({ scene }: { scene: Scene }) {
     try { localStorage.setItem(`${STORAGE_PREFIX}${scene.id}`, JSON.stringify(nextSeen)) } catch { /* memory still works without persistence */ }
     setItem(next)
     setRevealed(nextSeen.length)
+    trackEvent('memory_explore', { scene_id: scene.id, method: 'keepsake', keepsake_id: next.id })
   }
 
   const openBox = () => {

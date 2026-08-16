@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion'
 import { ExternalLink, GripHorizontal, Maximize2, Minimize2, Radio } from 'lucide-react'
-import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
 import { getSpotifyEmbedUrl, type SpotifyPlaylist } from '../data/spotify'
+import { trackEvent } from '../lib/analytics'
 
 type Position = { x: number; y: number }
 type SpotifyController = {
@@ -29,7 +30,9 @@ const STORAGE_KEY = 'yaadein-spotify-position'
 const COLLAPSED_KEY = 'yaadein-spotify-collapsed'
 const NAV_CLEARANCE = 82
 export const SPOTIFY_PLAY_EVENT = 'yaadein:play-spotify'
-export const requestSpotifyPlayback = (playlist: SpotifyPlaylist) => window.dispatchEvent(new CustomEvent(SPOTIFY_PLAY_EVENT, { detail: { uri: playlist.uri } }))
+export const requestSpotifyPlayback = (playlist: SpotifyPlaylist) => {
+  window.dispatchEvent(new CustomEvent(SPOTIFY_PLAY_EVENT, { detail: { uri: playlist.uri } }))
+}
 let spotifyApiPromise: Promise<SpotifyIframeApi> | undefined
 
 function loadSpotifyApi() {
@@ -132,6 +135,7 @@ export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
         })
         createdController.addListener('playback_started', () => {
           pendingUri.current = null
+          if (!playbackStarted.current) trackEvent('audio_play', { audio_type: 'spotify', playlist: activePlaylist.current.title, source: 'spotify_player' })
           playbackStarted.current = true
         })
       })
@@ -170,26 +174,26 @@ export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
     controller.current.play()
   }, [playlist.uri])
 
-  const clamp = (next: Position) => {
+  const clamp = useCallback((next: Position) => {
     const width = panel.current?.offsetWidth ?? Math.min(370, window.innerWidth - 28)
     const height = panel.current?.offsetHeight ?? 210
     return {
       x: Math.min(Math.max(8, next.x), Math.max(8, window.innerWidth - width - 8)),
       y: Math.min(Math.max(8, next.y), Math.max(8, window.innerHeight - height - NAV_CLEARANCE)),
     }
-  }
+  }, [])
 
-  const save = (next: Position) => {
+  const save = useCallback((next: Position) => {
     const safe = clamp(next)
     setPosition(safe)
     localStorage.setItem(STORAGE_KEY, JSON.stringify(safe))
-  }
+  }, [clamp])
 
   useEffect(() => {
     const resize = () => save(position)
     window.addEventListener('resize', resize)
     return () => window.removeEventListener('resize', resize)
-  }, [position.x, position.y])
+  }, [position, save])
 
   const startDrag = (event: PointerEvent<HTMLDivElement>) => {
     dragOffset.current = { x: event.clientX - position.x, y: event.clientY - position.y }

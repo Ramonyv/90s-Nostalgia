@@ -31,13 +31,14 @@ export function useAudioPlayer() {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(24)
   const [volume, setVolume] = useState(() => Number(sessionStorage.getItem('yaadein-volume') ?? .38))
+  const initialVolume = useRef(volume)
 
   useEffect(() => {
-    const audio = new Audio(urls[0]); audio.loop = true; audio.preload = 'metadata'; audio.volume = volume; audioRef.current = audio
+    const audio = new Audio(urls[0]); audio.loop = true; audio.preload = 'metadata'; audio.volume = initialVolume.current; audioRef.current = audio
     const time = () => setCurrentTime(audio.currentTime), meta = () => setDuration(audio.duration || 24)
     audio.addEventListener('timeupdate', time); audio.addEventListener('loadedmetadata', meta)
     return () => { audio.pause(); urls.forEach(URL.revokeObjectURL) }
-  }, []) // one persistent audio instance
+  }, [urls]) // one persistent audio instance
 
   useEffect(() => { if (audioRef.current) audioRef.current.volume = volume; sessionStorage.setItem('yaadein-volume', String(volume)) }, [volume])
   const toggle = useCallback(async () => {

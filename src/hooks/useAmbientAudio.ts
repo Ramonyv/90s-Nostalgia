@@ -22,6 +22,8 @@ export function useAmbientAudio(scene: Scene, entered: boolean) {
   const gain = useRef<GainNode | null>(null)
   const source = useRef<AudioBufferSourceNode | null>(null)
   const [enabled, setEnabled] = useState(true)
+  const enabledRef = useRef(enabled)
+  useEffect(() => { enabledRef.current = enabled }, [enabled])
 
   const build = useCallback(() => {
     if (!context.current) context.current = new AudioContext()
@@ -41,10 +43,10 @@ export function useAmbientAudio(scene: Scene, entered: boolean) {
       window.setTimeout(() => { try { oldSource.stop() } catch { /* already stopped */ } }, 850)
     }
     source.current = src; gain.current = level
-    level.gain.linearRampToValueAtTime(enabled ? preset.gain : 0, ctx.currentTime + 1.2)
-  }, [scene.id, scene.ambientAudio, enabled])
+    level.gain.linearRampToValueAtTime(enabledRef.current ? preset.gain : 0, ctx.currentTime + 1.2)
+  }, [scene.ambientAudio])
 
-  useEffect(() => { if (entered) build() }, [scene.id, entered])
+  useEffect(() => { if (entered) build() }, [build, entered])
   useEffect(() => { const ctx = context.current, g = gain.current; if (ctx && g) { g.gain.cancelScheduledValues(ctx.currentTime); g.gain.linearRampToValueAtTime(enabled ? ambiencePresets[scene.ambientAudio].gain : 0, ctx.currentTime + .5) } }, [enabled, scene.ambientAudio])
   const start = async () => { build(); await context.current?.resume() }
   return { ambienceEnabled: enabled, setAmbienceEnabled: setEnabled, startAmbient: start }

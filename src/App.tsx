@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { scenes } from './data/scenes'
 import { AdSenseLoader } from './editorial/ads'
 import { ConsentManager } from './editorial/ConsentManager'
-import { RouteAnalytics } from './editorial/SEO'
+import { ExternalLinkAnalytics, RouteAnalytics } from './editorial/SEO'
 
 const ImmersiveApp = lazy(() => import('./components/AppShell').then(module => ({ default: module.AppShell })))
 const EditorialApp = lazy(() => import('./editorial/EditorialApp').then(module => ({ default: module.EditorialApp })))
@@ -20,7 +20,7 @@ export default function App() {
     }
   }, [isImmersive])
   return <>
-    <RouteAnalytics /><ConsentManager /><AdSenseLoader />
+    <RouteAnalytics /><ExternalLinkAnalytics /><ConsentManager /><AdSenseLoader />
     {location.pathname === '/' ? <Navigate to="/salon" replace /> : isImmersive ? <Suspense fallback={<div className="route-loader">Loading memory…</div>}><ImmersiveApp /></Suspense> : <Suspense fallback={<div className="route-loader route-loader--paper">Loading archive…</div>}><EditorialApp /></Suspense>}
   </>
 }

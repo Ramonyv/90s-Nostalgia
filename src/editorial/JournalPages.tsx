@@ -1,12 +1,13 @@
 import { ArrowRight, CalendarDays, Check, Clock3, Copy, Search } from 'lucide-react'
-import { lazy, Suspense, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { absoluteUrl, SITE_NAME } from '../config/site'
 import { sceneAvif, scenes } from '../data/scenes'
 import { getPublishedPost, publishedPosts } from './blog'
 import { SEO } from './SEO'
 import { AdSlot } from './ads'
 import { NotFoundPage } from './StaticPages'
+import { trackEvent, trackEventOnce } from '../lib/analytics'
 
 const formatDate = (date: string) => new Intl.DateTimeFormat('en-IN', { dateStyle: 'long' }).format(new Date(`${date}T00:00:00`))
 const MarkdownContent = lazy(() => import('./MarkdownContent').then(module => ({ default: module.MarkdownContent })))
@@ -30,18 +31,22 @@ export function JournalIndex() {
       {featured ? <section className="journal-section"><p className="section-kicker">Featured story</p><StoryRow post={featured} featured /></section> : <section className="journal-empty"><p className="section-kicker">The journal is being prepared</p><h2>Good memories deserve careful telling.</h2><p>No public articles have been published yet. The archive is ready for original essays; drafts remain private until Raman marks them for publication.</p><Link className="text-link" to="/memories">Explore the memories <ArrowRight size={15} /></Link></section>}
       {publishedPosts.length > 0 && <>
         <section className="journal-tools"><label><Search size={18} /><span className="sr-only">Search journal</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search titles, categories and tags" /></label><div>{categories.map(category => <button key={category} onClick={() => setQuery(category)}>{category}</button>)}</div></section>
-        <section className="journal-section"><p className="section-kicker">Latest stories</p>{filtered.map(post => <StoryRow post={post} key={post.slug} />)}{!filtered.length && <p>No stories match “{query}”.</p>}</section>
+        <section className="journal-section"><p className="section-kicker">Latest stories</p>{filtered.filter(post => post.slug !== featured?.slug).map(post => <StoryRow post={post} key={post.slug} />)}{!filtered.length && <p>No stories match “{query}”.</p>}</section>
         <AdSlot placement="list" />
       </>}
-      <section className="memory-bridge"><p className="section-kicker">Memory essays begin here</p><h2>Step inside the scenes.</h2><p>The immersive archive remains the heart of 90s Yaadein.</p><div>{scenes.slice(0, 4).map(scene => <Link key={scene.id} to={scene.slug}><picture><source srcSet={sceneAvif(scene.mobileBackground)} type="image/avif" /><img src={scene.mobileBackground} alt="" width="320" height="220" loading="lazy" /></picture><span>{scene.title}<small>{scene.year}</small></span></Link>)}</div></section>
+      <section className="memory-bridge"><p className="section-kicker">Memory essays begin here</p><h2>Step inside the scenes.</h2><p>The immersive archive remains the heart of 90s Yaadein.</p><div>{scenes.slice(0, 4).map(scene => <Link key={scene.id} to={scene.slug} onClick={() => trackEvent('blog_to_scene_click', { source: 'journal_index', to_scene: scene.id })}><picture><source srcSet={sceneAvif(scene.mobileBackground)} type="image/avif" /><img src={scene.mobileBackground} alt={`${scene.title}, an illustrated memory from ${scene.year}`} width="320" height="220" loading="lazy" decoding="async" /></picture><span>{scene.title}<small>{scene.year}</small></span></Link>)}</div></section>
     </div>
   </>
 }
 
 export function ArticlePage() {
   const { slug } = useParams()
+  const location = useLocation()
   const post = getPublishedPost(slug)
   const [copied, setCopied] = useState(false)
+  useEffect(() => {
+    if (post) trackEventOnce(`blog-view:${location.key}:${post.slug}`, 'blog_view', { article_slug: post.slug, article_title: post.title, category: post.category })
+  }, [location.key, post])
   if (!post) return <NotFoundPage />
   const canonical = post.canonical || absoluteUrl(`/journal/${post.slug}`)
   const related = publishedPosts.filter(item => item.slug !== post.slug && (item.category === post.category || item.tags.some(tag => post.tags.includes(tag)))).slice(0, 3)
@@ -49,7 +54,19 @@ export function ArticlePage() {
   const share = (network: string) => {
     const encodedUrl = encodeURIComponent(canonical), encodedTitle = encodeURIComponent(post.title)
     const urls: Record<string, string> = { x: `https://x.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`, facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}` }
+    trackEvent('share_click', { content_type: 'article', item_id: post.slug, method: network })
     window.open(urls[network], '_blank', 'noopener,noreferrer')
+  }
+  const copyLink = async () => {
+    trackEvent('share_click', { content_type: 'article', item_id: post.slug, method: 'copy_link' })
+    try {
+      await navigator.clipboard.writeText(canonical)
+    } catch {
+      const input = document.createElement('textarea')
+      input.value = canonical; input.style.position = 'fixed'; input.style.opacity = '0'
+      document.body.appendChild(input); input.select(); document.execCommand('copy'); input.remove()
+    }
+    setCopied(true)
   }
   const jsonLd = [{ '@context': 'https://schema.org', '@type': 'Article', headline: post.title, description: post.description, image: post.cover ? absoluteUrl(post.cover) : undefined, datePublished: post.date, dateModified: post.updated, author: { '@type': 'Person', name: 'Raman' }, publisher: { '@type': 'Organization', name: SITE_NAME }, mainEntityOfPage: canonical }, { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') }, { '@type': 'ListItem', position: 2, name: 'Journal', item: absoluteUrl('/journal') }, { '@type': 'ListItem', position: 3, name: post.category }, { '@type': 'ListItem', position: 4, name: post.title, item: canonical }] }]
   return <>
@@ -60,8 +77,8 @@ export function ArticlePage() {
       {post.cover && <figure className="article-cover"><img src={post.cover} alt={post.coverAlt} width="1440" height="900" fetchPriority="high" /></figure>}
       <Suspense fallback={<div className="article-body">Preparing article…</div>}><MarkdownContent body={post.body} /></Suspense>
       <AdSlot placement="article" />
-      {memory && <aside className="related-memory"><picture><source srcSet={sceneAvif(memory.mobileBackground)} type="image/avif" /><img src={memory.mobileBackground} alt={`${memory.title}, an illustrated memory from ${memory.year}`} width="640" height="420" loading="lazy" /></picture><div><p className="section-kicker">Enter the memory</p><h2>{memory.title}</h2><p>{memory.description}</p><Link to={memory.slug}>Experience the scene <ArrowRight size={16} /></Link></div></aside>}
-      <section className="share-row"><strong>Share this story</strong><button onClick={() => void navigator.clipboard.writeText(canonical).then(() => setCopied(true))}>{copied ? <Check size={15} /> : <Copy size={15} />} {copied ? 'Copied' : 'Copy link'}</button><button onClick={() => share('x')}>X</button><button onClick={() => share('facebook')}>Facebook</button><button onClick={() => share('whatsapp')}>WhatsApp</button></section>
+      {memory && <aside className="related-memory"><picture><source srcSet={sceneAvif(memory.mobileBackground)} type="image/avif" /><img src={memory.mobileBackground} alt={`${memory.title}, an illustrated memory from ${memory.year}`} width="640" height="420" loading="lazy" decoding="async" /></picture><div><p className="section-kicker">Enter the memory</p><h2>{memory.title}</h2><p>{memory.description}</p><Link to={memory.slug} onClick={() => trackEvent('blog_to_scene_click', { article_slug: post.slug, to_scene: memory.id })}>Experience the scene <ArrowRight size={16} /></Link></div></aside>}
+      <section className="share-row"><strong>Share this story</strong><button onClick={() => void copyLink()}>{copied ? <Check size={15} /> : <Copy size={15} />} {copied ? 'Copied' : 'Copy link'}</button><button onClick={() => share('x')}>X</button><button onClick={() => share('facebook')}>Facebook</button><button onClick={() => share('whatsapp')}>WhatsApp</button></section>
       <aside className="author-box"><img src="/creator-raman.webp" alt="Raman" width="96" height="96" loading="lazy" /><div><p className="section-kicker">About the author</p><h2>Raman</h2><p>Raman is a multidisciplinary designer exploring how interaction, illustration, sound and technology can turn everyday memories into digital experiences.</p></div></aside>
       {related.length > 0 && <section className="related-articles"><p className="section-kicker">Related articles</p>{related.map(item => <StoryRow key={item.slug} post={item} />)}</section>}
     </article>

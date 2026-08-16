@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { absoluteUrl, SITE_DESCRIPTION, SITE_NAME } from '../config/site'
+import { trackEvent } from '../lib/analytics'
 
 type SEOProps = {
   title?: string
@@ -65,5 +66,25 @@ export function RouteAnalytics() {
     lastTrackedRoute = routeKey
     window.gtag?.('event', 'page_view', { page_path: `${location.pathname}${location.search}`, page_title: document.title })
   }, [location.pathname, location.search])
+  return null
+}
+
+export function ExternalLinkAnalytics() {
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      const anchor = (event.target as Element | null)?.closest<HTMLAnchorElement>('a[href]')
+      if (!anchor) return
+      let destination: URL
+      try { destination = new URL(anchor.href, window.location.href) } catch { return }
+      if (destination.origin === window.location.origin) return
+      trackEvent('external_link_click', {
+        link_url: destination.href,
+        link_domain: destination.hostname,
+        link_text: anchor.textContent?.trim().slice(0, 100) || anchor.getAttribute('aria-label') || '',
+      })
+    }
+    document.addEventListener('click', onClick)
+    return () => document.removeEventListener('click', onClick)
+  }, [])
   return null
 }

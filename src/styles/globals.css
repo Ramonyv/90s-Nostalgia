@@ -27,6 +27,18 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 .memory-scene--highway-adda .scene-copy { left:4.3vw; top:36%; width:min(390px,28vw); transform:none; }
 .memory-scene--highway-adda .scene-copy h1 { max-width:390px; font-size:clamp(35px,3.4vw,55px); line-height:1.22; }
 .memory-scene--highway-adda .scene-description { max-width:330px; font-size:clamp(13px,1vw,16px); opacity:.72; }
+.memory-scene--90s-shaadi .scene-shade { background:linear-gradient(90deg,rgba(8,11,13,.82) 0%,rgba(17,13,10,.5) 24%,rgba(18,12,8,.08) 53%),linear-gradient(0deg,rgba(12,9,8,.62),transparent 38%,rgba(4,7,10,.28)); }
+.memory-scene--90s-shaadi .scene-copy { left:4.3vw; top:38%; width:min(390px,29vw); transform:none; }
+.memory-scene--90s-shaadi .scene-copy h1 { font-size:clamp(40px,4.4vw,68px); }
+.memory-scene--90s-shaadi .scene-description { max-width:320px; }
+.shaadi-ambience { position:absolute; z-index:3; inset:0; overflow:hidden; pointer-events:none; }
+.shaadi-light { position:absolute; width:9vw; height:22vh; border-radius:50%; background:radial-gradient(ellipse,rgba(255,219,157,.17),transparent 68%); filter:blur(10px); animation:shaadi-light 5.8s steps(1,end) infinite; }
+.shaadi-light--one { left:72%; top:13%; }
+.shaadi-light--two { left:84%; top:27%; animation-delay:-2.7s; }
+.shaadi-petals { position:absolute; inset:0; }
+.shaadi-petals i { --size:calc(4px + (var(--i) % 3) * 2px); position:absolute; left:calc(43% + var(--i) * 5.5%); top:22%; width:var(--size); height:calc(var(--size) * .55); border-radius:70% 20% 65% 25%; background:#d87954; opacity:0; animation:shaadi-petal calc(8s + var(--i) * .7s) calc(var(--i) * -1.1s) linear infinite; }
+.shaadi-haze { position:absolute; inset:40% -10% -15%; background:linear-gradient(100deg,transparent,rgba(219,174,116,.06),transparent 68%); filter:blur(14px); animation:shaadi-haze 12s ease-in-out infinite alternate; }
+.shaadi-vhs { position:absolute; inset:0; opacity:.035; background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.35) 4px,transparent 5px); mix-blend-mode:screen; animation:shaadi-vhs 9s steps(1,end) infinite; }
 .highway-adda-ambience { position:absolute; z-index:3; inset:0; overflow:hidden; pointer-events:none; }
 .adda-distance-light { position:absolute; left:-5%; top:47%; width:9px; height:3px; border-radius:50%; background:#f9d491; box-shadow:0 0 10px 3px rgba(255,198,107,.55),23px 0 9px 2px rgba(255,213,143,.38); opacity:0; animation:adda-highway-pass 15s 3s ease-in-out infinite; }
 .adda-radio-glow { position:absolute; left:85.5%; top:8%; width:8%; height:12%; border-radius:40%; background:radial-gradient(circle,rgba(239,142,60,.28),transparent 67%); opacity:0; transition:opacity .35s; }
@@ -322,6 +334,10 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 @keyframes adda-radio-tune { 0%,100% { opacity:.45 } 50% { opacity:1 } }
 @keyframes adda-steam { from { transform:translate(0,8px) scaleY(.7); opacity:0 } 45% { opacity:.8 } to { transform:translate(9px,-34px) scaleY(1.15); opacity:0 } }
 @keyframes adda-bike-flicker { 0%,17%,31%,49%,100% { opacity:0 } 8%,25%,40%,58%,92% { opacity:.88 } }
+@keyframes shaadi-light { 0%,45%,49%,100% { opacity:.8 } 47% { opacity:.58 } 76% { opacity:.7 } }
+@keyframes shaadi-petal { 0%,18% { transform:translate3d(0,-4vh,0) rotate(0); opacity:0 } 23% { opacity:.72 } 68% { opacity:.48 } 78%,100% { transform:translate3d(calc((var(--i) - 3) * 8px),44vh,0) rotate(270deg); opacity:0 } }
+@keyframes shaadi-haze { to { transform:translateX(7%) } }
+@keyframes shaadi-vhs { 0%,94%,100% { transform:translateY(0); opacity:.025 } 95% { transform:translateY(2px); opacity:.06 } 96% { transform:translateY(-1px); opacity:.03 } }
 @media (max-width: 760px) {
   .consent-panel { right:max(12px,env(safe-area-inset-right)); bottom:max(12px,env(safe-area-inset-bottom)); width:calc(100% - max(24px,env(safe-area-inset-left) + env(safe-area-inset-right) + 16px)); max-height:calc(100dvh - max(24px,env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px)); padding:22px; overflow:auto; overscroll-behavior:contain; }
   .consent-panel label { min-height:48px; }
@@ -350,6 +366,12 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
   .memory-scene--highway-adda .adda-radio-glow { left:87%; top:10%; width:16%; height:12%; }
   .memory-scene--highway-adda .adda-chai-steam { left:68%; top:70%; width:20%; height:12%; }
   .memory-scene--highway-adda .adda-bike-light { left:45%; top:37%; width:14%; height:9%; }
+  .memory-scene--90s-shaadi .scene-shade { background:linear-gradient(0deg,rgba(10,8,7,.9) 0%,rgba(13,9,7,.2) 50%,rgba(3,6,9,.36) 100%); }
+  .memory-scene--90s-shaadi .scene-copy { left:22px; right:22px; top:auto; bottom:143px; width:auto; }
+  .memory-scene--90s-shaadi .scene-copy h1 { max-width:92%; font-size:clamp(32px,9.6vw,44px); }
+  .memory-scene--90s-shaadi .shaadi-light--one { left:68%; top:12%; width:24vw; }
+  .memory-scene--90s-shaadi .shaadi-light--two { left:82%; top:25%; width:22vw; }
+  .memory-scene--90s-shaadi .shaadi-petals i { left:calc(22% + var(--i) * 8%); top:20%; }
   .gear6-memory__paper { padding:48px 28px 34px; }
   .adhoori-shayari { left:auto; right:5%; top:24%; max-width:45%; font-size:10px; line-height:1.7; }
   .adhoori-fan { left:31%; top:5%; width:68px; height:68px; }
@@ -450,7 +472,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 @media (max-width:760px) and (orientation:landscape) and (max-height:520px) {
   .topbar { height:calc(56px + env(safe-area-inset-top)); }
   .brand strong { font-size:16px; }
-  .scene-copy,.memory-scene--auto-rickshaw .scene-copy,.memory-scene--adhoori-shaam .scene-copy,.memory-scene--highway-adda .scene-copy { left:max(18px,env(safe-area-inset-left)); right:auto; bottom:74px; width:min(48vw,390px); }
+  .scene-copy,.memory-scene--auto-rickshaw .scene-copy,.memory-scene--adhoori-shaam .scene-copy,.memory-scene--highway-adda .scene-copy,.memory-scene--90s-shaadi .scene-copy { left:max(18px,env(safe-area-inset-left)); right:auto; bottom:74px; width:min(48vw,390px); }
   .scene-copy h1,.memory-scene--railway .scene-copy h1,.memory-scene--highway-adda .scene-copy h1 { font-size:clamp(25px,5vw,38px); line-height:1.12; }
   .scene-year { margin-bottom:6px; }
   .scene-description { max-width:360px; font-size:12px; line-height:1.35; }

@@ -70,6 +70,13 @@ export const spotifyPlaylists: Record<SceneId, SpotifyPlaylist> = {
     sourceUrl: 'https://open.spotify.com/playlist/0hTAaFIMq8i2FzNVgtJQb6?si=oevM7zIiRB6O3TY5hQ6mPQ',
     uri: 'spotify:playlist:0hTAaFIMq8i2FzNVgtJQb6',
   },
+  '90s-shaadi': {
+    playlistId: '0NZ2TX1Rt8X2BdUvXKgGuQ',
+    title: '90s Shaadi Playlist',
+    sourceUrl: 'https://open.spotify.com/playlist/0NZ2TX1Rt8X2BdUvXKgGuQ?si=sVFmokgoTriIQ_lmz609dw',
+    uri: 'spotify:playlist:0NZ2TX1Rt8X2BdUvXKgGuQ',
+    stationLabel: 'Shaadi radio',
+  },
 }
 
 export const getSpotifyEmbedUrl = (playlist: SpotifyPlaylist) => `https://open.spotify.com/embed/playlist/${playlist.playlistId}?utm_source=generator&theme=0`

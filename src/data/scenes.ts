@@ -1,5 +1,5 @@
-export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'adhoori-shaam' | 'highway-adda'
-export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'permit-room'
+export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'adhoori-shaam' | 'highway-adda' | '90s-shaadi'
+export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'permit-room' | 'baraat'
 export type HotspotAction = 'spotify' | 'radio' | 'chai' | 'motorcycle' | 'gear6'
 export type Hotspot = { x: number; y: number; label: string; align?: 'left' | 'right'; action?: HotspotAction }
 
@@ -157,6 +157,16 @@ export const scenes: Scene[] = [
       { x: 56, y: 79, label: 'Chai. Still warm.', action: 'chai' },
       { x: 16, y: 66, label: 'One kick. Maybe two.', action: 'motorcycle' },
       { x: 53, y: 31, label: 'An old club poster.', action: 'gear6' },
+    ],
+  },
+  {
+    id: '90s-shaadi', slug: '/90s-shaadi', navLabel: 'Shaadi', title: '90s Shaadi', hindiTitle: '90s की शादी', year: '1997',
+    description: 'A neighbourhood baraat of brass, borrowed lights, tangled wires, and relatives who danced anyway.', shortLine: 'जब बारात पूरे मोहल्ले की होती थी।', desktopBackground: '/scenes/90s-shaadi/90s-shaadi.webp', mobileBackground: '/scenes/90s-shaadi/90s-shaadi-mobile.webp', fallbackImage: '/scenes/90s-shaadi/90s-shaadi.webp', ambientAudio: 'baraat', accentColor: '#d89452', animation: { dust: false, dustCount: 0 }, availability: 'active', primaryNav: false, mobilePosition: 'center 46%',
+    hotspots: [
+      { x: 39, y: 67, label: 'उसकी शादी नहीं थी। नाच फिर भी सबसे ज़्यादा वही रहा।' },
+      { x: 54, y: 46, label: 'दूल्हा खुश था… और थोड़ा-सा घबराया हुआ भी।' },
+      { x: 72, y: 34, label: 'रोशनी उधार की थी। रौनक पूरे मोहल्ले की।', align: 'right' },
+      { x: 18, y: 42, label: 'छतों और बालकनियों की अपनी guest list होती थी।' },
     ],
   },
 ]

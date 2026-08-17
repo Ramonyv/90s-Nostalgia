@@ -96,17 +96,35 @@ export function RippleSceneMedia({ alt, desktopImage, mobileImage, mobilePositio
     const media = hasVideo ? localVideoRef.current : imageRef.current
     if (!canvas || !media || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    const gl = canvas.getContext('webgl', { alpha: false, antialias: false, powerPreference: 'high-performance' })
+    setShaderReady(false)
+    const gl = canvas.getContext('webgl', { alpha: false, antialias: false, powerPreference: 'high-performance', preserveDrawingBuffer: true })
     if (!gl) return
+    let frame = 0
+    let disposed = false
+    const handleContextLost = () => {
+      disposed = true
+      cancelAnimationFrame(frame)
+      setShaderReady(false)
+    }
+    canvas.addEventListener('webglcontextlost', handleContextLost)
     const vertex = compileShader(gl, gl.VERTEX_SHADER, vertexShader)
     const fragment = compileShader(gl, gl.FRAGMENT_SHADER, fragmentShader)
-    if (!vertex || !fragment) return
+    if (!vertex || !fragment) {
+      canvas.removeEventListener('webglcontextlost', handleContextLost)
+      return
+    }
     const program = gl.createProgram()
-    if (!program) return
+    if (!program) {
+      canvas.removeEventListener('webglcontextlost', handleContextLost)
+      return
+    }
     gl.attachShader(program, vertex)
     gl.attachShader(program, fragment)
     gl.linkProgram(program)
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      canvas.removeEventListener('webglcontextlost', handleContextLost)
+      return
+    }
     gl.useProgram(program)
 
     const buffer = gl.createBuffer()
@@ -136,10 +154,8 @@ export function RippleSceneMedia({ alt, desktopImage, mobileImage, mobilePositio
     let rippleIndex = 0
     let lastTrail = 0
     let lastRippleAt = Number.NEGATIVE_INFINITY
-    let frame = 0
     let running = true
     let textureUploaded = false
-    let disposed = false
     let ready = false
     const startedAt = performance.now()
 
@@ -204,6 +220,10 @@ export function RippleSceneMedia({ alt, desktopImage, mobileImage, mobilePositio
           gl.uniform3fv(ripplesLocation, rippleData)
           gl.uniform1fv(strengthsLocation, strengths)
           gl.drawArrays(gl.TRIANGLES, 0, 6)
+          if (gl.isContextLost() || gl.getError() !== gl.NO_ERROR) {
+            handleContextLost()
+            return
+          }
           if (!ready) { ready = true; setShaderReady(true) }
         } catch {
           disposed = true
@@ -226,6 +246,7 @@ export function RippleSceneMedia({ alt, desktopImage, mobileImage, mobilePositio
       cancelAnimationFrame(frame)
       window.removeEventListener('pointermove', addRipple)
       window.removeEventListener('pointerdown', addRipple)
+      canvas.removeEventListener('webglcontextlost', handleContextLost)
       gl.deleteTexture(texture)
       gl.deleteBuffer(buffer)
       gl.deleteProgram(program)

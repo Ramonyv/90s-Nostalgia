@@ -9,7 +9,6 @@ const sceneStickers: Record<string, [string, string]> = {
   school: ['Group 104.png', 'Group 97.png'],
   cricket: ['Group 101.png', 'Group 108.png'],
   tv: ['Group 106.png', 'Group 111.png'],
-  'tv-room': ['Group 99.png', 'Group 95.png'],
   rain: ['Group 105.png', 'Group 100.png'],
   gaming: ['Group 95.png', 'Group 99.png'],
   'cassette-shop': ['Group 107.png', 'Group 102.png'],

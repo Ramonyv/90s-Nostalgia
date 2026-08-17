@@ -74,7 +74,7 @@ export function AppShell() {
     ambient.setAmbienceEnabled(!ambient.ambienceEnabled)
   }
   return <div className="app-shell">
-    <SEO title={`${scene.title} (${scene.year})`} description={`${scene.description} Explore an illustrated memory from everyday India in the 1990s.`} canonicalPath={scene.slug} image={scene.desktopBackground} jsonLd={scene.id === 'salon' ? { '@context': 'https://schema.org', '@type': 'WebSite', name: '90s Yaadein', description: 'An interactive archive of everyday memories from 1990s India.', url: absoluteUrl('/') } : undefined} />
+    <SEO title={scene.seoTitle ?? `${scene.title} (${scene.year})`} description={scene.seoDescription ?? `${scene.description} Explore an illustrated memory from everyday India in the 1990s.`} canonicalPath={scene.slug} image={scene.desktopBackground} jsonLd={scene.id === 'salon' ? { '@context': 'https://schema.org', '@type': 'WebSite', name: '90s Yaadein', description: 'An interactive archive of everyday memories from 1990s India.', url: absoluteUrl('/') } : undefined} />
     <NostalgiaStickers sceneId={scene.id} />
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>

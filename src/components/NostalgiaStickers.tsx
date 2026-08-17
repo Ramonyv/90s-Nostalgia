@@ -19,6 +19,7 @@ const sceneStickers: Record<string, [string, string]> = {
   'adhoori-shaam': ['Group 96.png', 'Group 107.png'],
   'highway-adda': ['Group 109.png', 'Group 110.png'],
   '90s-shaadi': ['Group 98.png', 'Group 112.png'],
+  'nusrat-night': ['Group 107.png', 'Group 96.png'],
 }
 
 export function NostalgiaStickers({ sceneId }: { sceneId: string }) {

@@ -1,5 +1,5 @@
-export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'adhoori-shaam' | 'highway-adda' | '90s-shaadi'
-export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'permit-room' | 'baraat'
+export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'adhoori-shaam' | 'highway-adda' | '90s-shaadi' | 'nusrat-night'
+export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'permit-room' | 'baraat' | 'night'
 export type HotspotAction = 'spotify' | 'radio' | 'chai' | 'motorcycle' | 'gear6'
 export type Hotspot = { x: number; y: number; label: string; align?: 'left' | 'right'; action?: HotspotAction }
 
@@ -25,6 +25,10 @@ export type Scene = {
   availability: 'active' | 'planned'
   primaryNav: boolean
   mobilePosition: string
+  selectorTitle?: string
+  selectorSecondary?: string
+  seoTitle?: string
+  seoDescription?: string
 }
 
 export const scenes: Scene[] = [
@@ -167,6 +171,16 @@ export const scenes: Scene[] = [
       { x: 54, y: 46, label: 'दूल्हा खुश था… और थोड़ा-सा घबराया हुआ भी।' },
       { x: 72, y: 34, label: 'रोशनी उधार की थी। रौनक पूरे मोहल्ले की।', align: 'right' },
       { x: 18, y: 42, label: 'छतों और बालकनियों की अपनी guest list होती थी।' },
+    ],
+  },
+  {
+    id: 'nusrat-night', slug: '/nusrat-night', navLabel: 'Nusrat Night', title: 'Night, Radio & Nusrat', hindiTitle: 'रात, रेडियो और नुसरत', year: '1997',
+    description: 'A quiet late-night memory from 1997: cassette music, chai, a ceiling fan and the kind of voice that made the night feel endless.', shortLine: 'कुछ आवाज़ें सुनी नहीं जातीं, महसूस की जाती हैं।', desktopBackground: '/scenes/nusrat-night/nusrat-night.webp', mobileBackground: '/scenes/nusrat-night/nusrat-night-mobile.webp', fallbackImage: '/scenes/nusrat-night/nusrat-night.webp', ambientAudio: 'night', accentColor: '#d5a056', animation: { dust: false, dustCount: 0 }, availability: 'active', primaryNav: false, mobilePosition: 'center', selectorTitle: 'रात, रेडियो और नुसरत', selectorSecondary: 'Night, Radio & Nusrat', seoTitle: 'Night, Radio & Nusrat', seoDescription: 'A quiet late-night memory from 1997: cassette music, chai, a ceiling fan and the kind of voice that made the night feel endless.',
+    hotspots: [
+      { x: 50, y: 69, label: 'कुछ गाने खत्म हो जाते थे। असर नहीं।' },
+      { x: 78, y: 42, label: 'शहर सो जाता था। कुछ लोग नहीं।', align: 'right' },
+      { x: 47, y: 75, label: 'चाय ठंडी हो जाती थी, रात नहीं।' },
+      { x: 58, y: 77, label: 'कुछ बातें लिखी जाती थीं क्योंकि भेजी नहीं जा सकती थीं।', align: 'right' },
     ],
   },
 ]

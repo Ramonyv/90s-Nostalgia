@@ -16,6 +16,7 @@ const ambiencePresets: Record<AmbientKind, { filter: number; noise: number; gain
   'auto-rickshaw': { filter: 360, noise: .2, gain: .16, rhythm: 8 },
   'permit-room': { filter: 1180, noise: .2, gain: .14, rhythm: .72 },
   baraat: { filter: 720, noise: .16, gain: .105, rhythm: 2.15 },
+  night: { filter: 240, noise: .065, gain: .055, rhythm: .38 },
 }
 
 export function useAmbientAudio(scene: Scene, entered: boolean) {

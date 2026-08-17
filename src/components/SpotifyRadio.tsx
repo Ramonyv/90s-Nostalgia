@@ -31,6 +31,7 @@ const COLLAPSED_KEY = 'yaadein-spotify-collapsed'
 const NAV_CLEARANCE = 82
 export const SPOTIFY_PLAY_EVENT = 'yaadein:play-spotify'
 export const requestSpotifyPlayback = (playlist: SpotifyPlaylist) => {
+  if (playlist.available === false || !playlist.uri) return
   window.dispatchEvent(new CustomEvent(SPOTIFY_PLAY_EVENT, { detail: { uri: playlist.uri } }))
 }
 let spotifyApiPromise: Promise<SpotifyIframeApi> | undefined
@@ -79,7 +80,15 @@ function defaultPosition(): Position {
   return { x: Math.max(14, Math.round(window.innerWidth * .043)), y: window.innerWidth <= 760 ? 144 : Math.max(14, window.innerHeight - 224 - NAV_CLEARANCE) }
 }
 
-export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
+function SpotifyUnavailable({ playlist }: { playlist: SpotifyPlaylist }) {
+  const position = defaultPosition()
+  return <motion.aside className="spotify-radio spotify-radio--placeholder" style={{ left: position.x, top: position.y }} initial={{ opacity: 0, y: 12, scale: .96 }} animate={{ opacity: 1, y: 0, scale: 1 }} aria-label="Scene music information">
+    <div className="radio-topline"><div><Radio size={14} /><span>Music card · 1997</span></div></div>
+    <div className="spotify-placeholder__body"><small>Late Night · Side A</small><strong>{playlist.title}</strong><p>{playlist.stationLabel}</p></div>
+  </motion.aside>
+}
+
+function SpotifyPlayer({ playlist }: { playlist: SpotifyPlaylist }) {
   const panel = useRef<HTMLElement>(null)
   const embedHost = useRef<HTMLDivElement>(null)
   const controller = useRef<SpotifyController | null>(null)
@@ -236,4 +245,8 @@ export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
       <a href={playlist.sourceUrl} target="_blank" rel="noreferrer" tabIndex={collapsed ? -1 : undefined}>Open playlist on Spotify <ExternalLink size={10} /></a>
     </div>
   </motion.aside>
+}
+
+export function SpotifyRadio({ playlist }: { playlist: SpotifyPlaylist }) {
+  return playlist.available === false ? <SpotifyUnavailable playlist={playlist} /> : <SpotifyPlayer playlist={playlist} />
 }

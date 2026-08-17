@@ -9,6 +9,7 @@ export type SpotifyPlaylist = {
   cover?: string
   hindiName?: string
   preservePlayback?: boolean
+  available?: boolean
 }
 
 const salonPlaylist: SpotifyPlaylist = {
@@ -76,6 +77,15 @@ export const spotifyPlaylists: Record<SceneId, SpotifyPlaylist> = {
     sourceUrl: 'https://open.spotify.com/playlist/0NZ2TX1Rt8X2BdUvXKgGuQ?si=sVFmokgoTriIQ_lmz609dw',
     uri: 'spotify:playlist:0NZ2TX1Rt8X2BdUvXKgGuQ',
     stationLabel: 'Shaadi radio',
+  },
+  'nusrat-night': {
+    playlistId: '2iUv9CXZjCHOkujmQaaJC1',
+    title: 'Nusrat Night',
+    sourceUrl: 'https://open.spotify.com/playlist/2iUv9CXZjCHOkujmQaaJC1?si=LGNhRFEtRnCzIJI2QYzErw',
+    uri: 'spotify:playlist:2iUv9CXZjCHOkujmQaaJC1',
+    stationLabel: 'Nusrat Night · Side A · 1997',
+    hindiName: 'रात की आवाज़',
+    available: true,
   },
 }
 

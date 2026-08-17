@@ -40,6 +40,19 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 .memory-scene--90s-shaadi .scene-copy { left:4.3vw; top:38%; width:min(390px,29vw); transform:none; }
 .memory-scene--90s-shaadi .scene-copy h1 { font-size:clamp(40px,4.4vw,68px); }
 .memory-scene--90s-shaadi .scene-description { max-width:320px; }
+.memory-scene--nusrat-night .scene-shade { background:linear-gradient(90deg,rgba(10,8,8,.78) 0%,rgba(12,10,12,.46) 27%,rgba(7,10,15,.04) 58%),linear-gradient(0deg,rgba(8,7,8,.5),transparent 35%,rgba(8,7,8,.24)); }
+.memory-scene--nusrat-night .scene-copy { left:4.3vw; top:39%; width:min(520px,34vw); transform:none; }
+.memory-scene--nusrat-night .scene-copy h1 { max-width:520px; font-size:clamp(39px,4.2vw,66px); line-height:1.18; }
+.memory-scene--nusrat-night .scene-description { max-width:410px; font-size:clamp(14px,1.12vw,18px); }
+.nusrat-ambience { position:absolute; z-index:3; inset:0; overflow:hidden; pointer-events:none; }
+.nusrat-fan { position:absolute; left:47.1%; top:5.1%; width:106px; height:106px; margin:-53px; opacity:.24; animation:nusrat-fan 6.8s linear infinite; }
+.nusrat-fan i { position:absolute; left:50px; top:3px; width:6px; height:100px; border-radius:85% 18% 85% 18%; background:rgba(20,16,13,.82); transform-origin:center; filter:blur(.25px); }
+.nusrat-fan i:nth-child(2) { transform:rotate(120deg); }
+.nusrat-fan i:nth-child(3) { transform:rotate(240deg); }
+.nusrat-curtain { position:absolute; left:52.5%; top:14%; width:11%; height:50%; opacity:.1; background:linear-gradient(90deg,transparent,rgba(239,198,137,.4),transparent 52%); filter:blur(5px); transform-origin:top; animation:nusrat-curtain 7.5s ease-in-out infinite alternate; }
+.nusrat-radio-light { position:absolute; left:54.4%; top:66.8%; width:4px; height:3px; border-radius:50%; background:#ff8b42; box-shadow:0 0 8px 3px rgba(255,111,43,.42); animation:nusrat-radio-light 3.8s steps(1,end) infinite; }
+.nusrat-street-light { position:absolute; left:72%; top:48%; width:5px; height:2px; border-radius:50%; background:#f5d098; box-shadow:0 0 8px 3px rgba(246,194,116,.36); opacity:0; animation:nusrat-street-light 17s 4s ease-in-out infinite; }
+.nusrat-lamp { position:absolute; left:55%; top:42%; width:13%; height:26%; border-radius:50%; background:radial-gradient(ellipse,rgba(255,183,90,.12),transparent 68%); filter:blur(10px); animation:nusrat-lamp 5.4s ease-in-out infinite; }
 .shaadi-ambience { position:absolute; z-index:3; inset:0; overflow:hidden; pointer-events:none; }
 .shaadi-light { position:absolute; width:9vw; height:22vh; border-radius:50%; background:radial-gradient(ellipse,rgba(255,219,157,.17),transparent 68%); filter:blur(10px); animation:shaadi-light 5.8s steps(1,end) infinite; }
 .shaadi-light--one { left:72%; top:13%; }
@@ -298,7 +311,13 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 .memory-list a:hover { opacity:1; transform:translateX(7px); }
 .memory-list a span,.memory-list a em { font-size:8px; opacity:.45; font-style:normal; letter-spacing:.1em; }
 .memory-list a strong { font-weight:500; line-height:1.15; }
+.memory-list a strong b { display:block; margin-top:4px; font-size:8px; font-weight:500; letter-spacing:.04em; opacity:.58; }
 .memory-list a strong small { display:block; margin-top:7px; max-width:220px; font:400 8px/1.4 'Noto Sans Devanagari','DM Sans',sans-serif; opacity:.42; }
+.spotify-radio--placeholder { width:300px; min-height:126px; overflow:hidden; color:var(--cream); background:linear-gradient(145deg,rgba(36,28,24,.97),rgba(15,19,25,.98)); border-color:rgba(213,160,86,.48); }
+.spotify-placeholder__body { padding:19px 18px 18px; }
+.spotify-placeholder__body small { display:block; margin-bottom:7px; color:#d5a056; font-size:7px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; }
+.spotify-placeholder__body strong { display:block; font:500 19px/1.2 'Noto Sans Devanagari','DM Sans',sans-serif; }
+.spotify-placeholder__body p { margin:7px 0 0; font-size:9px; letter-spacing:.05em; opacity:.5; }
 .memory-list a svg { opacity:0; transform:translate(-5px,5px); transition:opacity .25s,transform .25s; }
 .memory-list a:hover svg { opacity:.8; transform:none; }
 .intro { position:fixed; inset:0; z-index:100; display:grid; place-items:center; background:#24160e; color:var(--cream); }
@@ -362,6 +381,11 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
 @keyframes shaadi-petal { 0%,18% { transform:translate3d(0,-4vh,0) rotate(0); opacity:0 } 23% { opacity:.72 } 68% { opacity:.48 } 78%,100% { transform:translate3d(calc((var(--i) - 3) * 8px),44vh,0) rotate(270deg); opacity:0 } }
 @keyframes shaadi-haze { to { transform:translateX(7%) } }
 @keyframes shaadi-vhs { 0%,94%,100% { transform:translateY(0); opacity:.025 } 95% { transform:translateY(2px); opacity:.06 } 96% { transform:translateY(-1px); opacity:.03 } }
+@keyframes nusrat-fan { to { transform:rotate(360deg) } }
+@keyframes nusrat-curtain { to { transform:skewX(1.6deg) translateX(4px) } }
+@keyframes nusrat-radio-light { 0%,92%,100% { opacity:.75 } 94% { opacity:.38 } 96% { opacity:.9 } }
+@keyframes nusrat-street-light { 0%,66% { left:72%; opacity:0 } 70% { opacity:.65 } 86% { left:88%; opacity:.42 } 91%,100% { left:92%; opacity:0 } }
+@keyframes nusrat-lamp { 50% { opacity:.78; transform:scale(1.025) } }
 @media (max-width: 760px) {
   .consent-panel { right:max(12px,env(safe-area-inset-right)); bottom:max(12px,env(safe-area-inset-bottom)); width:calc(100% - max(24px,env(safe-area-inset-left) + env(safe-area-inset-right) + 16px)); max-height:calc(100dvh - max(24px,env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px)); padding:22px; overflow:auto; overscroll-behavior:contain; }
   .consent-panel label { min-height:48px; }
@@ -396,6 +420,21 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
   .memory-scene--90s-shaadi .shaadi-light--one { left:68%; top:12%; width:24vw; }
   .memory-scene--90s-shaadi .shaadi-light--two { left:82%; top:25%; width:22vw; }
   .memory-scene--90s-shaadi .shaadi-petals i { left:calc(22% + var(--i) * 8%); top:20%; }
+  .memory-scene--nusrat-night .scene-shade { background:linear-gradient(0deg,rgba(8,7,9,.87) 0%,rgba(9,9,12,.2) 49%,rgba(7,6,7,.38) 100%); }
+  .memory-scene--nusrat-night .scene-copy { left:22px; right:22px; top:24%; bottom:auto; width:auto; }
+  .memory-scene--nusrat-night .scene-copy h1 { max-width:86%; font-size:clamp(31px,9.4vw,43px); line-height:1.2; }
+  .memory-scene--nusrat-night .scene-description { max-width:88%; font-size:13px; }
+  .memory-scene--nusrat-night .hotspot__label { display:none; }
+  .memory-scene--nusrat-night .hotspot:nth-child(1) { left:43%!important; top:65%!important; }
+  .memory-scene--nusrat-night .hotspot:nth-child(2) { left:72%!important; top:43%!important; }
+  .memory-scene--nusrat-night .hotspot:nth-child(3) { left:38%!important; top:70%!important; }
+  .memory-scene--nusrat-night .hotspot:nth-child(4) { left:52%!important; top:72%!important; }
+  .nusrat-fan { left:30%; top:13%; width:94px; height:94px; margin:-47px; }
+  .nusrat-fan i { left:44px; height:88px; }
+  .nusrat-curtain { left:38%; top:27%; width:18%; height:34%; }
+  .nusrat-radio-light { left:44%; top:65%; }
+  .nusrat-street-light { left:64%; top:42%; }
+  .nusrat-lamp { left:38%; top:50%; width:27%; height:20%; }
   .gear6-memory__paper { padding:48px 28px 34px; }
   .adhoori-shayari { left:auto; right:5%; top:24%; max-width:45%; font-size:10px; line-height:1.7; }
   .adhoori-fan { left:31%; top:5%; width:68px; height:68px; }
@@ -458,6 +497,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid v
   .memory-list>div { min-height:72px; padding:18px 0; }
   .close-overlay { right:max(12px,env(safe-area-inset-right)); top:max(13px,env(safe-area-inset-top)); width:44px; height:44px; display:grid; place-items:center; padding:0; }
   .spotify-radio { width:calc(100vw - 28px); }
+  .spotify-radio--placeholder { min-height:116px; }
   .creator-radio { top:calc(119px + env(safe-area-inset-top)); right:max(17px,env(safe-area-inset-right)); bottom:auto; width:auto; padding:0; border:0; border-radius:18px; background:transparent; box-shadow:none; backdrop-filter:none; scale:1; transform-origin:right top; }
   .creator-radio::before,.creator-radio__topline,.creator-radio__identity,.creator-radio__speaker,.creator-radio__footer { display:none; }
   .creator-radio__support { width:78px; height:32px; gap:5px; margin:0; padding:0 11px; border-color:rgba(244,234,215,.24); border-radius:18px; color:rgba(244,234,215,.8); background:rgba(29,20,14,.58); box-shadow:0 7px 20px rgba(10,5,2,.14); backdrop-filter:blur(9px); font-size:6px; letter-spacing:.07em; animation:none; }

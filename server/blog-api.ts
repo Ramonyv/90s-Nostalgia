@@ -68,6 +68,10 @@ function sameOrigin(request: Request) {
   return !origin || origin === new URL(request.url).origin
 }
 
+export const isAdminSession = validSession
+export const isAdminOrigin = sameOrigin
+export const adminAuthConfigured = (env: BlogServerEnv) => Boolean(env.BLOG_ADMIN_PASSWORD_HASH && env.BLOG_SESSION_SECRET)
+
 async function readJson(request: Request, maxLength = 6_000_000) {
   const length = Number(request.headers.get('content-length') || 0)
   if (length > maxLength) throw new Error('Request is too large.')

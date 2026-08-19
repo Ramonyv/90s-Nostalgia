@@ -10,7 +10,16 @@ export type SpotifyPlaylist = {
   hindiName?: string
   preservePlayback?: boolean
   available?: boolean
+  eyebrow?: string
+  meta?: string
+  externalCta?: string
 }
+
+// Paste the owner-supplied Spotify playlist URL between these quotes.
+export const GULZAR_SPOTIFY_PLAYLIST_URL = 'https://open.spotify.com/playlist/4uGmozHrHA1hrg0X9xm3Y2?si=vUdhrhQ_TYmnNJn509wS8g'
+
+const spotifyPlaylistId = (url: string) => url.match(/open\.spotify\.com\/playlist\/([A-Za-z0-9]+)/)?.[1] ?? ''
+const gulzarPlaylistId = spotifyPlaylistId(GULZAR_SPOTIFY_PLAYLIST_URL)
 
 const salonPlaylist: SpotifyPlaylist = {
   playlistId: '7vnd8GlKrfazw3sUQ8gt0q',
@@ -86,6 +95,18 @@ export const spotifyPlaylists: Record<SceneId, SpotifyPlaylist> = {
     stationLabel: 'Nusrat Night · Side A · 1997',
     hindiName: 'रात की आवाज़',
     available: true,
+  },
+  'gulzar-rain': {
+    playlistId: gulzarPlaylistId,
+    title: 'Top 100 Songs of Gulzar by T5',
+    sourceUrl: GULZAR_SPOTIFY_PLAYLIST_URL,
+    uri: gulzarPlaylistId ? `spotify:playlist:${gulzarPlaylistId}` : '',
+    stationLabel: 'गुलज़ार की शाम',
+    hindiName: 'गुलज़ार की शाम',
+    available: Boolean(gulzarPlaylistId),
+    eyebrow: 'अब बज रहा है',
+    meta: '100 songs • Spotify',
+    externalCta: 'PLAY PLAYLIST',
   },
 }
 

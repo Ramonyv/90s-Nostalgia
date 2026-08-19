@@ -1,4 +1,4 @@
-export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'adhoori-shaam' | 'highway-adda' | '90s-shaadi' | 'nusrat-night'
+export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'adhoori-shaam' | 'highway-adda' | '90s-shaadi' | 'nusrat-night' | 'gulzar-rain'
 export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'permit-room' | 'baraat' | 'night'
 export type HotspotAction = 'spotify' | 'radio' | 'chai' | 'motorcycle' | 'gear6'
 export type Hotspot = { x: number; y: number; label: string; align?: 'left' | 'right'; action?: HotspotAction }
@@ -29,6 +29,7 @@ export type Scene = {
   selectorSecondary?: string
   seoTitle?: string
   seoDescription?: string
+  memoryLabel?: string
 }
 
 export const scenes: Scene[] = [
@@ -181,6 +182,16 @@ export const scenes: Scene[] = [
       { x: 78, y: 42, label: 'शहर सो जाता था। कुछ लोग नहीं।', align: 'right' },
       { x: 47, y: 75, label: 'चाय ठंडी हो जाती थी, रात नहीं।' },
       { x: 58, y: 77, label: 'कुछ बातें लिखी जाती थीं क्योंकि भेजी नहीं जा सकती थीं।', align: 'right' },
+    ],
+  },
+  {
+    id: 'gulzar-rain', slug: '/gulzar-rain', navLabel: 'Gulzar Rain', title: 'Rain, Window & Gulzar', hindiTitle: 'बारिश, खिड़की और गुलज़ार', year: '1998',
+    description: 'A monsoon train journey where the rain, the passing landscape and the music stayed longer than the destination.', shortLine: 'कुछ सफ़र मंज़िल के लिए नहीं होते।', desktopBackground: '/scenes/gulzar-rain/gulzar-rain.webp', mobileBackground: '/scenes/gulzar-rain/gulzar-rain-mobile.webp', fallbackImage: '/scenes/gulzar-rain/gulzar-rain.webp', ambientAudio: 'rain', accentColor: '#86a5a4', animation: { dust: false, dustCount: 0 }, availability: 'active', primaryNav: false, mobilePosition: 'center', selectorTitle: 'बारिश, खिड़की और गुलज़ार', selectorSecondary: 'Rain, Window & Gulzar', memoryLabel: 'A MONSOON MEMORY • 1998', seoTitle: 'Rain, Window & Gulzar — A Monsoon Train Memory', seoDescription: 'Step into a cinematic 1998 Indian train journey: rain on the window, chai, a diary and Gulzar songs as the monsoon countryside passes by.',
+    hotspots: [
+      { x: 45, y: 51, label: 'खिड़की के बाहर शहर बदलते रहे, अंदर एक ही गाना चलता रहा।' },
+      { x: 52, y: 78, label: 'चाय ठंडी हुई। सफ़र चलता रहा।' },
+      { x: 66, y: 79, label: 'कुछ बातें डायरी के पन्नों तक ही पहुँचीं।' },
+      { x: 88, y: 75, label: 'एक बैग में सामान था। बाकी सब यादें थीं।', align: 'right' },
     ],
   },
 ]

@@ -83,8 +83,8 @@ function defaultPosition(): Position {
 function SpotifyUnavailable({ playlist }: { playlist: SpotifyPlaylist }) {
   const position = defaultPosition()
   return <motion.aside className="spotify-radio spotify-radio--placeholder" style={{ left: position.x, top: position.y }} initial={{ opacity: 0, y: 12, scale: .96 }} animate={{ opacity: 1, y: 0, scale: 1 }} aria-label="Scene music information">
-    <div className="radio-topline"><div><Radio size={14} /><span>Music card · 1997</span></div></div>
-    <div className="spotify-placeholder__body"><small>Late Night · Side A</small><strong>{playlist.title}</strong><p>{playlist.stationLabel}</p></div>
+    <div className="radio-topline"><div><Radio size={14} /><span>{playlist.eyebrow ?? 'Music card · 1997'}</span></div></div>
+    <div className="spotify-placeholder__body"><small>{playlist.eyebrow ?? 'Late Night · Side A'}</small><strong>{playlist.stationLabel}</strong><p>{playlist.meta ?? playlist.title}</p>{playlist.sourceUrl && <a href={playlist.sourceUrl} target="_blank" rel="noreferrer">{playlist.externalCta ?? 'Open playlist'} <ExternalLink size={10} /></a>}</div>
   </motion.aside>
 }
 
@@ -235,14 +235,14 @@ function SpotifyPlayer({ playlist }: { playlist: SpotifyPlaylist }) {
 
   return <motion.aside layout ref={panel} className={`spotify-radio spotify-radio--persistent${collapsed ? ' is-collapsed' : ''}${dragging ? ' is-dragging' : ''}`} style={{ left: position.x, top: position.y, transformOrigin: 'top left' }} initial={{ opacity: 0, y: 12, scale: .94 }} animate={{ opacity: 1, y: 0, scale: collapsed ? .9 : 1 }} transition={{ duration: .38, ease: [0.22, 1, 0.36, 1] }} aria-label="Persistent Spotify radio">
     <div className="radio-topline">
-      <div className="radio-drag-handle" role="button" tabIndex={0} aria-label="Drag Spotify player. Use arrow keys to reposition." onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onKeyDown={moveWithKeyboard}><Radio size={14} /><span>{playlist.stationLabel} · real 80s &amp; 90s</span><GripHorizontal size={18} aria-hidden="true" /></div>
+      <div className="radio-drag-handle" role="button" tabIndex={0} aria-label="Drag Spotify player. Use arrow keys to reposition." onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onKeyDown={moveWithKeyboard}><Radio size={14} /><span>{playlist.eyebrow ? `${playlist.eyebrow} · ${playlist.meta ?? playlist.stationLabel}` : `${playlist.stationLabel} · real 80s & 90s`}</span><GripHorizontal size={18} aria-hidden="true" /></div>
       <button className="spotify-scale-toggle" type="button" onClick={toggleCollapsed} aria-label={collapsed ? 'Expand Spotify player' : 'Minimize Spotify player'} aria-expanded={!collapsed}>{collapsed ? <Maximize2 size={14} /> : <Minimize2 size={14} />}</button>
     </div>
     <div className="spotify-radio__body" aria-hidden={collapsed}>
       <div ref={embedHost} className={`spotify-embed ${embedReady ? 'is-ready' : 'is-loading'}`} aria-label={`${playlist.title} on Spotify`}>
         {embedFailed && <iframe src={getSpotifyEmbedUrl(playlist)} title={`${playlist.title} on Spotify`} width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="eager" />}
       </div>
-      <a href={playlist.sourceUrl} target="_blank" rel="noreferrer" tabIndex={collapsed ? -1 : undefined}>Open playlist on Spotify <ExternalLink size={10} /></a>
+      <a href={playlist.sourceUrl} target="_blank" rel="noreferrer" tabIndex={collapsed ? -1 : undefined}>{playlist.externalCta ?? 'Open playlist on Spotify'} <ExternalLink size={10} /></a>
     </div>
   </motion.aside>
 }

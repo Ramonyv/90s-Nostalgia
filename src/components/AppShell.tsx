@@ -1,8 +1,8 @@
 import { AnimatePresence } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { Film, Image as ImageIcon, Maximize2, Menu, Minimize2, Volume2, VolumeX } from 'lucide-react'
-import { getScene, scenes } from '../data/scenes'
+import { scenes } from '../data/scenes'
 import { spotifyPlaylists } from '../data/spotify'
 import { useAmbientAudio } from '../hooks/useAmbientAudio'
 import { MemoryScene } from '../scenes/MemoryScene'
@@ -19,14 +19,25 @@ import { absoluteUrl } from '../config/site'
 import { MemoryKeepsake } from './MemoryKeepsake'
 import { trackEvent, trackEventOnce } from '../lib/analytics'
 import { NostalgiaStickers } from './NostalgiaStickers'
+import { useExperienceConfig } from '../hooks/useExperienceConfig'
+import { sceneIsVisible, scenePlayback } from '../config/experience'
 
 export function AppShell() {
-  const location = useLocation(), scene = getScene(location.pathname)
+  const location = useLocation()
+  const { config: experience } = useExperienceConfig()
+  const activeScenes = useMemo(() => {
+    const visible = scenes.filter(candidate => candidate.availability === 'active' && sceneIsVisible(experience, candidate.id))
+    return visible.length ? visible : [scenes[0]]
+  }, [experience])
+  const featuredScene = activeScenes.find(candidate => candidate.id === experience.featuredScene) ?? activeScenes[0] ?? scenes[0]
+  const scene = activeScenes.find(candidate => candidate.slug === location.pathname) ?? featuredScene
   const [entered, setEntered] = useState(() => sessionStorage.getItem('yaadein-entered') === 'yes')
   const [moreOpen, setMoreOpen] = useState(false)
   const [fullscreen, setFullscreen] = useState(Boolean(document.fullscreenElement))
   const [mediaAudioUnlocked, setMediaAudioUnlocked] = useState(false)
-  const [animatedScenes, setAnimatedScenes] = useState(false)
+  const [visitorAnimationOverride, setVisitorAnimationOverride] = useState<boolean | null>(null)
+  const configuredAnimation = scenePlayback(experience, scene.id) === 'loop'
+  const animatedScenes = experience.allowVisitorOverride && visitorAnimationOverride !== null ? visitorAnimationOverride : configuredAnimation
   const previousScene = useRef<typeof scene.id | null>(null)
   const ambient = useAmbientAudio(scene, entered)
   const playlist = spotifyPlaylists[scene.id]
@@ -79,24 +90,24 @@ export function AppShell() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Navigate to="/salon" replace />} />
-        {scenes.map(s => <Route key={s.id} path={s.slug} element={<MemoryScene scene={s} animated={animatedScenes} videoSoundEnabled={mediaAudioUnlocked && ambient.ambienceEnabled} onAmbientToggle={toggleAmbient} />} />)}
+        {scenes.map(s => <Route key={s.id} path={s.slug} element={activeScenes.some(candidate => candidate.id === s.id) ? <MemoryScene scene={s} animated={animatedScenes} videoSoundEnabled={mediaAudioUnlocked && ambient.ambienceEnabled} onAmbientToggle={toggleAmbient} /> : <Navigate to={featuredScene.slug} replace />} />)}
         <Route path="*" element={<Navigate to="/salon" replace />} />
       </Routes>
     </AnimatePresence>
-    <header className="topbar"><a className="brand" href="/salon"><strong><span>90s</span> यादें</strong><small>Relive it. Feel it. Live it.</small></a><div className="immersive-nav-cluster"><SceneNavigation current={scene.id} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} /><nav className="archive-nav" aria-label="Archive"><a href="/memories">Memories</a><a href="/journal" onClick={() => trackEvent('scene_to_blog_click', { scene_id: scene.id, destination: '/journal' })}>Journal</a><a href="/about">About</a></nav></div><button className="mobile-menu" onClick={() => { trackEvent('memory_explore', { scene_id: scene.id, method: 'mobile_menu' }); setMoreOpen(true) }} aria-label="Open memory menu"><Menu /></button></header>
+    <header className="topbar"><a className="brand" href={featuredScene.slug}><strong><span>90s</span> यादें</strong><small>Relive it. Feel it. Live it.</small></a><div className="immersive-nav-cluster"><SceneNavigation current={scene.id} memories={activeScenes} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} /><nav className="archive-nav" aria-label="Archive"><a href="/memories">Memories</a><a href="/journal" onClick={() => trackEvent('scene_to_blog_click', { scene_id: scene.id, destination: '/journal' })}>Journal</a><a href="/about">About</a></nav></div><button className="mobile-menu" onClick={() => { trackEvent('memory_explore', { scene_id: scene.id, method: 'mobile_menu' }); setMoreOpen(true) }} aria-label="Open memory menu"><Menu /></button></header>
     <div className="scene-controls">
-      <button className={`scene-control animation-toggle${animatedScenes ? ' is-active' : ''}`} onClick={() => { if (!animatedScenes) trackEvent('memory_explore', { scene_id: scene.id, method: 'enable_animation' }); setAnimatedScenes(value => !value) }} aria-label={animatedScenes ? 'Use static scene backgrounds' : 'Animate scene backgrounds'} aria-pressed={animatedScenes}>{animatedScenes ? <Film size={15} /> : <ImageIcon size={15} />}<span>{animatedScenes ? 'Animated' : 'Static'}</span></button>
+      {experience.allowVisitorOverride && <button className={`scene-control animation-toggle${animatedScenes ? ' is-active' : ''}`} onClick={() => { if (!animatedScenes) trackEvent('memory_explore', { scene_id: scene.id, method: 'enable_animation' }); setVisitorAnimationOverride(!animatedScenes) }} aria-label={animatedScenes ? 'Use static scene backgrounds' : 'Animate scene backgrounds'} aria-pressed={animatedScenes}>{animatedScenes ? <Film size={15} /> : <ImageIcon size={15} />}<span>{animatedScenes ? 'Animated' : 'Static'}</span></button>}
       <button className="scene-control ambient-toggle" onClick={toggleAmbient} aria-label={ambient.ambienceEnabled ? 'Mute ambience' : 'Play ambience'}>{ambient.ambienceEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}<span>Ambience {ambient.ambienceEnabled ? 'on' : 'off'}</span></button>
       {document.fullscreenEnabled && <button className="scene-control fullscreen-toggle" onClick={() => void toggleFullscreen()} aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} aria-pressed={fullscreen}>{fullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}<span>{fullscreen ? 'Exit fullscreen' : 'Fullscreen'}</span></button>}
     </div>
     {scene.id !== 'highway-adda' && <Gear6Promo />}
     <CreatorRadio />
     <NetlifyCredit />
-    <MemoryNavigator current={scene.id} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} />
+    <MemoryNavigator current={scene.id} memories={activeScenes} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} />
     <MemoryKeepsake key={scene.id} scene={scene} />
     {entered && <SpotifyRadio playlist={playlist} />}
-    <div className="scene-count"><span>0{scenes.findIndex(s => s.id === scene.id) + 1}</span><i /><span>0{scenes.length}</span></div>
-    <MoreMemories open={moreOpen} onClose={() => setMoreOpen(false)} onSceneSelect={selectScene} />
+    <div className="scene-count"><span>{String(activeScenes.findIndex(candidate => candidate.id === scene.id) + 1).padStart(2, '0')}</span><i /><span>{String(activeScenes.length).padStart(2, '0')}</span></div>
+    <MoreMemories open={moreOpen} memories={activeScenes} onClose={() => setMoreOpen(false)} onSceneSelect={selectScene} />
     <IntroLoader visible={!entered} onEnter={enter} />
   </div>
 }

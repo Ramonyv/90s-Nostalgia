@@ -18,7 +18,7 @@ cover: "/blog/nobody-told-us-it-was-the-last-time-90s-india/cover.webp"
 coverAlt: "An empty cricket bat, bricks used as wickets and a bicycle left on a quiet 1990s Indian neighbourhood street at blue hour after children have gone home."
 featured: true
 draft: false
-relatedMemory: "/salonalso"
+relatedMemory: "/salon"
 seoTitle: "The Last Time We Were 90s Kids in India"
 seoDescription: "A story about the ordinary last times of a 90s Indian childhood: the final street-cricket match, cassette, summer holiday and evening call home."
 canonical: ""

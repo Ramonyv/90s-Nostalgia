@@ -94,7 +94,7 @@ function staticDiscoveryPlugin(siteUrl: string, publisherId: string) {
           .replace(/<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${escapeXml(title)}" />`)
           .replace(/<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${escapeXml(description)}" />`)
           .replace(/<meta name="twitter:image" content="[^"]*" \/>/, `<meta name="twitter:image" content="${escapeXml(socialImage)}" />`)
-          .replace('</head>', `    <link rel="canonical" href="${escapeXml(canonical)}" />\n    <meta property="og:url" content="${escapeXml(canonical)}" />\n${noindex ? '    <meta name="robots" content="noindex,nofollow" />\n' : ''}  </head>`)
+          .replace('</head>', `    <link rel="canonical" href="${escapeXml(canonical)}" />\n    <meta property="og:url" content="${escapeXml(canonical)}" />\n${noindex ? '    <meta name="robots" content="noindex,follow" />\n' : ''}  </head>`)
       }
       for (const [path, title, description, image] of routeMetadata) {
         if (path === '/') { writeFileSync(resolve(output, 'index.html'), renderHtml(path, title, description, image)); continue }
@@ -107,6 +107,13 @@ function staticDiscoveryPlugin(siteUrl: string, publisherId: string) {
       }
       const adminHtml = renderHtml('/admin/blog', 'Blog Studio — 90s Yaadein', 'Internal Markdown importer.', '/social-preview.jpg', 'website', true)
       const adminDirectory = resolve(output, 'admin/blog'); mkdirSync(adminDirectory, { recursive: true }); writeFileSync(resolve(adminDirectory, 'index.html'), adminHtml); mkdirSync(resolve(output, 'admin'), { recursive: true }); writeFileSync(resolve(output, 'admin/blog.html'), adminHtml)
+      const systemPaths = ['', 'design', 'themes', 'content', 'seo', 'ads', 'privacy', 'copyright', 'accessibility', 'performance', 'analytics', 'architecture', 'release', 'health']
+      for (const section of systemPaths) {
+        const path = section ? `/system/${section}` : '/system'
+        const title = section ? `${section[0].toUpperCase()}${section.slice(1)} · 90s Yaadein System` : '90s Yaadein System'
+        const html = renderHtml(path, title, 'Internal design, content, technology and governance documentation.', '/social-preview.jpg', 'website', true)
+        const directory = resolve(output, path.slice(1)); mkdirSync(directory, { recursive: true }); writeFileSync(resolve(directory, 'index.html'), html)
+      }
     },
   }
 }

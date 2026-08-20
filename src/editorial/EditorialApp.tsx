@@ -8,6 +8,7 @@ const ArticlePage = lazy(() => import('./JournalPages').then(module => ({ defaul
 const JournalIndex = lazy(() => import('./JournalPages').then(module => ({ default: module.JournalIndex })))
 const BlogStudio = lazy(() => import('./BlogStudio').then(module => ({ default: module.BlogStudio })))
 const ExperienceControl = lazy(() => import('./ExperienceControl').then(module => ({ default: module.ExperienceControl })))
+const SystemApp = lazy(() => import('../system/SystemApp').then(module => ({ default: module.SystemApp })))
 const journalFallback = <div className="route-loader route-loader--paper">Loading journal…</div>
 
 export function EditorialApp() {
@@ -27,5 +28,6 @@ export function EditorialApp() {
     </Route>
     <Route path="/admin/blog" element={<Suspense fallback={<div className="route-loader route-loader--paper">Loading Blog Studio…</div>}><BlogStudio /></Suspense>} />
     <Route path="/admin/experience" element={<Suspense fallback={<div className="route-loader route-loader--paper">Loading Experience Control…</div>}><ExperienceControl /></Suspense>} />
+    <Route path="/system/*" element={<Suspense fallback={<div className="route-loader route-loader--paper">Loading System…</div>}><SystemApp /></Suspense>} />
   </Routes>
 }

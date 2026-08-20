@@ -29,7 +29,7 @@ export function SEO({ title, description = SITE_DESCRIPTION, canonicalPath = '/'
     const socialImage = image.startsWith('http') ? image : absoluteUrl(image)
     document.title = fullTitle
     upsertMeta('meta[name="description"]', { name: 'description', content: description })
-    upsertMeta('meta[name="robots"]', { name: 'robots', content: noindex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large' })
+    upsertMeta('meta[name="robots"]', { name: 'robots', content: noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large' })
     upsertMeta('meta[property="og:type"]', { property: 'og:type', content: type })
     upsertMeta('meta[property="og:title"]', { property: 'og:title', content: fullTitle })
     upsertMeta('meta[property="og:description"]', { property: 'og:description', content: description })

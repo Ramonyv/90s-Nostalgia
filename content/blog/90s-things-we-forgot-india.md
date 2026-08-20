@@ -18,13 +18,11 @@ cover: "/blog/90s-things-we-forgot-india/cover.webp"
 coverAlt: "A nostalgic collection of everyday childhood objects from 1990s India"
 featured: true
 draft: false
-relatedMemory: "/salonalso"
+relatedMemory: "/salon"
 seoTitle: "90s Things We Forgot Until We Saw Them Again"
 seoDescription: "A nostalgic trip through tiny things from 90s India—candies, pocket games, cassette tapes and everyday objects that instantly bring childhood back."
 canonical: ""
 ---
-
-# The 90s Things We Forgot Until We Saw Them Again
 
 There are things from childhood you remember forever.
 

@@ -18,7 +18,7 @@ cover: "/blog/if-you-grew-up-in-90s-india-this-will-feel-like-home/cover.webp"
 coverAlt: "Children playing street cricket in a warm 1990s Indian neighbourhood at sunset, with a kirana shop and family watching a CRT television nearby."
 featured: true
 draft: false
-relatedMemory: "/salonalso"
+relatedMemory: "/salon"
 seoTitle: "90s India Nostalgia: Childhood Memories We Still Miss"
 seoDescription: "Relive 90s India through street cricket, cassette tapes, railway journeys, TV evenings, summer holidays and the ordinary moments we never knew we would miss."
 canonical: ""

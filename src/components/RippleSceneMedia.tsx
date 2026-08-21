@@ -58,6 +58,7 @@ type RippleSceneMediaProps = {
   videoRef: MutableRefObject<HTMLVideoElement | null>
   onPlay: () => void
   onVideoError: () => void
+  onFirstInteraction?: () => void
 }
 
 function compileShader(gl: WebGLRenderingContext, type: number, source: string) {
@@ -79,7 +80,7 @@ function parsePosition(value: string) {
   return [number(parts[0]), number(parts[1] ?? parts[0])] as const
 }
 
-export function RippleSceneMedia({ alt, desktopImage, mobileImage, mobilePosition, video, mobileVideo, poster, muted, videoRef, onPlay, onVideoError }: RippleSceneMediaProps) {
+export function RippleSceneMedia({ alt, desktopImage, mobileImage, mobilePosition, video, mobileVideo, poster, muted, videoRef, onPlay, onVideoError, onFirstInteraction }: RippleSceneMediaProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const localVideoRef = useRef<HTMLVideoElement>(null)
@@ -154,6 +155,7 @@ export function RippleSceneMedia({ alt, desktopImage, mobileImage, mobilePositio
     let rippleIndex = 0
     let lastTrail = 0
     let lastRippleAt = Number.NEGATIVE_INFINITY
+    let interactionReported = false
     let running = true
     let textureUploaded = false
     let ready = false
@@ -164,9 +166,9 @@ export function RippleSceneMedia({ alt, desktopImage, mobileImage, mobilePositio
       : [imageRef.current?.naturalWidth ?? 0, imageRef.current?.naturalHeight ?? 0]
 
     const addRipple = (event: PointerEvent) => {
-      if (event.pointerType === 'touch') return
+      if ((event.target as HTMLElement | null)?.closest('button,a,input,[role="dialog"]')) return
       const now = performance.now()
-      if (event.type === 'pointermove' && now - lastTrail < 48) return
+      if (event.type === 'pointermove' && now - lastTrail < (event.pointerType === 'touch' ? 72 : 48)) return
       lastTrail = now
       const rect = canvas.getBoundingClientRect()
       if (!rect.width || !rect.height) return
@@ -177,6 +179,10 @@ export function RippleSceneMedia({ alt, desktopImage, mobileImage, mobilePositio
       strengths[rippleIndex] = event.type === 'pointerdown' ? 1.35 : .72
       rippleIndex = (rippleIndex + 1) % MAX_RIPPLES
       lastRippleAt = now
+      if (!interactionReported) {
+        interactionReported = true
+        onFirstInteraction?.()
+      }
       if (!running) {
         running = true
         frame = requestAnimationFrame(render)
@@ -253,7 +259,7 @@ export function RippleSceneMedia({ alt, desktopImage, mobileImage, mobilePositio
       gl.deleteShader(vertex)
       gl.deleteShader(fragment)
     }
-  }, [desktopImage, hasVideo, mobilePosition, video])
+  }, [desktopImage, hasVideo, mobilePosition, onFirstInteraction, video])
 
   return <div className={`scene-media${shaderReady ? ' scene-media--ripple-ready' : ''}`}>
     {hasVideo ? <video ref={localVideoRef} className="scene-video" poster={poster} autoPlay muted={muted} loop playsInline preload="metadata" aria-hidden="true" onPlay={onPlay} onError={onVideoError}>{mobileVideo && <source media="(max-width: 760px)" src={mobileVideo} type="video/mp4" />}<source src={video} type="video/mp4" /></video> : <picture><source media="(max-width: 760px)" srcSet={mobileImage.replace(/\.webp$/i, '.avif')} type="image/avif" /><source media="(max-width: 760px)" srcSet={mobileImage} type="image/webp" /><source srcSet={desktopImage.replace(/\.webp$/i, '.avif')} type="image/avif" /><img ref={imageRef} className="scene-image" src={desktopImage} alt={alt} fetchPriority="high" decoding="async" /></picture>}

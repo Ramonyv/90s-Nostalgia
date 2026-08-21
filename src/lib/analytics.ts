@@ -10,6 +10,7 @@ export type AnalyticsEventName =
   | 'blog_to_scene_click'
   | 'scene_to_blog_click'
   | 'external_link_click'
+  | 'interaction_first_ripple'
 
 export type AnalyticsEventDefinition = {
   event: AnalyticsEventName
@@ -32,6 +33,7 @@ export const analyticsEvents: AnalyticsEventDefinition[] = [
   { event: 'blog_to_scene_click', trigger: 'Article links to a related memory', parameters: ['slug', 'scene'], route: '/journal/:slug', status: 'Live' },
   { event: 'scene_to_blog_click', trigger: 'Scene links to the journal', parameters: ['scene_id'], route: 'Memory routes', status: 'Live' },
   { event: 'external_link_click', trigger: 'Visitor follows an external link', parameters: ['link_url', 'link_domain', 'link_text'], route: 'All routes', status: 'Live' },
+  { event: 'interaction_first_ripple', trigger: 'Visitor first touches the Sukoon water surface', parameters: ['scene_id', 'interaction'], route: '/sukoon', status: 'Live' },
 ]
 
 type AnalyticsParameters = Record<string, string | number | boolean | undefined>

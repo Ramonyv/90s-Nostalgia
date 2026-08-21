@@ -36,6 +36,7 @@ export function AppShell() {
   const [fullscreen, setFullscreen] = useState(Boolean(document.fullscreenElement))
   const [mediaAudioUnlocked, setMediaAudioUnlocked] = useState(false)
   const [visitorAnimationOverride, setVisitorAnimationOverride] = useState<boolean | null>(null)
+  const [quietRouteKey, setQuietRouteKey] = useState<string | null>(null)
   const configuredAnimation = scenePlayback(experience, scene.id) === 'loop'
   const animatedScenes = experience.allowVisitorOverride && visitorAnimationOverride !== null ? visitorAnimationOverride : configuredAnimation
   const previousScene = useRef<typeof scene.id | null>(null)
@@ -52,6 +53,24 @@ export function AppShell() {
     }
     previousScene.current = scene.id
   }, [location.key, scene.id, scene.title])
+  useEffect(() => {
+    if (scene.id !== 'sukoon') return
+    let timer = window.setTimeout(() => setQuietRouteKey(location.key), 5000)
+    const wake = () => {
+      setQuietRouteKey(null)
+      window.clearTimeout(timer)
+      timer = window.setTimeout(() => setQuietRouteKey(location.key), 5000)
+    }
+    window.addEventListener('pointermove', wake, { passive: true })
+    window.addEventListener('pointerdown', wake, { passive: true })
+    window.addEventListener('keydown', wake)
+    return () => {
+      window.clearTimeout(timer)
+      window.removeEventListener('pointermove', wake)
+      window.removeEventListener('pointerdown', wake)
+      window.removeEventListener('keydown', wake)
+    }
+  }, [location.key, scene.id])
   useEffect(() => {
     const syncFullscreen = () => setFullscreen(Boolean(document.fullscreenElement))
     document.addEventListener('fullscreenchange', syncFullscreen)
@@ -84,9 +103,9 @@ export function AppShell() {
     trackEvent(ambient.ambienceEnabled ? 'audio_pause' : 'audio_play', { audio_type: 'ambience', scene_id: scene.id, source: 'scene_control' })
     ambient.setAmbienceEnabled(!ambient.ambienceEnabled)
   }
-  return <div className="app-shell">
+  return <div className={`app-shell${quietRouteKey === location.key && scene.id === 'sukoon' ? ' app-shell--quiet' : ''}`}>
     <SEO title={scene.seoTitle ?? `${scene.title} (${scene.year})`} description={scene.seoDescription ?? `${scene.description} Explore an illustrated memory from everyday India in the 1990s.`} canonicalPath={scene.slug} image={scene.desktopBackground} jsonLd={scene.id === 'salon' ? { '@context': 'https://schema.org', '@type': 'WebSite', name: '90s Yaadein', description: 'An interactive archive of everyday memories from 1990s India.', url: absoluteUrl('/') } : undefined} />
-    <NostalgiaStickers sceneId={scene.id} />
+    {scene.id !== 'sukoon' && <NostalgiaStickers sceneId={scene.id} />}
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Navigate to="/salon" replace />} />
@@ -100,7 +119,7 @@ export function AppShell() {
       <button className="scene-control ambient-toggle" onClick={toggleAmbient} aria-label={ambient.ambienceEnabled ? 'Mute ambience' : 'Play ambience'}>{ambient.ambienceEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}<span>Ambience {ambient.ambienceEnabled ? 'on' : 'off'}</span></button>
       {document.fullscreenEnabled && <button className="scene-control fullscreen-toggle" onClick={() => void toggleFullscreen()} aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} aria-pressed={fullscreen}>{fullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}<span>{fullscreen ? 'Exit fullscreen' : 'Fullscreen'}</span></button>}
     </div>
-    {scene.id !== 'highway-adda' && <Gear6Promo />}
+    {scene.id !== 'highway-adda' && scene.id !== 'sukoon' && <Gear6Promo />}
     <CreatorRadio />
     <NetlifyCredit />
     <MemoryNavigator current={scene.id} memories={activeScenes} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} />

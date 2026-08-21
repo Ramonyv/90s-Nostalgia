@@ -17,9 +17,11 @@ export type SpotifyPlaylist = {
 
 // Paste the owner-supplied Spotify playlist URL between these quotes.
 export const GULZAR_SPOTIFY_PLAYLIST_URL = 'https://open.spotify.com/playlist/4uGmozHrHA1hrg0X9xm3Y2?si=vUdhrhQ_TYmnNJn509wS8g'
+export const SUKOON_PLAYLIST_URL = 'https://open.spotify.com/playlist/7MuGX2icynmq9zuklPCbnX?si=6zDONS-MTdixyB_zBRh75A'
 
 const spotifyPlaylistId = (url: string) => url.match(/open\.spotify\.com\/playlist\/([A-Za-z0-9]+)/)?.[1] ?? ''
 const gulzarPlaylistId = spotifyPlaylistId(GULZAR_SPOTIFY_PLAYLIST_URL)
+const sukoonPlaylistId = spotifyPlaylistId(SUKOON_PLAYLIST_URL)
 
 const salonPlaylist: SpotifyPlaylist = {
   playlistId: '7vnd8GlKrfazw3sUQ8gt0q',
@@ -107,6 +109,17 @@ export const spotifyPlaylists: Record<SceneId, SpotifyPlaylist> = {
     eyebrow: 'अब बज रहा है',
     meta: '100 songs • Spotify',
     externalCta: 'PLAY PLAYLIST',
+  },
+  sukoon: {
+    playlistId: sukoonPlaylistId,
+    title: 'SUKOON',
+    sourceUrl: SUKOON_PLAYLIST_URL,
+    uri: sukoonPlaylistId ? `spotify:playlist:${sukoonPlaylistId}` : '',
+    stationLabel: 'थोड़ा ठहरो।',
+    hindiName: 'सुकून',
+    available: Boolean(sukoonPlaylistId),
+    eyebrow: 'SUKOON',
+    meta: 'Calm • Instrumental • Slow',
   },
 }
 

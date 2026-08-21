@@ -1,5 +1,5 @@
-export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'adhoori-shaam' | 'highway-adda' | '90s-shaadi' | 'nusrat-night' | 'gulzar-rain'
-export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'permit-room' | 'baraat' | 'night'
+export type SceneId = 'salon' | 'truck' | 'railway' | 'school' | 'cricket' | 'tv' | 'rain' | 'gaming' | 'cassette-shop' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'adhoori-shaam' | 'highway-adda' | '90s-shaadi' | 'nusrat-night' | 'gulzar-rain' | 'sukoon'
+export type AmbientKind = 'room' | 'road' | 'station' | 'classroom' | 'lane' | 'television' | 'rain' | 'arcade' | 'cassette' | 'bus-stand' | 'village' | 'auto-rickshaw' | 'permit-room' | 'baraat' | 'night' | 'pond'
 export type HotspotAction = 'spotify' | 'radio' | 'chai' | 'motorcycle' | 'gear6'
 export type Hotspot = { x: number; y: number; label: string; align?: 'left' | 'right'; action?: HotspotAction }
 
@@ -30,6 +30,7 @@ export type Scene = {
   seoTitle?: string
   seoDescription?: string
   memoryLabel?: string
+  selectorImage?: string
 }
 
 export const scenes: Scene[] = [
@@ -193,6 +194,11 @@ export const scenes: Scene[] = [
       { x: 66, y: 79, label: 'कुछ बातें डायरी के पन्नों तक ही पहुँचीं।' },
       { x: 88, y: 75, label: 'एक बैग में सामान था। बाकी सब यादें थीं।', align: 'right' },
     ],
+  },
+  {
+    id: 'sukoon', slug: '/sukoon', navLabel: 'Sukoon', title: 'Sukoon', hindiTitle: 'सुकून', year: '1996',
+    description: 'A quiet interactive fish-pond experience with calming music, soft water ripples and colourful fish — a peaceful corner inside 90s Yaadein.', shortLine: 'बस थोड़ी देर यहीं रुक जाओ।', desktopBackground: '/scenes/sukoon/sukoon.webp', mobileBackground: '/scenes/sukoon/sukoon-mobile.webp', fallbackImage: '/scenes/sukoon/sukoon.webp', ambientAudio: 'pond', accentColor: '#d3ad64', animation: { dust: false, dustCount: 0 }, availability: 'active', primaryNav: true, mobilePosition: 'center', selectorTitle: 'सुकून', selectorSecondary: 'Sukoon', selectorImage: '/scenes/sukoon/sukoon-thumbnail.webp', memoryLabel: 'A QUIET MEMORY • 1996', seoTitle: 'Sukoon — Interactive Fish Pond | 90s Yaadein', seoDescription: 'A quiet interactive fish-pond experience with calming music, soft water ripples and colourful fish — a peaceful corner inside 90s Yaadein.',
+    hotspots: [],
   },
 ]
 

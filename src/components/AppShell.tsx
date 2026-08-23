@@ -21,6 +21,7 @@ import { trackEvent, trackEventOnce } from '../lib/analytics'
 import { NostalgiaStickers } from './NostalgiaStickers'
 import { useExperienceConfig } from '../hooks/useExperienceConfig'
 import { sceneIsVisible, scenePlayback } from '../config/experience'
+import { VisitorPresence } from './VisitorPresence'
 
 export function AppShell() {
   const location = useLocation()
@@ -113,7 +114,7 @@ export function AppShell() {
         <Route path="*" element={<Navigate to="/salon" replace />} />
       </Routes>
     </AnimatePresence>
-    <header className="topbar"><a className="brand" href={featuredScene.slug}><strong><span>90s</span> यादें</strong><small>Relive it. Feel it. Live it.</small></a><div className="immersive-nav-cluster"><SceneNavigation current={scene.id} memories={activeScenes} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} /><nav className="archive-nav" aria-label="Archive"><a href="/memories">Memories</a><a href="/journal" onClick={() => trackEvent('scene_to_blog_click', { scene_id: scene.id, destination: '/journal' })}>Journal</a><a href="/about">About</a></nav></div><button className="mobile-menu" onClick={() => { trackEvent('memory_explore', { scene_id: scene.id, method: 'mobile_menu' }); setMoreOpen(true) }} aria-label="Open memory menu"><Menu /></button></header>
+    <header className="topbar"><a className="brand" href={featuredScene.slug}><strong><span>90s</span> यादें</strong><small>Relive it. Feel it. Live it.</small></a><VisitorPresence /><div className="immersive-nav-cluster"><SceneNavigation current={scene.id} memories={activeScenes} onMore={() => setMoreOpen(true)} onSceneSelect={selectScene} /><nav className="archive-nav" aria-label="Archive"><a href="/memories">Memories</a><a href="/journal" onClick={() => trackEvent('scene_to_blog_click', { scene_id: scene.id, destination: '/journal' })}>Journal</a><a href="/about">About</a></nav></div><button className="mobile-menu" onClick={() => { trackEvent('memory_explore', { scene_id: scene.id, method: 'mobile_menu' }); setMoreOpen(true) }} aria-label="Open memory menu"><Menu /></button></header>
     <div className="scene-controls">
       {experience.allowVisitorOverride && <button className={`scene-control animation-toggle${animatedScenes ? ' is-active' : ''}`} onClick={() => { if (!animatedScenes) trackEvent('memory_explore', { scene_id: scene.id, method: 'enable_animation' }); setVisitorAnimationOverride(!animatedScenes) }} aria-label={animatedScenes ? 'Use static scene backgrounds' : 'Animate scene backgrounds'} aria-pressed={animatedScenes}>{animatedScenes ? <Film size={15} /> : <ImageIcon size={15} />}<span className="scene-control__label">{animatedScenes ? 'Animated' : 'Static'}</span><span className="scene-control__switch" aria-hidden="true"><i /></span></button>}
       <button className={`scene-control ambient-toggle${ambient.ambienceEnabled ? ' is-active' : ''}`} onClick={toggleAmbient} aria-label={ambient.ambienceEnabled ? 'Mute ambience' : 'Play ambience'} aria-pressed={ambient.ambienceEnabled}>{ambient.ambienceEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}<span className="scene-control__label">Ambience {ambient.ambienceEnabled ? 'on' : 'off'}</span><span className="scene-control__switch" aria-hidden="true"><i /></span></button>

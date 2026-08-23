@@ -21,6 +21,10 @@ On Netlify, settings are persisted automatically in the `yaadein-experience-cont
 
 The bottom memory dock uses lazy image thumbnails. Only the hovered or keyboard-focused theme creates a muted video preview, and reduced-motion visitors always receive static thumbnails.
 
+## Live visitor presence
+
+Memory scenes show a real active-browser count and a separate, clearly labeled nostalgia score (100 points per active visitor). Browsers heartbeat every 30 seconds and expire after 90 seconds. Netlify uses the `yaadein-visitor-presence` Blob store automatically. On Cloudflare, bind a KV namespace as `VISITOR_PRESENCE`; without a configured store the UI safely says “You’re here” and does not claim a live crowd count.
+
 ## Editorial archive
 
 The journal and trust layer is code-split from the immersive application. Public routes include `/memories`, `/journal`, `/about`, `/contact`, `/privacy`, `/terms`, `/editorial-policy`, `/accessibility`, and `/cookies`. Blog Studio is available only by direct URL at `/admin/blog`; it supports secure server-side GitHub publishing when configured and retains a local export fallback.

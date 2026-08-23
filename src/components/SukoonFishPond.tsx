@@ -16,6 +16,12 @@ const fishSeeds: FishState[] = [
   { x: .38, y: .57, angle: -.32, speed: .021, phase: 3.6, curiousUntil: 0 },
   { x: .53, y: .66, angle: -2.8, speed: .016, phase: 4.5, curiousUntil: 0 },
   { x: .43, y: .31, angle: 1.1, speed: .019, phase: 5.7, curiousUntil: 0 },
+  { x: .76, y: .29, angle: 2.25, speed: .018, phase: .8, curiousUntil: 0 },
+  { x: .31, y: .39, angle: -.72, speed: .016, phase: 1.9, curiousUntil: 0 },
+  { x: .78, y: .66, angle: -2.15, speed: .020, phase: 2.8, curiousUntil: 0 },
+  { x: .29, y: .71, angle: .24, speed: .017, phase: 3.9, curiousUntil: 0 },
+  { x: .59, y: .24, angle: 1.85, speed: .019, phase: 4.9, curiousUntil: 0 },
+  { x: .61, y: .76, angle: -1.7, speed: .015, phase: 6.2, curiousUntil: 0 },
 ]
 
 export function SukoonFishPond() {
@@ -108,7 +114,7 @@ export function SukoonFishPond() {
     {fishSeeds.map((fish, index) => <span
       key={index}
       ref={node => { fishRefs.current[index] = node }}
-      className={`sukoon-fish sukoon-fish--${index + 1}`}
+      className={`sukoon-fish sukoon-fish--${index % 6 + 1}`}
       style={{ left: `${fish.x * 100}%`, top: `${fish.y * 100}%`, transform: `translate(-50%,-50%) rotate(${fish.angle}rad)` }}
     />)}
   </div>

@@ -1,17 +1,19 @@
-import { ArrowLeft, ArrowRight, Grid2X2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Dices, Grid2X2 } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { sceneAvif, type Scene } from '../data/scenes'
 import { trackEvent } from '../lib/analytics'
 
 export function MemoryNavigator({ current, memories, onMore, onSceneSelect }: { current: Scene['id']; memories: Scene[]; onMore: () => void; onSceneSelect: (sceneId: Scene['id']) => void }) {
+  const routeTo = useNavigate()
   const currentIndex = Math.max(0, memories.findIndex(scene => scene.id === current))
   const previous = memories[(currentIndex - 1 + memories.length) % memories.length]
   const next = memories[(currentIndex + 1) % memories.length]
   const dockRef = useRef<HTMLElement>(null)
   const activeRef = useRef<HTMLAnchorElement>(null)
   const [preview, setPreview] = useState<{ sceneId: Scene['id']; left: number } | null>(null)
+  const [randomRolling, setRandomRolling] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   useEffect(() => {
     activeRef.current?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'nearest', inline: 'center' })
@@ -33,6 +35,15 @@ export function MemoryNavigator({ current, memories, onMore, onSceneSelect }: { 
     const center = bounds.left - dock.left + bounds.width / 2
     setPreview({ sceneId, left: Math.min(Math.max(148, center), Math.max(148, dock.width - 148)) })
   }
+  const openRandomMemory = () => {
+    const choices = memories.filter(scene => scene.id !== current)
+    const randomScene = choices[Math.floor(Math.random() * choices.length)] ?? memories[0]
+    if (!randomScene || randomScene.id === current) return
+    setRandomRolling(true)
+    window.setTimeout(() => setRandomRolling(false), 520)
+    navigate(randomScene, 'random_memory')
+    routeTo(randomScene.slug)
+  }
   const previewScene = memories.find(scene => scene.id === preview?.sceneId)
 
   return <nav ref={dockRef} className="memory-dock" aria-label="Memory navigation">
@@ -49,6 +60,7 @@ export function MemoryNavigator({ current, memories, onMore, onSceneSelect }: { 
       </Link>
     })}</div></div>
     <button className="memory-dock__all" type="button" onClick={() => { trackEvent('memory_explore', { scene_id: current, method: 'all_memories' }); onMore() }} aria-label={`Open all memories. Memory ${currentIndex + 1} of ${memories.length}`}><Grid2X2 size={15} /><span>{String(currentIndex + 1).padStart(2, '0')}/{String(memories.length).padStart(2, '0')}</span></button>
-    <Link className="memory-dock__arrow" to={next.slug} onClick={() => navigate(next, 'next')} aria-label={`Next memory: ${next.title}`}><ArrowRight size={16} /></Link>
+    <Link className="memory-dock__arrow memory-dock__next" to={next.slug} onClick={() => navigate(next, 'next')} aria-label={`Next memory: ${next.title}`}><ArrowRight size={16} /></Link>
+    <button className={`memory-dock__random${randomRolling ? ' is-rolling' : ''}`} type="button" onClick={openRandomMemory} aria-label="कोई याद खोलो — take me to a random memory" title="कोई याद खोलो"><Dices size={17} aria-hidden="true" /><span>Shuffle</span></button>
   </nav>
 }

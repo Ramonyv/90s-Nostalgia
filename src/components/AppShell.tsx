@@ -23,6 +23,9 @@ import { useExperienceConfig } from '../hooks/useExperienceConfig'
 import { sceneIsVisible, scenePlayback } from '../config/experience'
 import { VisitorPresence } from './VisitorPresence'
 
+// Keep the intro experience available for a future return without placing it in the current visitor flow.
+const INTRO_ENABLED = false
+
 export function AppShell() {
   const location = useLocation()
   const { config: experience } = useExperienceConfig()
@@ -32,7 +35,7 @@ export function AppShell() {
   }, [experience])
   const featuredScene = activeScenes.find(candidate => candidate.id === experience.featuredScene) ?? activeScenes[0] ?? scenes[0]
   const scene = activeScenes.find(candidate => candidate.slug === location.pathname) ?? featuredScene
-  const [entered, setEntered] = useState(() => sessionStorage.getItem('yaadein-entered') === 'yes')
+  const [entered, setEntered] = useState(() => !INTRO_ENABLED || sessionStorage.getItem('yaadein-entered') === 'yes')
   const [moreOpen, setMoreOpen] = useState(false)
   const [fullscreen, setFullscreen] = useState(Boolean(document.fullscreenElement))
   const [mediaAudioUnlocked, setMediaAudioUnlocked] = useState(false)
